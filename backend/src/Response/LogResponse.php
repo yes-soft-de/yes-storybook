@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class RecordResponse
+class LogResponse
 {
     public $id;
 

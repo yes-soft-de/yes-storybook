@@ -4,16 +4,16 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\RecordEntity;
-use App\Repository\RecordEntityRepository;
+use App\Repository\LogEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class RecordManager
+class LogManager
 {
     private $autoMapping;
     private $entityManager;
     private $repository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, RecordEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, LogEntityRepository $repository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;

@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class PaymentCreateResponse
+class StoreOwnerCreateResponse
 {
     public $id;
     public $ownerId;

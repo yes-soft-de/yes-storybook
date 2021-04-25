@@ -4,27 +4,26 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\PaymentsEntity;
-use App\Repository\PaymentsEntityRepository;
-use App\Request\PaymentCreateRequest;
-// use App\Request\RatingUpdateRequest;
+use App\Repository\storeOwnerPaymentEntityRepository;
+use App\Request\StoreOwnerPaymentCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PaymentManager
+class StoreOwnerPaymentManager
 {
     private $autoMapping;
     private $entityManager;
     private $repository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, PaymentsEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, storeOwnerPaymentEntityRepository $repository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
     }
 
-    public function create(PaymentCreateRequest $request)
+    public function create(StoreOwnerPaymentCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(PaymentCreateRequest::class, PaymentsEntity::class, $request);
+        $entity = $this->autoMapping->map(StoreOwnerPaymentCreateRequest::class, PaymentsEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -47,9 +46,4 @@ class PaymentManager
     {
         return $this->repository->getNewAmount($ownerId);
     }
-
-    // public function ratingByCaptainID($captainID)
-    // {
-    //     return $this->ratingRepository->ratingByCaptainID($captainID);
-    // }
 }

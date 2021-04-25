@@ -13,18 +13,18 @@ class ReportService
 {
     private $autoMapping;
     private $ReportManager;
-    private $recordService;
+    private $logService;
 
-    public function __construct(AutoMapping $autoMapping, ReportManager $reportManager, RecordService $recordService)
+    public function __construct(AutoMapping $autoMapping, ReportManager $reportManager, LogService $logService)
     {
         $this->autoMapping = $autoMapping;
         $this->reportManager = $reportManager;
-        $this->recordService = $recordService;
+        $this->logService = $logService;
     }
 
     public function create(ReportCreateRequest $request)
     {
-        $uuid =$this->recordService->uuid();
+        $uuid =$this->logService->uuid();
         
         $reprot = $this->reportManager->create($request, $uuid);
 

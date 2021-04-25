@@ -21,7 +21,6 @@ use App\Response\UserProfileResponse;
 use App\Response\UserRegisterResponse;
 use App\Response\AllUsersResponse;
 use App\Response\RemainingOrdersResponse;
-// use App\Response\CaptainsOngoingResponse;
 use App\Response\CaptainTotalBounceResponse;
 use App\Service\CaptainPaymentService;
 use App\Service\BankService;
@@ -35,19 +34,19 @@ class UserService
     private $acceptedOrderService;
     private $ratingService;
     private $branchesService;
-    private $recordService;
+    private $logService;
     private $params;
     private $captainPaymentService;
     private $bankService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, RecordService $recordService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
         $this->acceptedOrderService = $acceptedOrderService;
         $this->ratingService = $ratingService;
         $this->branchesService = $branchesService;
-        $this->recordService = $recordService;
+        $this->logService = $logService;
         $this->captainPaymentService = $captainPaymentService;
         $this->bankService = $bankService;
 
@@ -72,7 +71,7 @@ class UserService
 
     public function userProfileCreate(UserProfileCreateRequest $request)
     {
-        $uuid = $this->recordService->uuid();
+        $uuid = $this->logService->uuid();
         $userProfile = $this->userManager->userProfileCreate($request, $uuid);
 
         if ($userProfile instanceof UserProfile) {
@@ -147,7 +146,7 @@ class UserService
 
     public function captainprofileCreate(CaptainProfileCreateRequest $request)
     { 
-        $uuid = $this->recordService->uuid();
+        $uuid = $this->logService->uuid();
         $captainProfile = $this->userManager->captainprofileCreate($request, $uuid);
         
         if ($captainProfile instanceof CaptainProfileEntity) {

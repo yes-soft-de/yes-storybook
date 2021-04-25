@@ -4,39 +4,37 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Entity\RecordEntity;
-use App\Entity\AcceptedOrderEntity;
-use App\Manager\RecordManager;
-use App\Response\RecordResponse;
-use stdClass;
+use App\Manager\LogManager;
+use App\Response\LogResponse;
 
-class RecordService
+class LogService
 {
     private $autoMapping;
-    private $recordManager;
+    private $logManager;
 
-    public function __construct(AutoMapping $autoMapping, RecordManager $recordManager)
+    public function __construct(AutoMapping $autoMapping, LogManager $logManager)
     {
         $this->autoMapping = $autoMapping;
-        $this->recordManager = $recordManager;
+        $this->logManager = $logManager;
     }
 
     public function create($orderID, $state)
     {
         $record['orderID'] = $orderID;
         $record['state'] = $state;
-        $result = $this->recordManager->create($record);
+        $result = $this->logManager->create($record);
 
-        return $this->autoMapping->map(RecordEntity::class, RecordResponse::class, $result);
+        return $this->autoMapping->map(RecordEntity::class, LogResponse::class, $result);
     }
     
     public function getrecordByOrderId($orderId)
     {
-        return $this->recordManager->getrecordByOrderId($orderId);
+        return $this->logManager->getrecordByOrderId($orderId);
     }
 
     public function getRecordsByOrderId($orderId)
     {
-        return $this->recordManager->getRecordsByOrderId($orderId);
+        return $this->logManager->getRecordsByOrderId($orderId);
     }
 
     public function getRecordsWithcompletionTime($orderId)

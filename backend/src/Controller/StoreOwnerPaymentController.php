@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\PaymentCreateRequest;
-use App\Service\PaymentService;
+use App\Request\StoreOwnerPaymentCreateRequest;
+use App\Service\StoreOwnerPaymentService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,18 +14,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class PaymentsController extends BaseController
+class StoreOwnerPaymentController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $paymentService;
+    private $storeOwnerPaymentService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, PaymentService $paymentService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, StoreOwnerPaymentService $storeOwnerPaymentService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->paymentService = $paymentService;
+        $this->storeOwnerPaymentService = $storeOwnerPaymentService;
     }
     
     /**
@@ -38,7 +38,7 @@ class PaymentsController extends BaseController
     {
             $data = json_decode($request->getContent(), true);
 
-            $request = $this->autoMapping->map(stdClass::class, PaymentCreateRequest::class, (object)$data);
+            $request = $this->autoMapping->map(stdClass::class, StoreOwnerPaymentCreateRequest::class, (object)$data);
 
             $violations = $this->validator->validate($request);
 
@@ -47,7 +47,7 @@ class PaymentsController extends BaseController
 
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
-            $result = $this->paymentService->create($request);
+            $result = $this->storeOwnerPaymentService->create($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -59,7 +59,7 @@ class PaymentsController extends BaseController
      */
     public function paymentsOfOwner($ownerId)
     {
-        $result = $this->paymentService->getpaymentsForOwner($ownerId,"admin");
+        $result = $this->storeOwnerPaymentService->getpaymentsForOwner($ownerId,"admin");
 
         return $this->response($result, self::FETCH);
     }
@@ -73,7 +73,7 @@ class PaymentsController extends BaseController
       */
       public function getpaymentsForOwner()
       {
-          $result = $this->paymentService->getpaymentsForOwner($this->getUserId());
+          $result = $this->storeOwnerPaymentService->getpaymentsForOwner($this->getUserId());
   
           return $this->response($result, self::FETCH);
       }

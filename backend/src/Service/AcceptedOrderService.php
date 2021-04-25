@@ -10,7 +10,7 @@ use App\Response\AcceptedOrderResponse;
 use App\Response\AcceptedOrdersResponse;
 use App\Response\CaptainTotalEarnResponse;
 use App\Response\ongoingCaptainsResponse;
-use App\Service\RecordService;
+use App\Service\LogService;
 use App\Service\RoomIdHelperService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use DateTime;
@@ -18,15 +18,15 @@ class AcceptedOrderService
 {
     private $autoMapping;
     private $acceptedOrderManager;
-    private $recordService;
+    private $logService;
     private $roomIdHelperService;
     private $params;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, RecordService $recordService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
+    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->acceptedOrderManager = $acceptedOrderManager;
-        $this->recordService = $recordService;
+        $this->logService = $logService;
         $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
@@ -39,7 +39,7 @@ class AcceptedOrderService
         if (!$acceptedOrder) {
             $item = $this->acceptedOrderManager->create($request);
             if ($item) {
-               $this->recordService->create($item->getOrderID(), $item->getState());
+               $this->logService->create($item->getOrderID(), $item->getState());
                $data = $this->getOwnerIdAndUuid($item->getOrderID());
                $this->roomIdHelperService->create($data);
             }
@@ -53,7 +53,7 @@ class AcceptedOrderService
     // {
     //     $item = $this->acceptedOrderManager->getOrderStatusForCaptain($captainID, $orderId);
     //     if ($item) {
-    //         $record = $this->recordService->getRecordByOrderId($orderId);
+    //         $record = $this->logService->getRecordByOrderId($orderId);
     //     }
     //     $response = $this->autoMapping->map('array', AcceptedOrderResponse::class, $item);
     //     $response->record =  $record;
@@ -75,7 +75,7 @@ class AcceptedOrderService
     public function acceptedOrderUpdateStateByCaptain($orderId, $state)
     {
         $item = $this->acceptedOrderManager->acceptedOrderUpdateStateByCaptain($orderId, $state);
-        $this->recordService->create($orderId, $state);
+        $this->logService->create($orderId, $state);
     }
 
     public function getAcceptedOrderByOrderId($orderId)
@@ -88,7 +88,7 @@ class AcceptedOrderService
         $response = [];
         $orders = $this->acceptedOrderManager->getAcceptedOrderByCaptainId($captainId);
         foreach ($orders as $order){
-            $order['record'] = $this->recordService->getrecordByOrderId($order['orderID']);
+            $order['record'] = $this->logService->getrecordByOrderId($order['orderID']);
             $response[] = $this->autoMapping->map('array', AcceptedOrdersResponse::class, $order);
         }
     

@@ -4,32 +4,32 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Entity\PaymentsEntity;
-use App\Manager\PaymentManager;
-use App\Request\PaymentCreateRequest;
-use App\Response\PaymentCreateResponse;
+use App\Manager\StoreOwnerPaymentManager;
+use App\Request\StoreOwnerPaymentCreateRequest;
+use App\Response\StoreOwnerCreateResponse;
 use App\Service\SubscriptionService;
 use App\Service\BankService;
 use DateTime;
-class PaymentService
+class StoreOwnerPaymentService
 {
     private $autoMapping;
-    private $paymentManager;
+    private $storeOwnerPaymentManager;
     private $subscriptionService;
     private $bankService;
 
-    public function __construct(AutoMapping $autoMapping, PaymentManager $paymentManager, SubscriptionService $subscriptionService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, SubscriptionService $subscriptionService, BankService $bankService)
     {
         $this->autoMapping = $autoMapping;
-        $this->paymentManager = $paymentManager;
+        $this->storeOwnerPaymentManager = $storeOwnerPaymentManager;
         $this->subscriptionService = $subscriptionService;
         $this->bankService = $bankService;
     }
 
-    public function create(PaymentCreateRequest $request)
+    public function create(StoreOwnerPaymentCreateRequest $request)
     {
-        $item = $this->paymentManager->create($request);
+        $item = $this->storeOwnerPaymentManager->create($request);
 
-        return $this->autoMapping->map(PaymentsEntity::class, PaymentCreateResponse::class, $item);
+        return $this->autoMapping->map(PaymentsEntity::class, StoreOwnerCreateResponse::class, $item);
     }
 
     public function getpaymentsForOwner($ownerId, $admin='null')
@@ -39,11 +39,11 @@ class PaymentService
        $totalAmountOfSubscriptions= $this->subscriptionService->totalAmountOfSubscriptions($ownerId);
        $bank= $this->bankService->getAccount($ownerId);
        
-        $items = $this->paymentManager->getpaymentsForOwner($ownerId);
+        $items = $this->storeOwnerPaymentManager->getpaymentsForOwner($ownerId);
       
-        $sumPayments = $this->paymentManager->getSumAmount($ownerId);
+        $sumPayments = $this->storeOwnerPaymentManager->getSumAmount($ownerId);
        
-        $NewAmount = $this->paymentManager->getNewAmount($ownerId);
+        $NewAmount = $this->storeOwnerPaymentManager->getNewAmount($ownerId);
         $nextPay = null;
         if ($NewAmount){
             $nextPay = $this->subtractTowDates($NewAmount[0]['date']);
@@ -57,7 +57,7 @@ class PaymentService
         if ($admin == "admin"){$total = $totalAmountOfSubscriptions - $sumPayments;}
         
         foreach ($items as $item) {  
-            $response[]=  $this->autoMapping->map('array', PaymentCreateResponse::class, $item);  
+            $response[]=  $this->autoMapping->map('array', StoreOwnerCreateResponse::class, $item);  
         }
         
       $arr['payments'] = $response;

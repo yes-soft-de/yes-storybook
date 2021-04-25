@@ -3,11 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\PaymentsEntity;
-use App\Entity\BankEntity;
-use App\Entity\SubscriptionEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method PaymentsEntity|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,7 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
  * @method PaymentsEntity[]    findAll()
  * @method PaymentsEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PaymentsEntityRepository extends ServiceEntityRepository
+class storeOwnerPaymentEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

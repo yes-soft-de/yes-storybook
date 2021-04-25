@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class PaymentCreateRequest
+class StoreOwnerPaymentCreateRequest
 {
     private $ownerId;
     private $amount;
