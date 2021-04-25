@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class TermsCaptainUpdateRequest
+class CaptainTermUpdateRequest
 {
     private $id;
     private $content;

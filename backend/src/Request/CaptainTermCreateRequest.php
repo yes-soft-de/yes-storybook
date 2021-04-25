@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class TermsCaptainCreateRequest
+class CaptainTermCreateRequest
 {
     private $content;
 }

@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\TermsCaptainCreateRequest;
-use App\Request\TermsCaptainUpdateRequest;
-use App\Service\TermsCaptainService;
+use App\Request\CaptainTermCreateRequest;
+use App\Request\CaptainTermUpdateRequest;
+use App\Service\CaptainTermService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +15,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class TermsCaptainController extends BaseController
+class CaptainTermController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $termsCaptainService;
+    private $captainTermService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, TermsCaptainService $termsCaptainService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, CaptainTermService $captainTermService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->termsCaptainService = $termsCaptainService;
+        $this->captainTermService = $captainTermService;
     }
     
     /**
@@ -39,7 +39,7 @@ class TermsCaptainController extends BaseController
     {
             $data = json_decode($request->getContent(), true);
 
-            $request = $this->autoMapping->map(stdClass::class, TermsCaptainCreateRequest::class, (object)$data);
+            $request = $this->autoMapping->map(stdClass::class, CaptainTermCreateRequest::class, (object)$data);
 
             $violations = $this->validator->validate($request);
 
@@ -48,7 +48,7 @@ class TermsCaptainController extends BaseController
 
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
-            $result = $this->termsCaptainService->create($request);
+            $result = $this->captainTermService->create($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -60,7 +60,7 @@ class TermsCaptainController extends BaseController
       */
       public function getTermsCaptain()
       {
-          $result = $this->termsCaptainService->getTermsCaptain();
+          $result = $this->captainTermService->getTermsCaptain();
   
           return $this->response($result, self::FETCH);
       }
@@ -72,7 +72,7 @@ class TermsCaptainController extends BaseController
       */
       public function getTermsCaptainById($id)
       {
-          $result = $this->termsCaptainService->getTermsCaptainById($id);
+          $result = $this->captainTermService->getTermsCaptainById($id);
   
           return $this->response($result, self::FETCH);
       }
@@ -87,9 +87,9 @@ class TermsCaptainController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, TermsCaptainUpdateRequest::class, (object) $data);
+        $request = $this->autoMapping->map(stdClass::class, CaptainTermUpdateRequest::class, (object) $data);
 
-        $response = $this->termsCaptainService->update($request);
+        $response = $this->captainTermService->update($request);
 
         return $this->response($response, self::UPDATE);
     }

@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class TermsCaptainCreateResponse
+class CaptainTermCreateResponse
 {
     public $id;
     public $content;

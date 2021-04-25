@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method TermsCaptain[]    findAll()
  * @method TermsCaptain[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TermsCaptainRepository extends ServiceEntityRepository
+class CaptainTermRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
