@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method UpdateEntity[]    findAll()
  * @method UpdateEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UpdateEntityRepository extends ServiceEntityRepository
+class AnnouncementEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class UpdateUpdateRequest
+class AnnouncementUpdateRequest
 {
     private $id;
     private $title;

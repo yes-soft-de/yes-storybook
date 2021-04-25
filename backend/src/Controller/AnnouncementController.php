@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 use App\AutoMapping;
-use App\Request\UpdateCreateRequest;
-use App\Request\UpdateUpdateRequest;
-use App\Service\UpdateService;
+use App\Request\AnnouncementCreateRequest;
+use App\Request\AnnouncementUpdateRequest;
+use App\Service\AnnouncementService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +15,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
-class UpdateController extends BaseController
+class AnnouncementController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $updateService;
+    private $announcementService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, UpdateService $updateService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, AnnouncementService $announcementService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->updateService = $updateService;
+        $this->announcementService = $announcementService;
+        $this->announcementService = $announcementService;
     }
 
     /**
@@ -39,7 +40,7 @@ class UpdateController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, updateCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, AnnouncementCreateRequest::class, (object)$data);
 
         $violations = $this->validator->validate($request);
 
@@ -48,7 +49,7 @@ class UpdateController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-        $result = $this->updateService->create($request);
+        $result = $this->announcementService->create($request);
             
 
         return $this->response($result, self::CREATE);
@@ -63,7 +64,7 @@ class UpdateController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(\stdClass::class, UpdateUpdateRequest::class, (object) $data);
+        $request = $this->autoMapping->map(\stdClass::class, AnnouncementUpdateRequest::class, (object) $data);
 
         $violations = $this->validator->validate($request);
 
@@ -73,7 +74,7 @@ class UpdateController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->updateService->update($request);
+        $result = $this->announcementService->update($request);
 
         return $this->response($result, self::UPDATE);
     }
@@ -84,7 +85,7 @@ class UpdateController extends BaseController
      */
     public function getUpdateById($id)
     {
-        $result = $this->updateService->getUpdateById($id);
+        $result = $this->announcementService->getUpdateById($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -95,7 +96,7 @@ class UpdateController extends BaseController
      */
     public function getUpdateAll()
     {
-        $result = $this->updateService->getUpdateAll();
+        $result = $this->announcementService->getUpdateAll();
 
         return $this->response($result, self::FETCH);
     }

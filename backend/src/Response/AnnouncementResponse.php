@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class UpdateResponse
+class AnnouncementResponse
 {
     public $id;
     public $title;
