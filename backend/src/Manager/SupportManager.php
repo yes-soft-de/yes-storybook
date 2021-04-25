@@ -4,27 +4,27 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\ReportEntity;
-use App\Repository\ReportEntityRepository;
-use App\Request\ReportCreateRequest;
+use App\Repository\SupportEntityRepository;
+use App\Request\SupportCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ReportManager
+class SupportManager
 {
     private $autoMapping;
     private $entityManager;
     private $repository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, ReportEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, SupportEntityRepository $repository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
     }
 
-    public function create(ReportCreateRequest $request, $uuid)
+    public function create(SupportCreateRequest $request, $uuid)
     {
         $request->setUuid($uuid);
-        $entity = $this->autoMapping->map(ReportCreateRequest::class, ReportEntity::class, $request);
+        $entity = $this->autoMapping->map(SupportCreateRequest::class, ReportEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();

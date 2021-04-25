@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\Expr\Join;
  * @method ReportEntity[]    findAll()
  * @method ReportEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ReportEntityRepository extends ServiceEntityRepository
+class SupportEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

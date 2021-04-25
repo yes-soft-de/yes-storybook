@@ -3,8 +3,8 @@
 
 namespace App\Controller;
 use App\AutoMapping;
-use App\Request\ReportCreateRequest;
-use App\Service\ReportService;
+use App\Request\SupportCreateRequest;
+use App\Service\SupportService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,18 +14,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class ReportController extends BaseController
+class SupportController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $reportService;
+    private $supportService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, ReportService $reportService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, SupportService $supportService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->reportService = $reportService;
+        $this->supportService = $supportService;
     }
     
     /**
@@ -38,7 +38,7 @@ class ReportController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, ReportCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, SupportCreateRequest::class, (object)$data);
 
         $request->setUserID($this->getUserId());
 
@@ -49,7 +49,7 @@ class ReportController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->reportService->create($request);
+            $result = $this->supportService->create($request);
             
 
         return $this->response($result, self::CREATE);
@@ -62,7 +62,7 @@ class ReportController extends BaseController
      */
     public function getReports()
     {
-        $result = $this->reportService->getReports();
+        $result = $this->supportService->getReports();
 
         return $this->response($result, self::FETCH);
     }
@@ -73,7 +73,7 @@ class ReportController extends BaseController
      */
     public function getReport($id)
     {
-        $result = $this->reportService->getReport($id);
+        $result = $this->supportService->getReport($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -85,7 +85,7 @@ class ReportController extends BaseController
      */
     public function reportUpdateNewMeessageStatus($id)
     {
-        $result = $this->reportService->reportUpdateNewMeessageStatus($id);
+        $result = $this->supportService->reportUpdateNewMeessageStatus($id);
 
         return $this->response($result, self::FETCH);
     }

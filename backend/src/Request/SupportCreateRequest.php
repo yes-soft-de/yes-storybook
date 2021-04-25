@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class ReportCreateRequest
+class SupportCreateRequest
 {
     private $userId;
     private $orderId;

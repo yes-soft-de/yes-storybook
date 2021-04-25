@@ -8,7 +8,7 @@ use App\AutoMapping;
 use App\Entity\NotificationTokenEntity;
 use App\Manager\NotificationManager;
 use App\Service\RoomIdHelperService;
-use App\Service\ReportService;
+use App\Service\SupportService;
 use App\Service\UserService;
 use App\Request\NotificationTokenRequest;
 use App\Response\NotificationTokenResponse;
@@ -21,7 +21,7 @@ class NotificationService
     private $messaging;
     private $notificationManager;
     private $roomIdHelperService;
-    private $reportService;
+    private $supportService;
     private $userService;
     private $autoMapping;
 
@@ -31,13 +31,13 @@ class NotificationService
     const MESSAGE_NEW_CHAT = 'لديك رسالة جديدة';
     const MESSAGE_NEW_CHAT_FROM_ADMIN = 'لديك رسالة جديدة من الإدارة';
 
-    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, ReportService $reportService, UserService $userService)
+    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, supportService $supportService, UserService $userService)
     {
         $this->messaging = $messaging;
         $this->notificationManager = $notificationManager;
         $this->autoMapping = $autoMapping;
         $this->roomIdHelperService = $roomIdHelperService;
-        $this->reportService = $reportService;
+        $this->supportService = $supportService;
         $this->userService = $userService;
     }
 
@@ -85,7 +85,7 @@ class NotificationService
     {  
         $response=[];
         //NewMessageStatus = true
-        $item = $this->reportService->update($request,true);
+        $item = $this->supportService->update($request,true);
         if($item) {
             $response[] =  $this->autoMapping->map('array', NotificationTokenResponse::class, $item);
         }

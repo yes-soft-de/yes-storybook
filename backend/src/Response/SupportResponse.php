@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class ReportResponse
+class SupportResponse
 {
     public $id;
     public $userId;
