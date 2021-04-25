@@ -3,7 +3,7 @@
 namespace App\Controller;
 use App\AutoMapping;
 use App\Request\DeliveryCompanyInfoRequest;
-use App\Request\companyInfoUpdateRequest;
+use App\Request\DeliveryCompanyInfoUpdateRequest;
 use App\Service\DeliveryCompanyInfoService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -63,7 +63,7 @@ class DeliveryCompanyInfoController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(\stdClass::class, companyInfoUpdateRequest::class, (object) $data);
+        $request = $this->autoMapping->map(\stdClass::class, DeliveryCompanyInfoUpdateRequest::class, (object) $data);
 
         $violations = $this->validator->validate($request);
 

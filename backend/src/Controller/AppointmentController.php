@@ -3,9 +3,9 @@
 
 namespace App\Controller;
 use App\AutoMapping;
-use App\Request\DatingCreateRequest;
-use App\Request\DatingUpdateIsDoneRequest;
-use App\Service\DatingService;
+use App\Request\AppointmentCreateRequest;
+use App\Request\AppointmentUpdateIsDoneRequest;
+use App\Service\AppointmentService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,18 +16,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
-class DatingController extends BaseController
+class AppointmentController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $datingService;
+    private $appointmentService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, DatingService $datingService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, AppointmentService $appointmentService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->datingService = $datingService;
+        $this->appointmentService = $appointmentService;
     }
     
     /**
@@ -39,7 +39,7 @@ class DatingController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, DatingCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, AppointmentCreateRequest::class, (object)$data);
 
         $violations = $this->validator->validate($request);
 
@@ -48,7 +48,7 @@ class DatingController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->datingService->create($request);
+            $result = $this->appointmentService->create($request);
             
 
         return $this->response($result, self::CREATE);
@@ -62,7 +62,7 @@ class DatingController extends BaseController
       */
       public function datings()
       {
-          $result = $this->datingService->datings();
+          $result = $this->appointmentService->datings();
   
           return $this->response($result, self::FETCH);
       }
@@ -77,7 +77,7 @@ class DatingController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(\stdClass::class, DatingUpdateIsDoneRequest::class, (object) $data);
+        $request = $this->autoMapping->map(\stdClass::class, AppointmentUpdateIsDoneRequest::class, (object) $data);
 
         $violations = $this->validator->validate($request);
 
@@ -87,7 +87,7 @@ class DatingController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->datingService->update($request);
+        $result = $this->appointmentService->update($request);
 
         return $this->response($result, self::UPDATE);
     }

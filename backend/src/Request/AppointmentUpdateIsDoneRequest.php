@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class DatingUpdateIsDoneRequest
+class AppointmentUpdateIsDoneRequest
 {
     private $id;
     private $isDone;

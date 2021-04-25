@@ -6,7 +6,7 @@ use App\AutoMapping;
 use App\Entity\CompanyInfoEntity;
 use App\Repository\DeliveryCompanyInfoEntityRepository;
 use App\Request\DeliveryCompanyInfoRequest;
-use App\Request\companyInfoUpdateRequest;
+use App\Request\DeliveryCompanyInfoUpdateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DeliveryCompanyInfoManager
@@ -39,14 +39,14 @@ class DeliveryCompanyInfoManager
         }
     }
 
-    public function update(companyInfoUpdateRequest $request)
+    public function update(DeliveryCompanyInfoUpdateRequest $request)
     {
         $entity = $this->deliveryCompanyInfoEntityRepository->find($request->getId());
 
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(companyInfoUpdateRequest::class, CompanyInfoEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(DeliveryCompanyInfoUpdateRequest::class, CompanyInfoEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 

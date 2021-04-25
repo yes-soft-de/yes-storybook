@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class companyInfoUpdateRequest
+class DeliveryCompanyInfoUpdateRequest
 {
     private $id;
     private $phone;

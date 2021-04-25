@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\DatingEntityRepository;
+use App\Repository\AppointmentEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

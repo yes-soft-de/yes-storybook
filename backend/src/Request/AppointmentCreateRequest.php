@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class DatingCreateRequest
+class AppointmentCreateRequest
 {
     private $userName;
     private $phone;

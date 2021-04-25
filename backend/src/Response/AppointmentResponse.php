@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class DatingResponse
+class AppointmentResponse
 {
     public $id;
     public $userName;
