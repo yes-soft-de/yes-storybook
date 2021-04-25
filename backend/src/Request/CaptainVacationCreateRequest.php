@@ -3,7 +3,7 @@
 namespace App\Request;
 use DateTime;
 
-class VacationsCreateRequest
+class CaptainVacationCreateRequest
 {
     private $captainId;
 

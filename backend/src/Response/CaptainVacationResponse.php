@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class VacationsResponse
+class CaptainVacationResponse
 {
     public $id;
 

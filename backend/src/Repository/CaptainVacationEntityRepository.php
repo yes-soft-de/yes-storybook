@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method VacationsEntity[]    findAll()
  * @method VacationsEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class VacationsEntityRepository extends ServiceEntityRepository
+class CaptainVacationEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

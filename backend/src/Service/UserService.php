@@ -11,7 +11,7 @@ use App\Request\UserProfileCreateRequest;
 use App\Request\UserProfileUpdateRequest;
 use App\Request\userProfileUpdateByAdminRequest;
 use App\Request\CaptainProfileCreateRequest;
-use App\Request\VacationsCreateRequest;
+use App\Request\CaptainVacationCreateRequest;
 use App\Request\CaptainProfileUpdateRequest;
 use App\Request\CaptainProfileUpdateByAdminRequest;
 use App\Request\UserRegisterRequest;
@@ -192,7 +192,7 @@ class UserService
         return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $item);
     }
 
-    public function captainvacationbyadmin(VacationsCreateRequest $request)
+    public function captainvacationbyadmin(CaptainVacationCreateRequest $request)
     {
         return $this->userManager->captainvacationbyadmin($request);
 

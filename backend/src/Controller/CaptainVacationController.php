@@ -3,9 +3,8 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\VacationsCreateRequest;
-// use App\Request\VacationsUpdateStateRequest;
-use App\Service\VacationsService;
+use App\Request\CaptainVacationCreateRequest;
+use App\Service\CaptainVacationService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +14,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class VacationsController extends BaseController
+class CaptainVacationController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $vacationsService;
+    private $captainVacationService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, VacationsService $vacationsService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, CaptainVacationService $captainVacationService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->vacationsService = $vacationsService;
+        $this->captainVacationService = $captainVacationService;
     }
 
     /**
@@ -39,7 +38,7 @@ class VacationsController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, VacationsCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, CaptainVacationCreateRequest::class, (object)$data);
 
         $violations = $this->validator->validate($request);
 
@@ -49,7 +48,7 @@ class VacationsController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->vacationsService->create($request);
+        $result = $this->captainVacationService->create($request);
 
         return $this->response($result, self::CREATE);
     }
