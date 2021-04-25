@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class MySubscriptionsResponse
+class StoreOwnerMySubscriptionsResponse
 {
     public $id;
 

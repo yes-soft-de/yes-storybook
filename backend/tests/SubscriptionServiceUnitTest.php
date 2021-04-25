@@ -4,10 +4,10 @@ namespace App\Tests;
 
 use App\AutoMapping;
 use App\Entity\SubscriptionEntity;
-use App\Manager\SubscriptionManager;
-use App\Service\SubscriptionService;
-use App\Request\SubscriptionCreateRequest;
-use App\Response\SubscriptionResponse;
+use App\Manager\storeOwnersubscriptionServiceSubscriptionManager;
+use App\Service\storeOwnersubscriptionServiceSubscriptionService;
+use App\Request\storeOwnersubscriptionServiceSubscriptionCreateRequest;
+use App\Response\storeOwnersubscriptionServiceSubscriptionResponse;
 use App\Tests\fixtures\SubscriptionProvider;
 use PHPUnit\Framework\TestCase;
 

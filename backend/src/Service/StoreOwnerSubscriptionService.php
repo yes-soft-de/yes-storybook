@@ -4,41 +4,41 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Entity\SubscriptionEntity;
-use App\Manager\SubscriptionManager;
-use App\Request\SubscriptionCreateRequest;
-use App\Request\SubscriptionNextRequest;
-use App\Response\SubscriptionResponse;
-use App\Response\SubscriptionByIdResponse;
-use App\Response\MySubscriptionsResponse;
-use App\Response\RemainingOrdersResponse;
+use App\Manager\StoreOwnerSubscriptionManager;
+use App\Request\StoreOwnerSubscriptionCreateRequest;
+use App\Request\StoreOwnerSubscriptionNextRequest;
+use App\Response\StoreOwnerSubscriptionResponse;
+use App\Response\StoreOwnerSubscriptionByIdResponse;
+use App\Response\StoreOwnerMySubscriptionsResponse;
+use App\Response\StoreOwnerRemainingOrdersResponse;
 use dateTime;
 
-class SubscriptionService
+class StoreOwnerSubscriptionService
 {
     private $autoMapping;
-    private $subscriptionManager;
+    private $storeOwnerSubscriptionManager;
 
-    public function __construct(AutoMapping $autoMapping, SubscriptionManager $subscriptionManager)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerSubscriptionManager $storeOwnerSubscriptionManager)
     {
         $this->autoMapping = $autoMapping;
-        $this->subscriptionManager = $subscriptionManager;
+        $this->storeOwnerSubscriptionManager = $storeOwnerSubscriptionManager;
     }
 
-    public function create(SubscriptionCreateRequest $request)
+    public function create(StoreOwnerSubscriptionCreateRequest $request)
     {
-        $subscriptionResult = $this->subscriptionManager->create($request);
+        $subscriptionResult = $this->storeOwnerSubscriptionManager->create($request);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, SubscriptionResponse::class, $subscriptionResult);
+        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
     }
     
-    public function nxetSubscription(SubscriptionNextRequest $request)
+    public function nxetSubscription(StoreOwnerSubscriptionNextRequest $request)
     {
        $SubscriptionCurrent = $this->getSubscriptionCurrent($request->getOwnerID());
        
        $status = $this->subscriptionIsActive($request->getOwnerID(), $SubscriptionCurrent['id']);
-        $subscriptionResult = $this->subscriptionManager->nxetSubscription($request, $status);
+        $subscriptionResult = $this->storeOwnerSubscriptionManager->nxetSubscription($request, $status);
         
-        return $this->autoMapping->map(SubscriptionEntity::class, SubscriptionResponse::class, $subscriptionResult);
+        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
     }
 
     public function getSubscriptionForOwner($ownerID)
@@ -50,7 +50,7 @@ class SubscriptionService
             $this->saveFinisheAuto($ownerID, $currentSubscription['id']);
        }
 
-       $subscriptions = $this->subscriptionManager->getSubscriptionForOwner($ownerID);
+       $subscriptions = $this->storeOwnerSubscriptionManager->getSubscriptionForOwner($ownerID);
       
         foreach ($subscriptions as $subscription) {
             $subscription['isCurrent'] = "no";
@@ -61,39 +61,39 @@ class SubscriptionService
             $subscription['isCurrent'] = $current;
             }
 
-            $response[] = $this->autoMapping->map("array", MySubscriptionsResponse::class, $subscription);
+            $response[] = $this->autoMapping->map("array", StoreOwnerMySubscriptionsResponse::class, $subscription);
         }
         return $response;
     }
   
     public function subscriptionUpdateState($request)
     {
-        $result = $this->subscriptionManager->subscriptionUpdateState($request);
+        $result = $this->storeOwnerSubscriptionManager->subscriptionUpdateState($request);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, SubscriptionResponse::class, $result);
+        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function updateFinishe($id, $status)
     {
-        $result = $this->subscriptionManager->updateFinishe($id, $status);
+        $result = $this->storeOwnerSubscriptionManager->updateFinishe($id, $status);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, SubscriptionResponse::class, $result);
+        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function changeIsFutureToFalse($id)
     {
-        $result = $this->subscriptionManager->changeIsFutureToFalse($id);
+        $result = $this->storeOwnerSubscriptionManager->changeIsFutureToFalse($id);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, SubscriptionResponse::class, $result);
+        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function getSubscriptionsPending()
     {
         $response = [];
-        $items = $this->subscriptionManager->getSubscriptionsPending();
+        $items = $this->storeOwnerSubscriptionManager->getSubscriptionsPending();
        
         foreach ($items as $item) {
-            $response[] = $this->autoMapping->map('array', SubscriptionByIdResponse::class, $item);
+            $response[] = $this->autoMapping->map('array', StoreOwnerSubscriptionByIdResponse::class, $item);
         }
         return $response;
     }
@@ -101,10 +101,10 @@ class SubscriptionService
     public function getSubscriptionById($id)
     {
         $response = [];
-        $items = $this->subscriptionManager->getSubscriptionById($id);
+        $items = $this->storeOwnerSubscriptionManager->getSubscriptionById($id);
       
         foreach ($items as $item) {
-            $response[] = $this->autoMapping->map('array', SubscriptionByIdResponse::class, $item);
+            $response[] = $this->autoMapping->map('array', StoreOwnerSubscriptionByIdResponse::class, $item);
         }
         return $response;
     }
@@ -113,7 +113,7 @@ class SubscriptionService
     {
         $this->saveFinisheAuto($ownerID, $subscribeId);
     
-        $item = $this->subscriptionManager->subscriptionIsActive($ownerID, $subscribeId);
+        $item = $this->storeOwnerSubscriptionManager->subscriptionIsActive($ownerID, $subscribeId);
         if ($item) {
           return  $item['status'];
         }
@@ -126,7 +126,7 @@ class SubscriptionService
     {
         $response = [];
         //Get full information for the current subscription
-        $remainingOrdersOfPackage = $this->subscriptionManager->getRemainingOrders($ownerID, $subscribeId);
+        $remainingOrdersOfPackage = $this->storeOwnerSubscriptionManager->getRemainingOrders($ownerID, $subscribeId);
         if ($remainingOrdersOfPackage['subscriptionEndDate']) {
    
             $endDate =date_timestamp_get($remainingOrdersOfPackage['subscriptionEndDate']);
@@ -152,8 +152,8 @@ class SubscriptionService
             }
             
         }
-        $response = $this->autoMapping->map('array', RemainingOrdersResponse::class, $remainingOrdersOfPackage);
-        $subscribeStauts = $this->subscriptionManager->subscriptionIsActive($ownerID, $subscribeId);
+        $response = $this->autoMapping->map('array', StoreOwnerRemainingOrdersResponse::class, $remainingOrdersOfPackage);
+        $subscribeStauts = $this->storeOwnerSubscriptionManager->subscriptionIsActive($ownerID, $subscribeId);
         
         if ($subscribeStauts['status']) {
             $response->subscriptionstatus = $subscribeStauts['status'];
@@ -167,21 +167,21 @@ class SubscriptionService
         $fromDate =new \DateTime($year . '-' . $month . '-01'); 
         $toDate = new \DateTime($fromDate->format('Y-m-d') . ' 1 month');
 
-        return $this->subscriptionManager->subscripeNewUsers($fromDate, $toDate);       
+        return $this->storeOwnerSubscriptionManager->subscripeNewUsers($fromDate, $toDate);       
      }
 
     public function dashboardContracts($year, $month)
     {
         $response = [];
 
-        $response[] = $this->subscriptionManager->countpendingContracts();
-        $response[] = $this->subscriptionManager->countDoneContracts();
+        $response[] = $this->storeOwnerSubscriptionManager->countpendingContracts();
+        $response[] = $this->storeOwnerSubscriptionManager->countDoneContracts();
         $response[] = $this->subscripeNewUsers($year, $month);
 
-        $subscriptionsPending = $this->subscriptionManager->getSubscriptionsPending();
+        $subscriptionsPending = $this->storeOwnerSubscriptionManager->getSubscriptionsPending();
        
         foreach ($subscriptionsPending as $item) {
-            $response[] = $this->autoMapping->map('array', SubscriptionByIdResponse::class, $item);
+            $response[] = $this->autoMapping->map('array', StoreOwnerSubscriptionByIdResponse::class, $item);
         }
         
         return $response;
@@ -189,12 +189,12 @@ class SubscriptionService
 
     public function getSubscriptionCurrent($ownerID)
     {
-        return $this->subscriptionManager->getSubscriptionCurrent($ownerID);
+        return $this->storeOwnerSubscriptionManager->getSubscriptionCurrent($ownerID);
     }
 
     public function getNextSubscription($ownerID)
     {
-        return $this->subscriptionManager->getNextSubscription($ownerID);
+        return $this->storeOwnerSubscriptionManager->getNextSubscription($ownerID);
     }
 
     public function packagebalance($ownerID)
@@ -208,7 +208,7 @@ class SubscriptionService
 
     public function totalAmountOfSubscriptions($ownerID)
     {
-        $items = $this->subscriptionManager->totalAmountOfSubscriptions($ownerID);
+        $items = $this->storeOwnerSubscriptionManager->totalAmountOfSubscriptions($ownerID);
         foreach($items as $item)
         {
             if (isset($result[$item['totalAmountOfSubscriptions']]))

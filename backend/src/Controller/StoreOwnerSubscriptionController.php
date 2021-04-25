@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\SubscriptionCreateRequest;
-use App\Request\SubscriptionNextRequest;
-// use App\Request\SubscriptionUpdateRequest;
-use App\Request\SubscriptionUpdateStateRequest;
-use App\Service\SubscriptionService;
+use App\Request\StoreOwnerSubscriptionCreateRequest;
+use App\Request\StoreOwnerSubscriptionNextRequest;
+use App\Request\StoreOwnerSubscriptionUpdateStateRequest;
+use App\Service\StoreOwnerSubscriptionService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,18 +16,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class SubscriptionController extends BaseController
+class StoreOwnerSubscriptionController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $subscriptionService;
+    private $storeOwnersubscriptionService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, SubscriptionService $subscriptionService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, storeOwnersubscriptionService $storeOwnersubscriptionService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->subscriptionService = $subscriptionService;
+        $this->storeOwnersubscriptionService = $storeOwnersubscriptionService;
     }
 
     /**
@@ -41,7 +40,7 @@ class SubscriptionController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, SubscriptionCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, StoreOwnerSubscriptionCreateRequest::class, (object)$data);
 
         $request->setOwnerID($this->getUserId());
 
@@ -53,7 +52,7 @@ class SubscriptionController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->subscriptionService->create($request);
+        $result = $this->storeOwnersubscriptionService->create($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -67,19 +66,11 @@ class SubscriptionController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, SubscriptionNextRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, StoreOwnerSubscriptionNextRequest::class, (object)$data);
 
         $request->setOwnerID($this->getUserId());
 
-        // $violations = $this->validator->validate($request);
-
-        // if (\count($violations) > 0) {
-        //     $violationsString = (string) $violations;
-
-        //     return new JsonResponse($violationsString, Response::HTTP_OK);
-        // }
-
-        $result = $this->subscriptionService->nxetSubscription($request);
+        $result = $this->storeOwnersubscriptionService->nxetSubscription($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -91,7 +82,7 @@ class SubscriptionController extends BaseController
      */
     public function getSubscriptionForOwner()
     {
-        $result = $this->subscriptionService->getSubscriptionForOwner($this->getUserId());
+        $result = $this->storeOwnersubscriptionService->getSubscriptionForOwner($this->getUserId());
 
         return $this->response($result, self::FETCH);
     }
@@ -106,7 +97,7 @@ class SubscriptionController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(\stdClass::class, SubscriptionUpdateStateRequest::class, (object) $data);
+        $request = $this->autoMapping->map(\stdClass::class, StoreOwnerSubscriptionUpdateStateRequest::class, (object) $data);
 
         $violations = $this->validator->validate($request);
 
@@ -116,7 +107,7 @@ class SubscriptionController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->subscriptionService->subscriptionUpdateState($request);
+        $result = $this->storeOwnersubscriptionService->subscriptionUpdateState($request);
 
         return $this->response($result, self::UPDATE);
     }
@@ -128,7 +119,7 @@ class SubscriptionController extends BaseController
      */
     public function getSubscriptionsPending()
     {
-        $result = $this->subscriptionService->getSubscriptionsPending();
+        $result = $this->storeOwnersubscriptionService->getSubscriptionsPending();
 
         return $this->response($result, self::FETCH);
     }
@@ -140,7 +131,7 @@ class SubscriptionController extends BaseController
      */
     public function getSubscriptionById($id)
     {
-        $result = $this->subscriptionService->getSubscriptionById($id);
+        $result = $this->storeOwnersubscriptionService->getSubscriptionById($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -153,7 +144,7 @@ class SubscriptionController extends BaseController
      */
     public function dashboardContracts($year, $month)
     {
-        $result = $this->subscriptionService->dashboardContracts($year, $month);
+        $result = $this->storeOwnersubscriptionService->dashboardContracts($year, $month);
 
         return $this->response($result, self::FETCH);
     }
@@ -166,7 +157,7 @@ class SubscriptionController extends BaseController
      */
     public function packagebalance()
     {
-        $result = $this->subscriptionService->packagebalance($this->getUserId());
+        $result = $this->storeOwnersubscriptionService->packagebalance($this->getUserId());
 
         return $this->response($result, self::FETCH);
     }

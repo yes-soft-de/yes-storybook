@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class RemainingOrdersResponse
+class StoreOwnerRemainingOrdersResponse
 {
     public $packageID;
     public $packagename;

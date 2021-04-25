@@ -12,7 +12,7 @@ use App\Request\SendNotificationRequest;
 use App\Response\OrderResponse;
 use App\Response\DeleteResponse;
 use App\Response\OrdersongoingResponse;
-use App\Service\SubscriptionService;
+use App\Service\StoreOwnerSubscriptionService;
 use App\Service\RatingService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use DateTime;
@@ -24,14 +24,14 @@ class OrderService
     private $acceptedOrderService;
     private $logService;
     private $branchesService;
-    private $subscriptionService;
+    private $storeOwnerSubscriptionService;
     private $userService;
     private $params;
     private $ratingService;
     private $notificationService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
-                                LogService $logService, BranchesService $branchesService, SubscriptionService $subscriptionService,
+                                LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
                                 , NotificationService $notificationService
                                 )
@@ -41,7 +41,7 @@ class OrderService
         $this->acceptedOrderService = $acceptedOrderService;
         $this->logService = $logService;
         $this->branchesService = $branchesService;
-        $this->subscriptionService = $subscriptionService;
+        $this->storeOwnerSubscriptionService = $storeOwnerSubscriptionService;
         $this->userService = $userService;
         $this->ratingService = $ratingService;
 
@@ -53,11 +53,11 @@ class OrderService
     {  
         $response = "please subscribe!!";
         //get Subscribe id Current
-        $subscriptionCurrent =  $this->subscriptionService->getSubscriptionCurrent($request->getOwnerID());
+        $subscriptionCurrent =  $this->storeOwnerSubscriptionService->getSubscriptionCurrent($request->getOwnerID());
       
         if ($subscriptionCurrent) {
              // check subscription
-            $status = $this->subscriptionService->subscriptionIsActive($request->getOwnerID(), $subscriptionCurrent['id']);
+            $status = $this->storeOwnerSubscriptionService->subscriptionIsActive($request->getOwnerID(), $subscriptionCurrent['id']);
         
             if ($status == 'active') {
                 $uuid = $this->logService->uuid();

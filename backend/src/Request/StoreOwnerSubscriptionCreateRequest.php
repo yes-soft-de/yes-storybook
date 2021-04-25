@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class SubscriptionNextRequest
+class StoreOwnerSubscriptionCreateRequest
 {
     private $ownerID;
 
@@ -31,6 +31,7 @@ class SubscriptionNextRequest
     {
         return $this->ownerID;
     }
+
     /**
      * @param mixed $status
      */
@@ -46,24 +47,19 @@ class SubscriptionNextRequest
     {
         return $this->status;
     }
-
     /**
-     * Get the value of isFuture
-     */ 
+     * @param mixed $isFuture
+     */
+    public function setIsFuture($isFuture): void
+    {
+        $this->isFuture = $isFuture;
+    }
+
+     /**
+     * @return mixed
+     */
     public function getIsFuture()
     {
         return $this->isFuture;
-    }
-
-    /**
-     * Set the value of isFuture
-     *
-     * @return  self
-     */ 
-    public function setIsFuture($isFuture)
-    {
-        $this->isFuture = $isFuture;
-
-        return $this;
     }
 }

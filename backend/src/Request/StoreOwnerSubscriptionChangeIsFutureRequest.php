@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class SubscriptionChangeIsFutureRequest
+class StoreOwnerSubscriptionChangeIsFutureRequest
 {
     private $id;
 

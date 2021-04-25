@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\Expr\Join;
  * @method SubscriptionEntity[]    findAll()
  * @method SubscriptionEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SubscriptionEntityRepository extends ServiceEntityRepository
+class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

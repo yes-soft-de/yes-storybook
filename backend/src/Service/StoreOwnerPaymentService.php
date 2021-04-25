@@ -7,21 +7,21 @@ use App\Entity\PaymentsEntity;
 use App\Manager\StoreOwnerPaymentManager;
 use App\Request\StoreOwnerPaymentCreateRequest;
 use App\Response\StoreOwnerCreateResponse;
-use App\Service\SubscriptionService;
+use App\Service\StoreOwnerSubscriptionService;
 use App\Service\BankService;
 use DateTime;
 class StoreOwnerPaymentService
 {
     private $autoMapping;
     private $storeOwnerPaymentManager;
-    private $subscriptionService;
+    private $storeOwnersubscriptionService;
     private $bankService;
 
-    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, SubscriptionService $subscriptionService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, StoreOwnerSubscriptionService $storeOwnersubscriptionService, BankService $bankService)
     {
         $this->autoMapping = $autoMapping;
         $this->storeOwnerPaymentManager = $storeOwnerPaymentManager;
-        $this->subscriptionService = $subscriptionService;
+        $this->storeOwnersubscriptionService = $storeOwnersubscriptionService;
         $this->bankService = $bankService;
     }
 
@@ -36,7 +36,7 @@ class StoreOwnerPaymentService
     {
        $response = [];
 
-       $totalAmountOfSubscriptions= $this->subscriptionService->totalAmountOfSubscriptions($ownerId);
+       $totalAmountOfSubscriptions= $this->storeOwnersubscriptionService->totalAmountOfSubscriptions($ownerId);
        $bank= $this->bankService->getAccount($ownerId);
        
         $items = $this->storeOwnerPaymentManager->getpaymentsForOwner($ownerId);
