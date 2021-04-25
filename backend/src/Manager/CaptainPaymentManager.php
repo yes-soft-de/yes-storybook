@@ -4,27 +4,27 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\PaymentsCaptainEntity;
-use App\Repository\PaymentsCaptainEntityRepository;
-use App\Request\PaymentCaptainCreateRequest;
+use App\Repository\CaptainPaymentEntityRepository;
+use App\Request\CaptainPaymentCreateRequest;
 // use App\Request\RatingUpdateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PaymentCaptainManager
+class CaptainPaymentManager
 {
     private $autoMapping;
     private $entityManager;
     private $repository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, PaymentsCaptainEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, CaptainPaymentEntityRepository $repository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
     }
 
-    public function create(PaymentCaptainCreateRequest $request)
+    public function create(CaptainPaymentCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(PaymentCaptainCreateRequest::class, PaymentsCaptainEntity::class, $request);
+        $entity = $this->autoMapping->map(CaptainPaymentCreateRequest::class, PaymentsCaptainEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();

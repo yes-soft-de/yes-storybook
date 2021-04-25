@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class PaymentCaptainCreateResponse
+class CaptainPaymentCreateResponse
 {
     public $id;
     public $captainId;

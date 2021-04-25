@@ -23,7 +23,7 @@ use App\Response\AllUsersResponse;
 use App\Response\RemainingOrdersResponse;
 // use App\Response\CaptainsOngoingResponse;
 use App\Response\CaptainTotalBounceResponse;
-use App\Service\PaymentCaptainService;
+use App\Service\CaptainPaymentService;
 use App\Service\BankService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -37,10 +37,10 @@ class UserService
     private $branchesService;
     private $recordService;
     private $params;
-    private $paymentCaptainService;
+    private $captainPaymentService;
     private $bankService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, RecordService $recordService, ParameterBagInterface $params, PaymentCaptainService $paymentCaptainService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, RecordService $recordService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
@@ -48,7 +48,7 @@ class UserService
         $this->ratingService = $ratingService;
         $this->branchesService = $branchesService;
         $this->recordService = $recordService;
-        $this->paymentCaptainService = $paymentCaptainService;
+        $this->captainPaymentService = $captainPaymentService;
         $this->bankService = $bankService;
 
         $this->params = $params->get('upload_base_url') . '/';
@@ -384,13 +384,13 @@ class UserService
         $item = $this->userManager->totalBounceCaptain($captainProfileId);
        
         if ($user == "captain") { 
-            $sumAmount = $this->paymentCaptainService->getSumAmount($captainId);
-            $payments = $this->paymentCaptainService->getpayments($captainId);
+            $sumAmount = $this->captainPaymentService->getSumAmount($captainId);
+            $payments = $this->captainPaymentService->getpayments($captainId);
             $bank = $this->bankService->getAccount($captainId);
         }
         if ($user == "admin") { 
-            $sumAmount = $this->paymentCaptainService->getSumAmount($item[0]['captainID']);
-            $payments = $this->paymentCaptainService->getpayments($item[0]['captainID']);
+            $sumAmount = $this->captainPaymentService->getSumAmount($item[0]['captainID']);
+            $payments = $this->captainPaymentService->getpayments($item[0]['captainID']);
             $bank = $this->bankService->getAccount($item[0]['captainID']);
         }
 

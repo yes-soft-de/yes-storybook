@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class PaymentCaptainCreateRequest
+class CaptainPaymentCreateRequest
 {
     private $captainId;
     private $amount;

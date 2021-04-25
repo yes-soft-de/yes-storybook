@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\PaymentCaptainCreateRequest;
-use App\Service\PaymentCaptainService;
+use App\Request\CaptainPaymentCreateRequest;
+use App\Service\CaptainPaymentService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +15,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
-class PaymentsCaptainController extends BaseController
+class CaptainPaymentController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $paymentService;
+    private $captainPaymentService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, PaymentCaptainService $paymentService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, CaptainPaymentService $captainPaymentService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->paymentService = $paymentService;
+        $this->captainPaymentService = $captainPaymentService;
     }
     
     /**
@@ -39,7 +39,7 @@ class PaymentsCaptainController extends BaseController
     {
             $data = json_decode($request->getContent(), true);
 
-            $request = $this->autoMapping->map(stdClass::class, PaymentCaptainCreateRequest::class, (object)$data);
+            $request = $this->autoMapping->map(stdClass::class, CaptainPaymentCreateRequest::class, (object)$data);
 
             $violations = $this->validator->validate($request);
 
@@ -48,7 +48,7 @@ class PaymentsCaptainController extends BaseController
 
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
-            $result = $this->paymentService->create($request);
+            $result = $this->captainPaymentService->create($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -61,7 +61,7 @@ class PaymentsCaptainController extends BaseController
       */
       public function getpaymentsForCaptain()
       {
-          $result = $this->paymentService->getpayments($this->getUserId());
+          $result = $this->captainPaymentService->getpayments($this->getUserId());
   
           return $this->response($result, self::FETCH);
       }
