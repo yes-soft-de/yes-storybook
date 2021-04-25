@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class PackageCreateRequest
+class DeliveryCompanyPackageCreateRequest
 {
     private $name;
 

@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class PackageResponse
+class DeliveryCompanyPackageResponse
 {
     public $id;
 

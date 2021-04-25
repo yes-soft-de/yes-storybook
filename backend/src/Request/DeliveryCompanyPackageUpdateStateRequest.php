@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class PackageUpdateStateRequest
+class DeliveryCompanyPackageUpdateStateRequest
 {
     private $id;
 

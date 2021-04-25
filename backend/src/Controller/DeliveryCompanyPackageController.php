@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\AutoMapping;
-use App\Request\PackageCreateRequest;
-use App\Request\PackageUpdateStateRequest;
-use App\Service\PackageService;
+use App\Request\DeliveryCompanyPackageCreateRequest;
+use App\Request\DeliveryCompanyPackageUpdateStateRequest;
+use App\Service\DeliveryCompanyPackageService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +15,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class PackageController extends BaseController
+class DeliveryCompanyPackageController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $packageService;
+    private $deliveryCompanyPackageService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, PackageService $packageService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, DeliveryCompanyPackageService $deliveryCompanyPackageService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->packageService = $packageService;
+        $this->deliveryCompanyPackageService = $deliveryCompanyPackageService;
     }
 
     /**
@@ -39,7 +39,7 @@ class PackageController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(stdClass::class, PackageCreateRequest::class, (object)$data);
+        $request = $this->autoMapping->map(stdClass::class, DeliveryCompanyPackageCreateRequest::class, (object)$data);
 
         $violations = $this->validator->validate($request);
 
@@ -49,7 +49,7 @@ class PackageController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->packageService->create($request);
+        $result = $this->deliveryCompanyPackageService->create($request);
 
         return $this->response($result, self::CREATE);
     }
@@ -60,7 +60,7 @@ class PackageController extends BaseController
      */
     public function getPackages()
     {
-        $result = $this->packageService->getPackages();
+        $result = $this->deliveryCompanyPackageService->getPackages();
 
         return $this->response($result, self::FETCH);
     }
@@ -72,7 +72,7 @@ class PackageController extends BaseController
      */
     public function getAllpackages()
     {
-        $result = $this->packageService->getAllpackages();
+        $result = $this->deliveryCompanyPackageService->getAllpackages();
 
         return $this->response($result, self::FETCH);
     }
@@ -83,7 +83,7 @@ class PackageController extends BaseController
      */
     public function getpackagesById($id)
     {
-        $result = $this->packageService->getpackagesById($id);
+        $result = $this->deliveryCompanyPackageService->getpackagesById($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -98,7 +98,7 @@ class PackageController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        $request = $this->autoMapping->map(\stdClass::class, PackageUpdateStateRequest::class, (object) $data);
+        $request = $this->autoMapping->map(\stdClass::class, DeliveryCompanyPackageUpdateStateRequest::class, (object) $data);
 
         $violations = $this->validator->validate($request);
 
@@ -108,7 +108,7 @@ class PackageController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->packageService->update($request);
+        $result = $this->deliveryCompanyPackageService->update($request);
 
         return $this->response($result, self::UPDATE);
     }

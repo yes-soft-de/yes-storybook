@@ -3,10 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\PackageEntity;
-use App\Entity\UserProfileEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method PackageEntity|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,7 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
  * @method PackageEntity[]    findAll()
  * @method PackageEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PackageEntityRepository extends ServiceEntityRepository
+class DeliveryCompanyPackageEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
