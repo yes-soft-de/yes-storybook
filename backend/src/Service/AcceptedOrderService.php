@@ -8,12 +8,10 @@ use App\Manager\AcceptedOrderManager;
 use App\Request\AcceptedOrderCreateRequest;
 use App\Response\AcceptedOrderResponse;
 use App\Response\AcceptedOrdersResponse;
-use App\Response\CaptainTotalEarnResponse;
-use App\Response\ongoingCaptainsResponse;
 use App\Service\LogService;
 use App\Service\RoomIdHelperService;
+use App\Service\DateFactoryService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use DateTime;
 class AcceptedOrderService
 {
     private $autoMapping;
@@ -21,13 +19,15 @@ class AcceptedOrderService
     private $logService;
     private $roomIdHelperService;
     private $params;
+    private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
+    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->acceptedOrderManager = $acceptedOrderManager;
         $this->logService = $logService;
         $this->roomIdHelperService = $roomIdHelperService;
+        $this->dateFactoryService = $dateFactoryService;
 
         $this->params = $params->get('upload_base_url') . '/';
     }
@@ -49,27 +49,9 @@ class AcceptedOrderService
         return $response;
     }
 
-    // public function getOrderStatusForCaptain($captainID, $orderId)
-    // {
-    //     $item = $this->acceptedOrderManager->getOrderStatusForCaptain($captainID, $orderId);
-    //     if ($item) {
-    //         $record = $this->logService->getRecordByOrderId($orderId);
-    //     }
-    //     $response = $this->autoMapping->map('array', AcceptedOrderResponse::class, $item);
-    //     $response->record =  $record;
-    //     return $response;
-    // }
-
     public function countOrdersDeliverd($userID)
     {
         return $this->acceptedOrderManager->countOrdersDeliverd($userID);
-    }
-
-    public function update($request)
-    {
-        $result = $this->acceptedOrderManager->update($request);
-
-        return $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $result);
     }
 
     public function updateAcceptedOrderStateByCaptain($orderId, $state)
@@ -88,7 +70,7 @@ class AcceptedOrderService
         $response = [];
         $orders = $this->acceptedOrderManager->getAcceptedOrderByCaptainId($captainId);
         foreach ($orders as $order){
-            $order['record'] = $this->logService->getrecordByOrderId($order['orderID']);
+            $order['record'] = $this->logService->getLogByOrderId($order['orderID']);
             $response[] = $this->autoMapping->map('array', AcceptedOrdersResponse::class, $order);
         }
     
@@ -115,14 +97,11 @@ class AcceptedOrderService
          return $this->acceptedOrderManager->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
      }
 
-    public function getTopCaptainsInThisMonth()
+    public function getTopCaptainsInLastMonthDate():array
     {
-        $response = [];
-        $dateNow =new DateTime("now");
-        $year = $dateNow->format("Y");
-        $month = $dateNow->format("m");
-        $date = $this->returnDate($year, $month);
-       $topCaptains = $this->acceptedOrderManager->getTopCaptainsInThisMonth($date[0],$date[1]);
+       $response = [];
+       $date = $this->dateFactoryService->returnLastMonthDate();
+       $topCaptains = $this->acceptedOrderManager->getTopCaptainsInLastMonthDate($date[0],$date[1]);
      
         foreach ($topCaptains as $topCaptain) {
             $topCaptain['imageURL'] = $topCaptain['image'];
@@ -135,17 +114,6 @@ class AcceptedOrderService
     
        return $response;
    }
-
-   public function returnDate($year, $month)
-   {
-       $fromDate =new \DateTime($year . '-' . $month . '-01'); 
-       $toDate = new \DateTime($fromDate->format('Y-m-d') . ' -1 month');
-    //    if you want get top captains in this month must change (-1 month) to (+1 month) in back line
-    //    return [$fromDate,  $toDate];
-
-    //    if you want get top captains in last month must change (+1 month) to (-1 month) in back line
-       return [$toDate,  $fromDate];
-    }
 
     public function specialLinkCheck($bool)
     {

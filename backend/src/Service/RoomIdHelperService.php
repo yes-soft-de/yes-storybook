@@ -5,9 +5,7 @@ namespace App\Service;
 use App\AutoMapping;
 use App\Entity\RoomIdHelperEntity;
 use App\Manager\RoomIdHelperManager;
-use App\Request\RoomIdHelperCreateRequest;
 use App\Response\RoomIdHelperResponse;
-use Doctrine\DBAL\Types\ObjectType;
 
 class RoomIdHelperService
 {
@@ -30,4 +28,16 @@ class RoomIdHelperService
     {
         return $this->roomIdHelperManager->getByRoomID($roomID);
     }
+
+    public function roomIdGenerate()
+    {
+       $data = random_bytes(16);
+
+       $data[0] = chr(ord('c') ); 
+       $data[1] = chr(ord('4') ); 
+       $data[2] = chr(ord('d') ); 
+       $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+       $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+       return  vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+   }
 }

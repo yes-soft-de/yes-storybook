@@ -8,13 +8,14 @@ use App\Manager\OrderManager;
 use App\Request\OrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
-use App\Request\SendNotificationRequest;
+// use App\Request\SendNotificationRequest;
 use App\Response\OrderResponse;
 use App\Response\DeleteResponse;
 use App\Response\OrdersongoingResponse;
 use App\Service\StoreOwnerSubscriptionService;
 use App\Service\RatingService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\Service\RoomIdHelperService;
 use DateTime;
 
 class OrderService
@@ -28,12 +29,14 @@ class OrderService
     private $userService;
     private $params;
     private $ratingService;
-    private $notificationService;
+    // private $notificationService;
+    private $roomIdHelperService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
                                 LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
-                                , NotificationService $notificationService
+                                // , NotificationService $notificationService
+                               , RoomIdHelperService $roomIdHelperService
                                 )
     {
         $this->autoMapping = $autoMapping;
@@ -44,9 +47,10 @@ class OrderService
         $this->storeOwnerSubscriptionService = $storeOwnerSubscriptionService;
         $this->userService = $userService;
         $this->ratingService = $ratingService;
+        $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
-        $this->notificationService = $notificationService;
+        // $this->notificationService = $notificationService;
     }
 
     public function create(OrderCreateRequest $request)
@@ -60,13 +64,13 @@ class OrderService
             $status = $this->storeOwnerSubscriptionService->subscriptionIsActive($request->getOwnerID(), $subscriptionCurrent['id']);
         
             if ($status == 'active') {
-                $uuid = $this->logService->uuid();
+                $uuid = $this->roomIdHelperService->roomIdGenerate();
                 
                 $item = $this->orderManager->create($request, $uuid, $subscriptionCurrent['id']);
 
                 //start-----> notification
                 // try{
-                $this->notificationService->notificationToCaptain();
+                // $this->notificationService->notificationToCaptain();
                 //notification <------end
                 // }
                 // catch (\Exception $e)
@@ -126,7 +130,7 @@ class OrderService
         $order = $this->orderManager->orderById($orderId);
         if ($order) {
             $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($orderId);
-            $record = $this->logService->getRecordByOrderId($orderId);
+            $record = $this->logService->getLogByOrderId($orderId);
         }
         $response = $this->autoMapping->map('array', OrderResponse::class, $order);
 
@@ -149,7 +153,7 @@ class OrderService
                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
             }
             $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
-            $order['record'] = $this->logService->getrecordByOrderId($order['id']);
+            $order['record'] = $this->logService->getLogByOrderId($order['id']);
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
 
@@ -168,7 +172,7 @@ class OrderService
             $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
             $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($orderId);
 
-            $order['record'] = $this->logService->getrecordByOrderId($orderId);
+            $order['record'] = $this->logService->getLogByOrderId($orderId);
         }
         $response = $this->autoMapping->map('array', OrderResponse::class, $order);
 
@@ -187,7 +191,7 @@ class OrderService
                 if ($order['fromBranch'] == true){
                     $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                 }
-                $order['record'] = $this->logService->getrecordByOrderId($order['id']);
+                $order['record'] = $this->logService->getLogByOrderId($order['id']);
                
                 $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
@@ -210,7 +214,7 @@ class OrderService
                 }
             $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
           
-            $order['record'] = $this->logService->getrecordByOrderId($order['id']);
+            $order['record'] = $this->logService->getLogByOrderId($order['id']);
             
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
@@ -231,7 +235,7 @@ class OrderService
             $acceptedOrderUpdateState = $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState());
         
             $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($item->getId());
-            $record = $this->logService->getRecordByOrderId($item->getId());
+            $record = $this->logService->getLogByOrderId($item->getId());
         }
         $response = $this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
         if($item) {
@@ -241,11 +245,11 @@ class OrderService
 
         //start-----> notification
         // try {
-        $notificationRequest = new SendNotificationRequest();
-        $notificationRequest->setUserIdOne($item->getOwnerID());
-        $notificationRequest->setUserIdTwo($acceptedOrder[0]['captainID']);
+        // $notificationRequest = new SendNotificationRequest();
+        // $notificationRequest->setUserIdOne($item->getOwnerID());
+        // $notificationRequest->setUserIdTwo($acceptedOrder[0]['captainID']);
 
-        $this->notificationService->notificationOrderUpdate($notificationRequest);
+        // $this->notificationService->notificationOrderUpdate($notificationRequest);
         //notification <------end
         // }
         // catch (\Exception $e)
@@ -394,7 +398,7 @@ class OrderService
                  }
  
              $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
-             $order['record'] = $this->logService->getrecordByOrderId($order['id']); 
+             $order['record'] = $this->logService->getLogByOrderId($order['id']); 
              $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
          }
      }
@@ -416,7 +420,7 @@ class OrderService
                     }
 
                 $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
-                $order['record'] = $this->logService->getrecordByOrderId($order['id']); 
+                $order['record'] = $this->logService->getLogByOrderId($order['id']); 
                 $firstDate = $this->logService->getFirstDate($order['id']); 
                 $lastDate = $this->logService->getLastDate($order['id']);
                

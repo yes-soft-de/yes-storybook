@@ -158,7 +158,7 @@ class AcceptedOrderEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getTopCaptainsInThisMonth($fromDate, $toDate)
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
     {
         return $this->createQueryBuilder('AcceptedOrderEntity')
 

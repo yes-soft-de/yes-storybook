@@ -7,24 +7,24 @@ use App\Entity\SupportEntity;
 use App\Manager\SupportManager;
 use App\Request\SupportCreateRequest;
 use App\Response\SupportResponse;
-
+use App\Service\RoomIdHelperService;
 
 class SupportService
 {
     private $autoMapping;
     private $supportManager;
-    private $logService;
+    private $roomIdHelperService;
 
-    public function __construct(AutoMapping $autoMapping, SupportManager $supportManager, LogService $logService)
+    public function __construct(AutoMapping $autoMapping, SupportManager $supportManager, RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->supportManager = $supportManager;
-        $this->logService = $logService;
+        $this->roomIdHelperService = $roomIdHelperService;
     }
 
     public function create(SupportCreateRequest $request)
     {
-        $uuid =$this->logService->uuid();
+        $uuid = $this->roomIdHelperService->roomIdGenerate();
         
         $reprot = $this->supportManager->create($request, $uuid);
 

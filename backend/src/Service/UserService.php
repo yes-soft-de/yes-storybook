@@ -24,6 +24,7 @@ use App\Response\RemainingOrdersResponse;
 use App\Response\CaptainTotalBounceResponse;
 use App\Service\CaptainPaymentService;
 use App\Service\BankService;
+use App\Service\RoomIdHelperService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
@@ -38,8 +39,9 @@ class UserService
     private $params;
     private $captainPaymentService;
     private $bankService;
+    private $roomIdHelperService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService,  RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
@@ -49,6 +51,7 @@ class UserService
         $this->logService = $logService;
         $this->captainPaymentService = $captainPaymentService;
         $this->bankService = $bankService;
+        $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
     }
@@ -71,7 +74,7 @@ class UserService
 
     public function userProfileCreate(UserProfileCreateRequest $request)
     {
-        $uuid = $this->logService->uuid();
+        $uuid = $this->roomIdHelperService->roomIdGenerate();
         $userProfile = $this->userManager->userProfileCreate($request, $uuid);
 
         if ($userProfile instanceof UserProfile) {
@@ -146,7 +149,7 @@ class UserService
 
     public function captainprofileCreate(CaptainProfileCreateRequest $request)
     { 
-        $uuid = $this->logService->uuid();
+        $uuid = $this->roomIdHelperService->roomIdGenerate();
         $captainProfile = $this->userManager->captainprofileCreate($request, $uuid);
         
         if ($captainProfile instanceof CaptainProfileEntity) {

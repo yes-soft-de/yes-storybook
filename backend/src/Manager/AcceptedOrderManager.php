@@ -7,7 +7,6 @@ use App\Entity\AcceptedOrderEntity;
 use App\Manager\OrderManager;
 use App\Repository\AcceptedOrderEntityRepository;
 use App\Request\AcceptedOrderCreateRequest;
-use App\Request\AcceptedOrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -15,7 +14,6 @@ class AcceptedOrderManager
 {
     private $autoMapping;
     private $entityManager;
-    private $encoder;
     private $repository;
     private $orderManager;
 
@@ -47,32 +45,9 @@ class AcceptedOrderManager
         return $item;
     }
 
-    // public function getOrderStatusForCaptain($captainID, $orderId)
-    // {
-    //     return $this->repository->getOrderStatusForCaptain($captainID, $orderId);
-    // }
-
     public function countOrdersDeliverd($userID)
     {
         return $this->repository->countOrdersDeliverd($userID);
-    }
-
-    public function update(AcceptedOrderUpdateRequest $request)
-    {
-        $acceptedOrderEntity = $this->repository->find($request->getId());
-        if ($acceptedOrderEntity) {
-            $request->setDate($acceptedOrderEntity->getDate());
-            $request->setDuration($acceptedOrderEntity->getDuration());
-            
-        }
-        if (!$acceptedOrderEntity) {
-            return null;
-        }
-        $acceptedOrderEntity = $this->autoMapping->mapToObject(AcceptedOrderUpdateRequest::class, AcceptedOrderEntity::class, $request, $acceptedOrderEntity);
-
-        $this->entityManager->flush();
-
-        return $acceptedOrderEntity;
     }
 
     public function updateAcceptedOrderStateByCaptain($orderId, $state)
@@ -122,9 +97,9 @@ class AcceptedOrderManager
         return $this->repository->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
     }
 
-    public function getTopCaptainsInThisMonth($fromDate, $toDate)
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
     {
-        return $this->repository->getTopCaptainsInThisMonth($fromDate, $toDate);
+        return $this->repository->getTopCaptainsInLastMonthDate($fromDate, $toDate);
     }
 
     public function countOrdersInDay($captainID, $fromDate, $toDate)

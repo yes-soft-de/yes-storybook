@@ -77,32 +77,7 @@ class AcceptedOrderController extends BaseController
     //     return $this->response($result, self::FETCH);
     // }
 
-    /**
-     * @Route("acceptedOrder", name="updateAcceptedOrder", methods={"PUT"})
-     * @IsGranted("ROLE_CAPTAIN")
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function update(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-
-        $request = $this->autoMapping->map(\stdClass::class, AcceptedOrderUpdateRequest::class, (object) $data);
-
-        $violations = $this->validator->validate($request);
-
-        if (\count($violations) > 0) {
-            $violationsString = (string) $violations;
-
-            return new JsonResponse($violationsString, Response::HTTP_OK);
-        }
-
-        $result = $this->acceptedOrderService->update($request);
-
-        return $this->response($result, self::UPDATE);
-    }
-
-       /**
+     /**
       * @Route("/getAcceptedOrder",        name="getAcceptedOrderByCaptainId", methods={"GET"})
       * @IsGranted("ROLE_CAPTAIN")
       * @return                  JsonResponse
@@ -145,9 +120,9 @@ class AcceptedOrderController extends BaseController
      * @param                                     Request $request
      * @return                                    JsonResponse
      */
-    public function getTopCaptainsInThisMonth()
+    public function getTopCaptainsInLastMonthDate()
     {
-        $result = $this->acceptedOrderService->getTopCaptainsInThisMonth();
+        $result = $this->acceptedOrderService->getTopCaptainsInLastMonthDate();
 
         return $this->response($result, self::FETCH);
     }
