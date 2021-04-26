@@ -9,20 +9,22 @@ use App\Request\StoreOwnerPaymentCreateRequest;
 use App\Response\StoreOwnerCreateResponse;
 use App\Service\StoreOwnerSubscriptionService;
 use App\Service\BankService;
-use DateTime;
+use App\Service\DateFactoryService;
 class StoreOwnerPaymentService
 {
     private $autoMapping;
     private $storeOwnerPaymentManager;
     private $storeOwnersubscriptionService;
     private $bankService;
+    private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, StoreOwnerSubscriptionService $storeOwnersubscriptionService, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, StoreOwnerSubscriptionService $storeOwnersubscriptionService, BankService $bankService, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->storeOwnerPaymentManager = $storeOwnerPaymentManager;
         $this->storeOwnersubscriptionService = $storeOwnersubscriptionService;
         $this->bankService = $bankService;
+        $this->dateFactoryService = $dateFactoryService;
     }
 
     public function create(StoreOwnerPaymentCreateRequest $request)
@@ -46,7 +48,7 @@ class StoreOwnerPaymentService
         $NewAmount = $this->storeOwnerPaymentManager->getNewAmount($ownerId);
         $nextPay = null;
         if ($NewAmount){
-            $nextPay = $this->subtractTowDates($NewAmount[0]['date']);
+            $nextPay = $this->dateFactoryService->returnNextPaymentDate($NewAmount[0]['date']);
         }
         $sumPayments = $sumPayments[0]['sumPayments'];
        
@@ -68,32 +70,4 @@ class StoreOwnerPaymentService
       $arr['bank']= $bank;
       return $arr;
     }
-
-    public  function subtractTowDates($date) {
-      
-        $d =$date->format('y-m-d');
-        $dateAfterMonth = date_modify(new DateTime($d),'+ 1month');
-        $now = new DateTime('now');
-        $difference =  $now->diff($dateAfterMonth);
-        
-        if($now < $dateAfterMonth) {
-            return $this->format_interval($difference);
-        }
-        if($now >= $dateAfterMonth) {
-            return "it is time for payment";
-        }
-        // return $this->format_interval($difference);
-    }
-
-    function format_interval($interval) {
-        $result = "";
-        if ($interval->y) { $result .= $interval->format("%y years "); }
-        if ($interval->m) { $result .= $interval->format("%m months "); }
-        if ($interval->d) { $result .= $interval->format("%d days "); }
-        if ($interval->h) { $result .= $interval->format("%h hours "); }
-        if ($interval->i) { $result .= $interval->format("%i minutes "); }
-        if ($interval->s) { $result .= $interval->format("%s seconds "); }
-    
-        return $result;
-    } 
 }

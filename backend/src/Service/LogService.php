@@ -6,23 +6,25 @@ use App\AutoMapping;
 use App\Entity\LogEntity;
 use App\Manager\LogManager;
 use App\Response\LogResponse;
-
+use App\Service\DateFactoryService;
 class LogService
 {
     private $autoMapping;
     private $logManager;
+    private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, LogManager $logManager)
+    public function __construct(AutoMapping $autoMapping, LogManager $logManager, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->logManager = $logManager;
+        $this->dateFactoryService = $dateFactoryService;
     }
 
-    public function create($orderID, $state)
+    public function createLog($orderID, $state)
     {
-        $record['orderID'] = $orderID;
-        $record['state'] = $state;
-        $result = $this->logManager->create($record);
+        $item['orderID'] = $orderID;
+        $item['state'] = $state;
+        $result = $this->logManager->create($item);
 
         return $this->autoMapping->map(LogEntity::class, LogResponse::class, $result);
     }
@@ -40,20 +42,20 @@ class LogService
     public function getLogsWithcompletionTime($orderId)
     {
         $response=[];
-        $records = $this->getLogsByOrderId($orderId);
+        $items = $this->getLogsByOrderId($orderId);
       
-        foreach ($records as $rec) {
+        foreach ($items as $item) {
          
-            $firstDate = $this->getFirstDate($rec['orderID']); 
-            $lastDate = $this->getLastDate($rec['orderID']);
+            $firstDate = $this->getFirstDate($item['orderID']); 
+            $lastDate = $this->getLastDate($item['orderID']);
            
             if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                $state['completionTime'] = $this->subtractTowDates($firstDate[0]['date'], $lastDate[0]['date']);
+                $state['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']);
             }
             
             $state['finalOrder'] = $lastDate[0]['state'] ;
-            $orderStatus = $this->autoMapping->map('array', RecordResponse::class, $state);
-            $record[] = $this->autoMapping->map('array', RecordResponse::class, $rec);
+            $orderStatus = $this->autoMapping->map('array', LogResponse::class, $state);
+            $record[] = $this->autoMapping->map('array', LogResponse::class, $item);
 
     } 
         if($firstDate && $lastDate) {
@@ -63,32 +65,13 @@ class LogService
         return  $response;
     }
 
-    public  function subtractTowDates($firstDate, $lastDate) {
-        
-        $difference = $firstDate->diff($lastDate);
-        
-        return $this->format_interval($difference);
-    }
-
     public function getFirstDate($orderId)
     {
-        return $this->recordManager->getFirstDate($orderId);
+        return $this->logManager->getFirstDate($orderId);
     }
 
     public function getLastDate($orderId)
     {
-        return $this->recordManager->getLastDate($orderId);
-    }
-
-    function format_interval($interval) {
-        $result = "";
-        if ($interval->y) { $result .= $interval->format("%y years "); }
-        if ($interval->m) { $result .= $interval->format("%m months "); }
-        if ($interval->d) { $result .= $interval->format("%d days "); }
-        if ($interval->h) { $result .= $interval->format("%h hours "); }
-        if ($interval->i) { $result .= $interval->format("%i minutes "); }
-        if ($interval->s) { $result .= $interval->format("%s seconds "); }
-    
-        return $result;
+        return $this->logManager->getLastDate($orderId);
     } 
 }

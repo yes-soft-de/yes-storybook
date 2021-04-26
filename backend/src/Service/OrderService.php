@@ -16,7 +16,7 @@ use App\Service\StoreOwnerSubscriptionService;
 use App\Service\RatingService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\RoomIdHelperService;
-use DateTime;
+use App\Service\DateFactoryService;
 
 class OrderService
 {
@@ -31,12 +31,13 @@ class OrderService
     private $ratingService;
     // private $notificationService;
     private $roomIdHelperService;
+    private $dateFactoryService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
                                 LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
-                               , RoomIdHelperService $roomIdHelperService
+                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService
                                 )
     {
         $this->autoMapping = $autoMapping;
@@ -48,7 +49,7 @@ class OrderService
         $this->userService = $userService;
         $this->ratingService = $ratingService;
         $this->roomIdHelperService = $roomIdHelperService;
-
+        $this->dateFactoryService = $dateFactoryService;
         $this->params = $params->get('upload_base_url') . '/';
         // $this->notificationService = $notificationService;
     }
@@ -78,7 +79,7 @@ class OrderService
         
                 // }
                 if ($item) {
-                    $this->logService->create($item->getId(), $item->getState());
+                    $this->logService->createLog($item->getId(), $item->getState());
                 }
                 $response =$this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
             }
@@ -320,7 +321,7 @@ class OrderService
                 $lastDate = $this->logService->getLastDate($item['id']);
                 $item['currentStage'] =  $lastDate;
                 if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                    $item['completionTime'] = $this->subtractTowDates($firstDate[0]['date'], $lastDate[0]['date']); 
+                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
                 }
 
                 $response []= $this->autoMapping->map('array', OrderResponse::class, $item);
@@ -341,7 +342,7 @@ class OrderService
                 $lastDate = $this->logService->getLastDate($item['id']);
                 $item['currentStage'] =  $lastDate;
                 if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                    $item['completionTime'] = $this->subtractTowDates($firstDate[0]['date'], $lastDate[0]['date']); 
+                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
                 }
                 $response []= $this->autoMapping->map('array', OrderResponse::class, $item);
             }
@@ -368,100 +369,67 @@ class OrderService
         return $response;
     }
 
-    public function returnDate($year, $month)
-    {
-        $fromDate =new \DateTime($year . '-' . $month . '-01'); 
-        $toDate = new \DateTime($fromDate->format('Y-m-d h:i:s') . ' -1 month');
-        // if you want get top captains in this month must change (-1 month) to (+1 month) in back line
-    //    return [$fromDate,  $toDate];
-
-        // if you want get top captains in last month must change (+1 month) to (-1 month) in back line
-       return [$toDate,  $fromDate];
-    
-     }
-
      public function getAllOrdersAndCount($year, $month, $userId, $userType)
      {
-         $response = [];
-         $date = $this->returnDate($year, $month);
-         
-    if ($userType == "owner") {
-        $response['countOrdersInMonth'] = $this->orderManager->countOrdersInMonthForOwner($date[0], $date[1], $userId);
-        $response['countOrdersInDay'] = $this->orderManager->countOrdersInDay($userId, $date[0],$date[1]);
-         
-         $ordersInMonth = $this->orderManager->getAllOrders($date[0], $date[1], $userId);
-        
-         foreach ($ordersInMonth as $order) {
+        $response = [];
+        $date = $this->dateFactoryService->returnRequiredDate($year, $month);
 
-             if ($order['fromBranch']){
-                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
-                 }
- 
-             $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
-             $order['record'] = $this->logService->getLogByOrderId($order['id']); 
-             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
-         }
-     }
+        if ($userType == "owner") {
+            $response['countOrdersInMonth'] = $this->orderManager->countOrdersInMonthForOwner($date[0], $date[1], $userId);
+            $response['countOrdersInDay'] = $this->orderManager->countOrdersInDay($userId, $date[0],$date[1]);
 
-    if ($userType == "captain") {
-       
-        $response['countOrdersInMonth'] = $this->acceptedOrderService->countOrdersInMonthForCaptin($date[0], $date[1], $userId);
-        $response['countOrdersInDay'] = $this->acceptedOrderService->countOrdersInDay($userId, $date[0],$date[1]);
-        $acceptedInMonth = $this->acceptedOrderService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
-         
-        foreach ($acceptedInMonth as $item){
-            $ordersInMonth =  $this->orderManager->orderById($item['orderID']);  
-          
-        
+            $ordersInMonth = $this->orderManager->getAllOrders($date[0], $date[1], $userId);
+            
             foreach ($ordersInMonth as $order) {
-    
+
                 if ($order['fromBranch']){
                     $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                     }
-
+    
                 $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
                 $order['record'] = $this->logService->getLogByOrderId($order['id']); 
-                $firstDate = $this->logService->getFirstDate($order['id']); 
-                $lastDate = $this->logService->getLastDate($order['id']);
-               
-                if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                    $order['completionTime'] = $this->subtractTowDates($firstDate[0]['date'], $lastDate[0]['date']);
-                    
-                }
-                
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
-                
             }
         }
-     }
-         return $response;
-    }
 
-    function format_interval($interval) {
-        $result = "";
-        if ($interval->y) { $result .= $interval->format("%y years "); }
-        if ($interval->m) { $result .= $interval->format("%m months "); }
-        if ($interval->d) { $result .= $interval->format("%d days "); }
-        if ($interval->h) { $result .= $interval->format("%h hours "); }
-        if ($interval->i) { $result .= $interval->format("%i minutes "); }
-        if ($interval->s) { $result .= $interval->format("%s seconds "); }
-    
-        return $result;
-    } 
-    function subtractTowDates($firstDate, $lastDate) {
+        if ($userType == "captain") {
         
-        $difference = $firstDate->diff($lastDate);
+            $response['countOrdersInMonth'] = $this->acceptedOrderService->countOrdersInMonthForCaptin($date[0], $date[1], $userId);
+            $response['countOrdersInDay'] = $this->acceptedOrderService->countOrdersInDay($userId, $date[0],$date[1]);
+            $acceptedInMonth = $this->acceptedOrderService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
+            
+            foreach ($acceptedInMonth as $item){
+                $ordersInMonth =  $this->orderManager->orderById($item['orderID']);  
+            
+            
+                foreach ($ordersInMonth as $order) {
         
-        return $this->format_interval($difference);
+                    if ($order['fromBranch']){
+                        $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                        }
+
+                    $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+                    $order['record'] = $this->logService->getLogByOrderId($order['id']); 
+                    $firstDate = $this->logService->getFirstDate($order['id']); 
+                    $lastDate = $this->logService->getLastDate($order['id']);
+                
+                    if($firstDate[0]['date'] && $lastDate[0]['date']) {
+                        $order['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']);
+                        
+                    }
+                    
+                    $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
+                    
+                }
+            }
+        }
+        return $response;
     }
     
     public function getTopOwners()
     {
-        $response=[];
-        $dateNow =new DateTime("now");
-        $year = $dateNow->format("Y");
-        $month = $dateNow->format("m");
-       $date = $this->returnDate($year, $month);
+       $response=[];
+       $date = $this->dateFactoryService->returnLastMonthDate();
  
        $topOwners = $this->orderManager->getTopOwners($date[0],$date[1]);
      

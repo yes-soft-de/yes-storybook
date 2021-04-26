@@ -39,7 +39,7 @@ class AcceptedOrderService
         if (!$acceptedOrder) {
             $item = $this->acceptedOrderManager->create($request);
             if ($item) {
-               $this->logService->create($item->getOrderID(), $item->getState());
+               $this->logService->createLog($item->getOrderID(), $item->getState());
                $data = $this->getOwnerIdAndUuid($item->getOrderID());
                $this->roomIdHelperService->create($data);
             }
@@ -57,7 +57,7 @@ class AcceptedOrderService
     public function updateAcceptedOrderStateByCaptain($orderId, $state)
     {
         $item = $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
-        $this->logService->create($orderId, $state);
+        $this->logService->createLog($orderId, $state);
     }
 
     public function getAcceptedOrderByOrderId($orderId)

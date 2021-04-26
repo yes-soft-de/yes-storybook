@@ -11,17 +11,20 @@ use App\Response\StoreOwnerSubscriptionResponse;
 use App\Response\StoreOwnerSubscriptionByIdResponse;
 use App\Response\StoreOwnerMySubscriptionsResponse;
 use App\Response\StoreOwnerRemainingOrdersResponse;
+use App\Service\DateFactoryService;
 use dateTime;
 
 class StoreOwnerSubscriptionService
 {
     private $autoMapping;
     private $storeOwnerSubscriptionManager;
+    private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, StoreOwnerSubscriptionManager $storeOwnerSubscriptionManager)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerSubscriptionManager $storeOwnerSubscriptionManager, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->storeOwnerSubscriptionManager = $storeOwnerSubscriptionManager;
+        $this->dateFactoryService = $dateFactoryService;
     }
 
     public function create(StoreOwnerSubscriptionCreateRequest $request)
@@ -163,11 +166,8 @@ class StoreOwnerSubscriptionService
 
     public function subscripeNewUsers($year, $month)
     {
-       
-        $fromDate =new \DateTime($year . '-' . $month . '-01'); 
-        $toDate = new \DateTime($fromDate->format('Y-m-d') . ' 1 month');
-
-        return $this->storeOwnerSubscriptionManager->subscripeNewUsers($fromDate, $toDate);       
+        $date = $this->dateFactoryService->returnRequiredDate($year, $month);
+        return $this->storeOwnerSubscriptionManager->subscripeNewUsers($date[0], $date[1]);       
      }
 
     public function dashboardContracts($year, $month)

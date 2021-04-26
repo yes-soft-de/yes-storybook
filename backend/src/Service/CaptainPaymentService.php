@@ -7,24 +7,21 @@ use App\Manager\CaptainPaymentManager;
 use App\Entity\CaptainPaymentEntity;
 use App\Request\CaptainPaymentCreateRequest;
 use App\Response\CaptainPaymentCreateResponse;
-use App\Service\BankService;
 
 class CaptainPaymentService
 {
     private $autoMapping;
     private $captainPaymentManager;
-    private $bankService;
 
-    public function __construct(AutoMapping $autoMapping, CaptainPaymentManager $captainPaymentManager, BankService $bankService)
+    public function __construct(AutoMapping $autoMapping, CaptainPaymentManager $captainPaymentManager)
     {
         $this->autoMapping = $autoMapping;
         $this->captainPaymentManager = $captainPaymentManager;
-        $this->bankService = $bankService;
     }
 
-    public function create(CaptainPaymentCreateRequest $request)
+    public function createCaptainPayment(CaptainPaymentCreateRequest $request)
     {
-        $item = $this->captainPaymentManager->create($request);
+        $item = $this->captainPaymentManager->createCaptainPayment($request);
 
         return $this->autoMapping->map(CaptainPaymentEntity::class, CaptainPaymentCreateResponse::class, $item);
     }

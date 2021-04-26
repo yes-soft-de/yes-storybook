@@ -22,7 +22,7 @@ class CaptainPaymentManager
         $this->repository = $repository;
     }
 
-    public function create(CaptainPaymentCreateRequest $request)
+    public function createCaptainPayment(CaptainPaymentCreateRequest $request)
     {
         $entity = $this->autoMapping->map(CaptainPaymentCreateRequest::class, CaptainPaymentEntity::class, $request);
 
