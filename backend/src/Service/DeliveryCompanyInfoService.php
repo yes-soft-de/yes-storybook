@@ -58,10 +58,10 @@ class DeliveryCompanyInfoService
        
     }
 
-     public function  getcompanyinfoAllOwner($userId)
+     public function  getAllCompanyInfoForStoreOwner($userId)
     {
         $respons=[];
-        $results = $this->deliveryCompanyInfoManager->getcompanyinfoAllOwner($userId);
+        $results = $this->deliveryCompanyInfoManager->getAllCompanyInfoForStoreOwner($userId);
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', DeliveryCompanyInfoResponse::class, $result);
@@ -70,10 +70,10 @@ class DeliveryCompanyInfoService
        
     }
 
-    public function  getcompanyinfoAllCaptain($userId)
+    public function  getAllCompanyInfoForCaptain($userId)
     {
         $respons=[];
-        $results = $this->deliveryCompanyInfoManager->getcompanyinfoAllCaptain($userId);
+        $results = $this->deliveryCompanyInfoManager->getAllCompanyInfoForCaptain($userId);
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', DeliveryCompanyInfoResponse::class, $result);

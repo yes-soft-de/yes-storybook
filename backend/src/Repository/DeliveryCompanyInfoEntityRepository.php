@@ -39,7 +39,7 @@ class DeliveryCompanyInfoEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function  getcompanyinfoAllOwner($userId)
+    public function  getAllCompanyInfoForStoreOwner($userId)
     {
         return $this->createQueryBuilder('CompanyInfoEntity') 
             ->select('CompanyInfoEntity.id, CompanyInfoEntity.phone, CompanyInfoEntity.phone2, CompanyInfoEntity.whatsapp, CompanyInfoEntity.fax, CompanyInfoEntity.bank, CompanyInfoEntity.stc, CompanyInfoEntity.email')
@@ -50,7 +50,7 @@ class DeliveryCompanyInfoEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getcompanyinfoAllCaptain($userId)
+    public function getAllCompanyInfoForCaptain($userId)
     {
         return $this->createQueryBuilder('CompanyInfoEntity') 
             ->select('CompanyInfoEntity.id, CompanyInfoEntity.phone, CompanyInfoEntity.phone2, CompanyInfoEntity.whatsapp, CompanyInfoEntity.fax, CompanyInfoEntity.bank, CompanyInfoEntity.stc, CompanyInfoEntity.email')

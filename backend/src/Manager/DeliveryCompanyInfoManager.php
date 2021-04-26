@@ -63,13 +63,13 @@ class DeliveryCompanyInfoManager
        return $this->deliveryCompanyInfoEntityRepository->getcompanyinfoAll();
     }
 
-    public function getcompanyinfoAllOwner($userId)
+    public function getAllCompanyInfoForStoreOwner($userId)
     {
-       return $this->deliveryCompanyInfoEntityRepository->getcompanyinfoAllOwner($userId);
+       return $this->deliveryCompanyInfoEntityRepository->getAllCompanyInfoForStoreOwner($userId);
     }
 
-    public function getcompanyinfoAllCaptain($userId)
+    public function getAllCompanyInfoForCaptain($userId)
     {
-       return $this->deliveryCompanyInfoEntityRepository->getcompanyinfoAllCaptain($userId);
+       return $this->deliveryCompanyInfoEntityRepository->getAllCompanyInfoForCaptain($userId);
     }
 }

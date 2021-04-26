@@ -19,7 +19,7 @@ class LogEntityRepository extends ServiceEntityRepository
         parent::__construct($registry, LogEntity::class);
     }
 
-    public function getRecordByOrderId($orderId)
+    public function getLogByOrderId($orderId)
     {
         return $this->createQueryBuilder('RecordEntity')
             ->select('RecordEntity.id, RecordEntity.orderID, RecordEntity.state, RecordEntity.startTime')
@@ -33,7 +33,7 @@ class LogEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getRecordsByOrderId($orderId)
+    public function getLogsByOrderId($orderId)
     {
         return $this->createQueryBuilder('RecordEntity')
             ->select('RecordEntity.id, RecordEntity.orderID, RecordEntity.state, RecordEntity.date')

@@ -27,20 +27,20 @@ class LogService
         return $this->autoMapping->map(LogEntity::class, LogResponse::class, $result);
     }
     
-    public function getrecordByOrderId($orderId)
+    public function getLogByOrderId($orderId)
     {
-        return $this->logManager->getrecordByOrderId($orderId);
+        return $this->logManager->getLogByOrderId($orderId);
     }
 
-    public function getRecordsByOrderId($orderId)
+    public function getLogsByOrderId($orderId)
     {
-        return $this->logManager->getRecordsByOrderId($orderId);
+        return $this->logManager->getLogsByOrderId($orderId);
     }
 
-    public function getRecordsWithcompletionTime($orderId)
+    public function getLogsWithcompletionTime($orderId)
     {
         $response=[];
-        $records = $this->getRecordsByOrderId($orderId);
+        $records = $this->getLogsByOrderId($orderId);
       
         foreach ($records as $rec) {
          

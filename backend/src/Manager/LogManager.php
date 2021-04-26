@@ -32,14 +32,14 @@ class LogManager
         return $logEntity;
     }
 
-    public function getRecordByOrderId($orderId)
+    public function getLogByOrderId($orderId)
     {
-        return $this->repository->getRecordByOrderId($orderId);
+        return $this->repository->getLogByOrderId($orderId);
     }
 
-    public function getRecordsByOrderId($orderId)
+    public function getLogsByOrderId($orderId)
     {
-        return $this->repository->getRecordsByOrderId($orderId);
+        return $this->repository->getLogsByOrderId($orderId);
     }
 
     public function getFirstDate($orderId)

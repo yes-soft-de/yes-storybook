@@ -83,9 +83,9 @@ class SupportController extends BaseController
      * @IsGranted("ROLE_ADMIN")
      * @return JsonResponse
      */
-    public function reportUpdateNewMeessageStatus($id)
+    public function updateReportNewMessageStatus($id)
     {
-        $result = $this->supportService->reportUpdateNewMeessageStatus($id);
+        $result = $this->supportService->updateReportNewMessageStatus($id);
 
         return $this->response($result, self::FETCH);
     }

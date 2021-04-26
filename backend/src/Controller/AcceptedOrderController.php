@@ -7,8 +7,6 @@ use App\Service\AcceptedOrderService;
 use App\Service\UserService;
 use App\Request\AcceptedOrderCreateRequest;
 use App\Request\AcceptedOrderUpdateRequest;
-use App\Request\AcceptedOrderUpdateStateByCaptainRequest;
-use App\Request\GetByIdRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

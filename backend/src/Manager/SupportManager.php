@@ -67,7 +67,7 @@ class SupportManager
         return null;
     }
 
-    public function reportUpdateNewMeessageStatus($id)
+    public function updateReportNewMessageStatus($id)
     {
         
             $entity = $this->repository->find($id);

@@ -228,7 +228,7 @@ class OrderService
     {
         $item = $this->orderManager->orderUpdateStateByCaptain($request);
         if($item) {
-            $acceptedOrderUpdateState = $this->acceptedOrderService->acceptedOrderUpdateStateByCaptain($item->getId(), $request->getState());
+            $acceptedOrderUpdateState = $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState());
         
             $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($item->getId());
             $record = $this->logService->getRecordByOrderId($item->getId());
@@ -309,7 +309,7 @@ class OrderService
         
             foreach ($items as $item) {
                 
-                $item['record'] = $this->logService->getRecordsByOrderId($item['id']);
+                $item['record'] = $this->logService->getLogsByOrderId($item['id']);
                 $item['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($item['id']);
 
                 $firstDate = $this->logService->getFirstDate($item['id']); 
@@ -328,7 +328,7 @@ class OrderService
             
             foreach ($items as $item) {
                 
-                $item['record'] = $this->logService->getRecordsByOrderId($item['id']);
+                $item['record'] = $this->logService->getLogsByOrderId($item['id']);
                 $item['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($item['id']);
                
                 $item['rating'] = $this->ratingService->ratingByCaptainID($item['acceptedOrder'][0]['captainID']);

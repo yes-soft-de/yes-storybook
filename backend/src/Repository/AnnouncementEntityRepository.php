@@ -19,7 +19,7 @@ class AnnouncementEntityRepository extends ServiceEntityRepository
         parent::__construct($registry, AnnouncementEntity::class);
     }
 
-    public function  getUpdateById($id)
+    public function  getAnnouncementById($id)
     {
         return $this->createQueryBuilder('UpdateEntity') 
             ->andWhere("UpdateEntity.id = :id ")
@@ -28,7 +28,7 @@ class AnnouncementEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function  getUpdateAll()
+    public function  getAllAnnouncements()
     {
         return $this->createQueryBuilder('UpdateEntity') 
             ->select('UpdateEntity.id, UpdateEntity.title, UpdateEntity.content')

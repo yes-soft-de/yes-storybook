@@ -33,17 +33,17 @@ class AnnouncementService
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
     }
 
-    public function  getUpdateById($id)
+    public function  getAnnouncementById($id)
     {
-        $result = $this->announcementManager->getUpdateById($id);
+        $result = $this->announcementManager->getAnnouncementById($id);
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
   
     }
 
-    public function  getUpdateAll()
+    public function  getAllAnnouncements()
     {
         $respons=[];
-        $results = $this->announcementManager->getUpdateAll();
+        $results = $this->announcementManager->getAllAnnouncements();
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', AnnouncementResponse::class, $result);

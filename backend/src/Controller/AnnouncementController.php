@@ -83,9 +83,9 @@ class AnnouncementController extends BaseController
      * @Route("update/{id}", name="getUpdateById", methods={"GET"})
      * @return JsonResponse
      */
-    public function getUpdateById($id)
+    public function getAnnouncementById($id)
     {
-        $result = $this->announcementService->getUpdateById($id);
+        $result = $this->announcementService->getAnnouncementById($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -94,9 +94,9 @@ class AnnouncementController extends BaseController
      * @Route("updateall", name="getUpdateAll", methods={"GET"})
      * @return JsonResponse
      */
-    public function getUpdateAll()
+    public function getAllAnnouncements()
     {
-        $result = $this->announcementService->getUpdateAll();
+        $result = $this->announcementService->getAllAnnouncements();
 
         return $this->response($result, self::FETCH);
     }

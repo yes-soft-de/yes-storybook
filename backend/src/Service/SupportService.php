@@ -56,9 +56,9 @@ class SupportService
         return $this->supportManager->update($item, $NewMessageStatus);
      }
 
-    public function reportUpdateNewMeessageStatus($id)
+    public function updateReportNewMessageStatus($id)
     {
-        return $this->supportManager->reportUpdateNewMeessageStatus($id);
+        return $this->supportManager->updateReportNewMessageStatus($id);
    
        
      }

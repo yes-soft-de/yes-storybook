@@ -107,11 +107,11 @@ class DeliveryCompanyInfoController extends BaseController
     public function getcompanyinfoAllForUser()
     {
         if ($this->isGranted('ROLE_OWNER')) {
-             $result = $this->deliveryCompanyInfoService->getcompanyinfoAllOwner($this->getUserId());
+             $result = $this->deliveryCompanyInfoService->getAllCompanyInfoForStoreOwner($this->getUserId());
         }
 
         if ($this->isGranted('ROLE_CAPTAIN')) {
-             $result = $this->deliveryCompanyInfoService->getcompanyinfoAllCaptain($this->getUserId());
+             $result = $this->deliveryCompanyInfoService->getAllCompanyInfoForCaptain($this->getUserId());
         }
         return $this->response($result, self::FETCH);
     }

@@ -100,7 +100,7 @@ class BranchesController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateIsActiveBranche(Request $request)
+    public function updateBranchAvailability(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -114,7 +114,7 @@ class BranchesController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->branchesService->updateIsActiveBranche($request);
+        $result = $this->branchesService->updateBranchAvailability($request);
 
         return $this->response($result, self::UPDATE);
     }

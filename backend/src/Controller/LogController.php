@@ -23,9 +23,9 @@ class LogController extends BaseController
       * @param                     Request $request
       * @return                    JsonResponse
       */
-      public function getRecordByOrderId($orderId)
+      public function getLogByOrderId($orderId)
       {
-          $result = $this->logService->getRecordByOrderId($orderId);
+          $result = $this->logService->getLogByOrderId($orderId);
   
           return $this->response($result, self::FETCH);
       }
@@ -35,9 +35,9 @@ class LogController extends BaseController
       * @param                     Request $request
       * @return                    JsonResponse
       */
-      public function getRecordsByOrderId($orderId)
+      public function getLogsByOrderId($orderId)
       {
-          $result = $this->logService->getRecordsWithcompletionTime($orderId);
+          $result = $this->logService->getLogsWithcompletionTime($orderId);
   
           return $this->response($result, self::FETCH);
       }

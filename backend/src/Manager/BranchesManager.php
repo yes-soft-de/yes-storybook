@@ -63,7 +63,7 @@ class BranchesManager
         return $this->branchesRepository->find($Id);
     }
 
-    public function updateIsActiveBranche(BranchesDeleteRequest $request)
+    public function updateBranchAvailability(BranchesDeleteRequest $request)
     {
         $entity = $this->branchesRepository->find($request->getId());
 

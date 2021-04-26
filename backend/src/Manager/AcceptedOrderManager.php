@@ -9,10 +9,8 @@ use App\Repository\AcceptedOrderEntityRepository;
 use App\Request\AcceptedOrderCreateRequest;
 use App\Request\AcceptedOrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
-use App\Request\GetByIdRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use DateTime;
 class AcceptedOrderManager
 {
     private $autoMapping;
@@ -77,7 +75,7 @@ class AcceptedOrderManager
         return $acceptedOrderEntity;
     }
 
-    public function acceptedOrderUpdateStateByCaptain($orderId, $state)
+    public function updateAcceptedOrderStateByCaptain($orderId, $state)
     {
         $acceptedOrderEntity = $this->repository->getByOrderId($orderId);
 

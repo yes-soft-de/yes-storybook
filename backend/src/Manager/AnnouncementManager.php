@@ -47,14 +47,14 @@ class AnnouncementManager
         return $entity;
     } 
 
-    public function getUpdateById($id)
+    public function getAnnouncementById($id)
     {
-        return $this->announcementEntityRepository->getUpdateById($id);
+        return $this->announcementEntityRepository->getAnnouncementById($id);
     }
 
-    public function getUpdateAll()
+    public function getAllAnnouncements()
     {
-       return $this->announcementEntityRepository->getUpdateAll();
+       return $this->announcementEntityRepository->getAllAnnouncements();
     }
 
 }

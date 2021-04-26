@@ -72,9 +72,9 @@ class AcceptedOrderService
         return $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $result);
     }
 
-    public function acceptedOrderUpdateStateByCaptain($orderId, $state)
+    public function updateAcceptedOrderStateByCaptain($orderId, $state)
     {
-        $item = $this->acceptedOrderManager->acceptedOrderUpdateStateByCaptain($orderId, $state);
+        $item = $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
         $this->logService->create($orderId, $state);
     }
 
