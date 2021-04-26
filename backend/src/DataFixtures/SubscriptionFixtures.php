@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\SubscriptionEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -15,7 +15,7 @@ class SubscriptionFixtures extends Fixture
             $startDate = \DateTime::createFromFormat('Ymd', '2019' . $i . '01');
             $endDate = \DateTime::createFromFormat('Ymd', '2020' . $i . '01');
 
-            $subscription = new SubscriptionEntity();
+            $subscription = new StoreOwnerSubscriptionEntity();
 
             $subscription->setOwnerID("a" . $i);
             $subscription->setPackageID($i);

@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\SubscriptionEntity;
-use App\Entity\PackageEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use App\Entity\OrderEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,16 +11,16 @@ use App\Entity\UserProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @method SubscriptionEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method SubscriptionEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method SubscriptionEntity[]    findAll()
- * @method SubscriptionEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method StoreOwnerSubscriptionEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method StoreOwnerSubscriptionEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method StoreOwnerSubscriptionEntity[]    findAll()
+ * @method StoreOwnerSubscriptionEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SubscriptionEntity::class);
+        parent::__construct($registry, StoreOwnerSubscriptionEntity::class);
     }
 
     public function getSubscriptionForOwner($userId)
@@ -28,7 +28,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('subscription')
             ->select('subscription.id', 'subscription.packageID', 'packageEntity.name', 'subscription.startDate', 'subscription.endDate', 'subscription.status', 'subscription.note')
 
-            ->leftJoin(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
+            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
             ->andWhere("subscription.ownerID = :userId")
 
@@ -45,7 +45,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
         
             ->select('subscription.id','subscription.status',  'packageEntity.name as packageName', 'subscription.startDate','subscription.endDate', 'subscription.note as subscriptionNote', 'userProfileEntity.userName', 'packageEntity.note as packageNote')
 
-            ->Join(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
+            ->Join(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
             ->join(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
@@ -62,7 +62,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 
             ->select('subscription.id','subscription.status',  'packageEntity.name as packageName', 'subscription.startDate','subscription.endDate', 'subscription.note as subscriptionNote', 'userProfileEntity.userName', 'packageEntity.note as packageNote')
 
-            ->leftJoin(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
+            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
             ->join(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
@@ -137,7 +137,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
-            ->leftJoin(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
+            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
             
             ->andWhere('subscription.ownerID=:ownerID')
             ->andWhere('subscription.id=:id')
@@ -210,7 +210,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('subscription')
             ->select('packageEntity.cost * count(subscription.id) as totalAmountOfSubscriptions')
 
-            ->leftJoin(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
+            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
             ->andWhere('subscription.ownerID=:ownerID')
             ->addGroupBy('subscription.packageID')

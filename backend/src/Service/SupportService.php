@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\ReportEntity;
+use App\Entity\SupportEntity;
 use App\Manager\SupportManager;
 use App\Request\SupportCreateRequest;
 use App\Response\SupportResponse;
@@ -28,7 +28,7 @@ class SupportService
         
         $reprot = $this->supportManager->create($request, $uuid);
 
-        return $this->autoMapping->map(ReportEntity::class, SupportResponse::class, $reprot);
+        return $this->autoMapping->map(SupportEntity::class, SupportResponse::class, $reprot);
     }
 
     public function getReports()

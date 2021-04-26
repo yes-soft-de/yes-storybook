@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\VacationsEntity;
+use App\Entity\CaptainVacationEntity;
 use App\Manager\CaptainVacationManager;
 use App\Request\CaptainVacationCreateRequest;
 use App\Response\CaptainVacationResponse;
@@ -28,7 +28,7 @@ class CaptainVacationService
         if ($result) {
            $this->userService->captainvacationbyadmin($request); 
         }
-        $respnose = $this->autoMapping->map(VacationsEntity::class, CaptainVacationResponse::class, $result);
+        $respnose = $this->autoMapping->map(CaptainVacationEntity::class, CaptainVacationResponse::class, $result);
         
         return $respnose;
     }

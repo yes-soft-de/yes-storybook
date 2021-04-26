@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\UserProfileEntity;
-use App\Entity\SubscriptionEntity;
-use App\Entity\PackageEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use App\Entity\BranchesEntity;
 use App\Entity\OrderEntity;
 use App\Entity\CaptainProfileEntity;
@@ -68,9 +68,9 @@ class UserProfileEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('profile')
             ->select('subscriptionEntity.id as subscriptionID', 'subscriptionEntity.status as subscriptionstatus', 'subscriptionEntity.packageID as packageID', 'packageEntity.name as packagename', 'packageEntity.orderCount - count(orderEntity.id) as remainingOrders', 'count(orderEntity.id) as countOrdersDelivered', 'subscriptionEntity.startDate as subscriptionStartDate', 'subscriptionEntity.endDate as subscriptionEndDate')
 
-            ->leftJoin(SubscriptionEntity::class, 'subscriptionEntity', Join::WITH, 'subscriptionEntity.ownerID = profile.userID')
+            ->leftJoin(StoreOwnerSubscriptionEntity::class, 'subscriptionEntity', Join::WITH, 'subscriptionEntity.ownerID = profile.userID')
 
-            ->leftJoin(PackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscriptionEntity.packageID')
+            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscriptionEntity.packageID')
 
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'orderEntity.ownerID = profile.userID')
             

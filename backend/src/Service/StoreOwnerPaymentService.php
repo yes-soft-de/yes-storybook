@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\PaymentsEntity;
+use App\Entity\StoreOwnerPaymentEntity;
 use App\Manager\StoreOwnerPaymentManager;
 use App\Request\StoreOwnerPaymentCreateRequest;
 use App\Response\StoreOwnerCreateResponse;
@@ -29,7 +29,7 @@ class StoreOwnerPaymentService
     {
         $item = $this->storeOwnerPaymentManager->create($request);
 
-        return $this->autoMapping->map(PaymentsEntity::class, StoreOwnerCreateResponse::class, $item);
+        return $this->autoMapping->map(StoreOwnerPaymentEntity::class, StoreOwnerCreateResponse::class, $item);
     }
 
     public function getpaymentsForOwner($ownerId, $admin='null')

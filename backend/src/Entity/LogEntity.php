@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\RecordEntityRepository;
+use App\Repository\LogEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass=RecordEntityRepository::class)
+ * @ORM\Entity(repositoryClass=LogEntity::class)
  */
-class RecordEntity
+class LogEntity
 {
     /**
      * @ORM\Id

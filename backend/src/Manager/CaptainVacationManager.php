@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\VacationsEntity;
+use App\Entity\CaptainVacationEntity;
 use App\Repository\CaptainVacationEntityRepository;
 use App\Request\CaptainVacationCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +23,7 @@ class CaptainVacationManager
 
     public function create(CaptainVacationCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(CaptainVacationCreateRequest::class, VacationsEntity::class, $request);
+        $entity = $this->autoMapping->map(CaptainVacationCreateRequest::class, CaptainVacationEntity::class, $request);
 
         $entity->setStartDate($request->getStartDate());
         $entity->setEndDate($request->getEndDate());

@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\RecordEntity;
+use App\Entity\LogEntity;
 use App\Manager\LogManager;
 use App\Response\LogResponse;
 
@@ -24,7 +24,7 @@ class LogService
         $record['state'] = $state;
         $result = $this->logManager->create($record);
 
-        return $this->autoMapping->map(RecordEntity::class, LogResponse::class, $result);
+        return $this->autoMapping->map(LogEntity::class, LogResponse::class, $result);
     }
     
     public function getrecordByOrderId($orderId)

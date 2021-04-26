@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\ReportEntity;
+use App\Entity\SupportEntity;
 use App\Repository\SupportEntityRepository;
 use App\Request\SupportCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +24,7 @@ class SupportManager
     public function create(SupportCreateRequest $request, $uuid)
     {
         $request->setUuid($uuid);
-        $entity = $this->autoMapping->map(SupportCreateRequest::class, ReportEntity::class, $request);
+        $entity = $this->autoMapping->map(SupportCreateRequest::class, SupportEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -58,7 +58,7 @@ class SupportManager
             }
             $entity->setNewMessageStatus($NewMessageStatus);
         
-            $entity = $this->autoMapping->mapToObject(ReportEntity::class, ReportEntity::class, $entity, $entity);
+            $entity = $this->autoMapping->mapToObject(SupportEntity::class, SupportEntity::class, $entity, $entity);
 
             $this->entityManager->flush();
 
@@ -77,7 +77,7 @@ class SupportManager
             }
             $entity->setNewMessageStatus(false);
         
-            $entity = $this->autoMapping->mapToObject(ReportEntity::class, ReportEntity::class, $entity, $entity);
+            $entity = $this->autoMapping->mapToObject(SupportEntity::class, SupportEntity::class, $entity, $entity);
 
             $this->entityManager->flush();
 

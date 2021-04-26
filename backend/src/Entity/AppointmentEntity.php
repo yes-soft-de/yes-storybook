@@ -6,9 +6,9 @@ use App\Repository\AppointmentEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DatingEntityRepository::class)
+ * @ORM\Entity(repositoryClass=AppointmentEntityRepository::class)
  */
-class DatingEntity
+class AppointmentEntity
 {
     /**
      * @ORM\Id

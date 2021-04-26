@@ -2,24 +2,24 @@
 
 namespace App\Repository;
 
-use App\Entity\DatingEntity;
+use App\Entity\AppointmentEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method DatingEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method DatingEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method DatingEntity[]    findAll()
- * @method DatingEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AppointmentEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AppointmentEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AppointmentEntity[]    findAll()
+ * @method AppointmentEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AppointmentEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DatingEntity::class);
+        parent::__construct($registry, AppointmentEntity::class);
     }
 
-    public function datings()
+    public function getAllAppointements()
     {
         return $this->createQueryBuilder('DatingEntityRepository')
             ->select('DatingEntityRepository.id','DatingEntityRepository.userName', 'DatingEntityRepository.phone', 'DatingEntityRepository.isDone')

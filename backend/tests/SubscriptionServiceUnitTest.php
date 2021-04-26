@@ -3,7 +3,7 @@
 namespace App\Tests;
 
 use App\AutoMapping;
-use App\Entity\SubscriptionEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
 use App\Manager\storeOwnersubscriptionServiceSubscriptionManager;
 use App\Service\storeOwnersubscriptionServiceSubscriptionService;
 use App\Request\storeOwnersubscriptionServiceSubscriptionCreateRequest;

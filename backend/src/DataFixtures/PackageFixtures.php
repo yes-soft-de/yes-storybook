@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\PackageEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -11,7 +11,7 @@ class PackageFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 20; $i++) {
-            $package = new PackageEntity();
+            $package = new DeliveryCompanyPackageEntity();
 
             $package->setName("p" . $i);
             $package->setCity("fixture city");

@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\DatingEntity;
+use App\Entity\AppointmentEntity;
 use App\Manager\AppointmentManager;
 use App\Request\AppointmentCreateRequest;
 use App\Response\AppointmentResponse;
@@ -23,13 +23,13 @@ class AppointmentService
     {
         $reprot = $this->appointmentManager->create($request);
 
-        return $this->autoMapping->map(DatingEntity::class, AppointmentResponse::class, $reprot);
+        return $this->autoMapping->map(AppointmentEntity::class, AppointmentResponse::class, $reprot);
     }
 
-    public function datings()
+    public function getAllAppointements()
     {
         $response = [];
-        $items = $this->appointmentManager->datings();
+        $items = $this->appointmentManager->getAllAppointements();
         foreach ($items as $item) {
         $response[] =  $this->autoMapping->map('array', AppointmentResponse::class, $item);
         }
@@ -40,6 +40,6 @@ class AppointmentService
     {
         $result = $this->appointmentManager->update($request);
 
-        return $this->autoMapping->map(DatingEntity::class, AppointmentResponse::class, $result);
+        return $this->autoMapping->map(AppointmentEntity::class, AppointmentResponse::class, $result);
     }
 }

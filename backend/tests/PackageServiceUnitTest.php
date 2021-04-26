@@ -3,7 +3,7 @@
 namespace App\Tests;
 
 use App\AutoMapping;
-use App\Entity\PackageEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use App\Manager\PackageManager;
 use App\Service\PackageService;
 use App\Request\PackageCreateRequest;

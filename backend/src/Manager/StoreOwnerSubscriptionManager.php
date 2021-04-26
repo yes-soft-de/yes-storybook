@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\SubscriptionEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
 use App\Repository\StoreOwnerSubscriptionEntityRepository;
 use App\Request\StoreOwnerSubscriptionCreateRequest;
 use App\Request\StoreOwnerSubscriptionNextRequest;
@@ -30,7 +30,7 @@ class StoreOwnerSubscriptionManager
         // NOTE: change active to inactive 
         $request->setStatus('active');
         $request->setIsFuture(0);
-        $subscriptionEntity = $this->autoMapping->map(StoreOwnerSubscriptionCreateRequest::class, SubscriptionEntity::class, $request);
+        $subscriptionEntity = $this->autoMapping->map(StoreOwnerSubscriptionCreateRequest::class, StoreOwnerSubscriptionEntity::class, $request);
 
         $this->entityManager->persist($subscriptionEntity);
         $this->entityManager->flush();
@@ -50,7 +50,7 @@ class StoreOwnerSubscriptionManager
         else{
             $request->setIsFuture(0);
         }
-        $subscriptionEntity = $this->autoMapping->map(SubscriptionNextRequest::class, SubscriptionEntity::class, $request);
+        $subscriptionEntity = $this->autoMapping->map(SubscriptionNextRequest::class, StoreOwnerSubscriptionEntity::class, $request);
     // tell talal and mohammed befor active    
     // to save subscribe end date automatic
        // $subscriptionEntity->setEndDate(date_modify(new DateTime('now'),'+1 month'));
@@ -77,7 +77,7 @@ class StoreOwnerSubscriptionManager
             return null;
         }
 
-        $subscribeEntity = $this->autoMapping->mapToObject(StoreOwnerSubscriptionUpdateStateRequest::class, SubscriptionEntity::class, $request, $subscribeEntity);
+        $subscribeEntity = $this->autoMapping->mapToObject(StoreOwnerSubscriptionUpdateStateRequest::class, StoreOwnerSubscriptionEntity::class, $request, $subscribeEntity);
 
         $this->entityManager->flush();
 
@@ -94,7 +94,7 @@ class StoreOwnerSubscriptionManager
             return null;
         }
 
-        $subscribeEntity = $this->autoMapping->map(StoreOwnerSubscriptionUpdateFinisheRequest::class, SubscriptionEntity::class, $subscribeEntity);
+        $subscribeEntity = $this->autoMapping->map(StoreOwnerSubscriptionUpdateFinisheRequest::class, StoreOwnerSubscriptionEntity::class, $subscribeEntity);
 
         $this->entityManager->flush();
 

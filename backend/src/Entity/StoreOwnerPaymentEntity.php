@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PaymentsCaptainEntityRepository;
+use App\Repository\StoreOwnerPaymentEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
 /**
- * @ORM\Entity(repositoryClass=PaymentsCaptainEntityRepository::class)
+ * @ORM\Entity(repositoryClass=StoreOwnerPaymentEntityRepository::class)
  */
-class PaymentsCaptainEntity
+class StoreOwnerPaymentEntity
 {
     /**
      * @ORM\Id
@@ -19,9 +18,9 @@ class PaymentsCaptainEntity
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $captainId;
+    private $ownerId;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -39,14 +38,14 @@ class PaymentsCaptainEntity
         return $this->id;
     }
 
-    public function getCaptainId(): ?string
+    public function getOwnerId(): ?string
     {
-        return $this->captainId;
+        return $this->ownerId;
     }
 
-    public function setCaptainId(string $captainId): self
+    public function setOwnerId(?string $ownerId): self
     {
-        $this->captainId = $captainId;
+        $this->ownerId = $ownerId;
 
         return $this;
     }

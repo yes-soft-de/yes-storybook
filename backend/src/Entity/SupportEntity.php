@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ReportEntityRepository;
+use App\Repository\SupportEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ReportEntityRepository::class)
+ * @ORM\Entity(repositoryClass=SupportEntityRepository::class)
  */
-class ReportEntity
+class SupportEntity
 {
     /**
      * @ORM\Id

@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\TermsCaptain;
+use App\Entity\CaptainTermEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method TermsCaptain|null find($id, $lockMode = null, $lockVersion = null)
- * @method TermsCaptain|null findOneBy(array $criteria, array $orderBy = null)
- * @method TermsCaptain[]    findAll()
- * @method TermsCaptain[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CaptainTermEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CaptainTermEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CaptainTermEntity[]    findAll()
+ * @method CaptainTermEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CaptainTermRepository extends ServiceEntityRepository
+class CaptainTermEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TermsCaptain::class);
+        parent::__construct($registry, CaptainTermEntity::class);
     }
 
     public function getTermsCaptain()

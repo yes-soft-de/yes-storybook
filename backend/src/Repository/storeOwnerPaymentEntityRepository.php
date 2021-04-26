@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\PaymentsEntity;
+use App\Entity\StoreOwnerPaymentEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method PaymentsEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method PaymentsEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method PaymentsEntity[]    findAll()
- * @method PaymentsEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method StoreOwnerPaymentEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method StoreOwnerPaymentEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method StoreOwnerPaymentEntity[]    findAll()
+ * @method StoreOwnerPaymentEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class storeOwnerPaymentEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PaymentsEntity::class);
+        parent::__construct($registry, StoreOwnerPaymentEntity::class);
     }
 
     public function getpaymentsForOwner($ownerId)

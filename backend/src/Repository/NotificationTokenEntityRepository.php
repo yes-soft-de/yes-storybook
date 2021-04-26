@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\NotificationTokenEntity;
-use App\Entity\ReportEntity;
+use App\Entity\SupportEntity;
 use App\Entity\CaptainProfileEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +26,7 @@ class NotificationTokenEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('NotificationTokenEntity')
         ->addSelect('reportEntity.userId') 
 
-        ->leftJoin(ReportEntity::class, 'reportEntity', Join::WITH, 'reportEntity.uuid = :uuid')
+        ->leftJoin(SupportEntity::class, 'reportEntity', Join::WITH, 'reportEntity.uuid = :uuid')
 
         ->andWhere("reportEntity.uuid = :uuid ")
         ->setParameter('uuid', $uuid) 

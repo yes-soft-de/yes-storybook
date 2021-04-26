@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\PaymentsCaptainEntity;
+use App\Entity\CaptainPaymentEntity;
 use App\Repository\CaptainPaymentEntityRepository;
 use App\Request\CaptainPaymentCreateRequest;
 // use App\Request\RatingUpdateRequest;
@@ -24,7 +24,7 @@ class CaptainPaymentManager
 
     public function create(CaptainPaymentCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(CaptainPaymentCreateRequest::class, PaymentsCaptainEntity::class, $request);
+        $entity = $this->autoMapping->map(CaptainPaymentCreateRequest::class, CaptainPaymentEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();

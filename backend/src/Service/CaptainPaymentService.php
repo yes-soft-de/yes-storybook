@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Manager\CaptainPaymentManager;
-use App\Entity\PaymentsCaptainEntity;
+use App\Entity\CaptainPaymentEntity;
 use App\Request\CaptainPaymentCreateRequest;
 use App\Response\CaptainPaymentCreateResponse;
 use App\Service\BankService;
@@ -26,7 +26,7 @@ class CaptainPaymentService
     {
         $item = $this->captainPaymentManager->create($request);
 
-        return $this->autoMapping->map(PaymentsCaptainEntity::class, CaptainPaymentCreateResponse::class, $item);
+        return $this->autoMapping->map(CaptainPaymentEntity::class, CaptainPaymentCreateResponse::class, $item);
     }
 
     public function getpayments($captainId)

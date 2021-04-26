@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\SubscriptionEntity;
+use App\Entity\StoreOwnerSubscriptionEntity;
 use App\Manager\StoreOwnerSubscriptionManager;
 use App\Request\StoreOwnerSubscriptionCreateRequest;
 use App\Request\StoreOwnerSubscriptionNextRequest;
@@ -28,7 +28,7 @@ class StoreOwnerSubscriptionService
     {
         $subscriptionResult = $this->storeOwnerSubscriptionManager->create($request);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
+        return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
     }
     
     public function nxetSubscription(StoreOwnerSubscriptionNextRequest $request)
@@ -38,7 +38,7 @@ class StoreOwnerSubscriptionService
        $status = $this->subscriptionIsActive($request->getOwnerID(), $SubscriptionCurrent['id']);
         $subscriptionResult = $this->storeOwnerSubscriptionManager->nxetSubscription($request, $status);
         
-        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
+        return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
     }
 
     public function getSubscriptionForOwner($ownerID)
@@ -70,21 +70,21 @@ class StoreOwnerSubscriptionService
     {
         $result = $this->storeOwnerSubscriptionManager->subscriptionUpdateState($request);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
+        return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function updateFinishe($id, $status)
     {
         $result = $this->storeOwnerSubscriptionManager->updateFinishe($id, $status);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
+        return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function changeIsFutureToFalse($id)
     {
         $result = $this->storeOwnerSubscriptionManager->changeIsFutureToFalse($id);
 
-        return $this->autoMapping->map(SubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
+        return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
 
     public function getSubscriptionsPending()

@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\UpdateEntity;
+use App\Entity\AnnouncementEntity;
 use App\Repository\AnnouncementEntityRepository;
 use App\Request\AnnouncementCreateRequest;
 use App\Request\AnnouncementUpdateRequest;
@@ -24,7 +24,7 @@ class AnnouncementManager
 
     public function create(AnnouncementCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(AnnouncementCreateRequest::class, UpdateEntity::class, $request);
+        $entity = $this->autoMapping->map(AnnouncementCreateRequest::class, AnnouncementEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -40,7 +40,7 @@ class AnnouncementManager
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(AnnouncementUpdateRequest::class, UpdateEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(AnnouncementUpdateRequest::class, AnnouncementEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 

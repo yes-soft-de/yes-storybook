@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\CompanyInfoEntity;
+use App\Entity\DeliveryCompanyInfoEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\CaptainProfileEntity;
@@ -10,16 +10,16 @@ use App\Entity\UserProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @method CompanyInfoEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method CompanyInfoEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method CompanyInfoEntity[]    findAll()
- * @method CompanyInfoEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DeliveryCompanyInfoEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DeliveryCompanyInfoEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DeliveryCompanyInfoEntity[]    findAll()
+ * @method DeliveryCompanyInfoEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DeliveryCompanyInfoEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CompanyInfoEntity::class);
+        parent::__construct($registry, DeliveryCompanyInfoEntity::class);
     }
  
     public function  getcompanyinfoById($id)

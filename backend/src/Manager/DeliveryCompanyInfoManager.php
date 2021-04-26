@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\CompanyInfoEntity;
+use App\Entity\DeliveryCompanyInfoEntity;
 use App\Repository\DeliveryCompanyInfoEntityRepository;
 use App\Request\DeliveryCompanyInfoRequest;
 use App\Request\DeliveryCompanyInfoUpdateRequest;
@@ -26,7 +26,7 @@ class DeliveryCompanyInfoManager
     {
        $isfound = $this->getcompanyinfoAll();
         if ($isfound == null) {
-        $entity = $this->autoMapping->map(DeliveryCompanyInfoRequest::class, CompanyInfoEntity::class, $request);
+        $entity = $this->autoMapping->map(DeliveryCompanyInfoRequest::class, DeliveryCompanyInfoEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -46,7 +46,7 @@ class DeliveryCompanyInfoManager
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(DeliveryCompanyInfoUpdateRequest::class, CompanyInfoEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(DeliveryCompanyInfoUpdateRequest::class, DeliveryCompanyInfoEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 

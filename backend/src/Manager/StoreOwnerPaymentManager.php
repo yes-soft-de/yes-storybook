@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\PaymentsEntity;
+use App\Entity\StoreOwnerPaymentEntity;
 use App\Repository\storeOwnerPaymentEntityRepository;
 use App\Request\StoreOwnerPaymentCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +23,7 @@ class StoreOwnerPaymentManager
 
     public function create(StoreOwnerPaymentCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(StoreOwnerPaymentCreateRequest::class, PaymentsEntity::class, $request);
+        $entity = $this->autoMapping->map(StoreOwnerPaymentCreateRequest::class, StoreOwnerPaymentEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();

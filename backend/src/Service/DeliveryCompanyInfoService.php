@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\CompanyInfoEntity;
+use App\Entity\DeliveryCompanyInfoEntity;
 use App\Manager\DeliveryCompanyInfoManager;
 use App\Request\DeliveryCompanyInfoRequest;
 use App\Response\DeliveryCompanyInfoResponse;
@@ -22,8 +22,8 @@ class DeliveryCompanyInfoService
     public function create(DeliveryCompanyInfoRequest $request)
     {
         $item = $this->deliveryCompanyInfoManager->create($request);
-        if ($item instanceof CompanyInfoEntity) {
-        return $this->autoMapping->map(CompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $item);
+        if ($item instanceof DeliveryCompanyInfoEntity) {
+        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $item);
         }
         if ($item == true) {
           
@@ -35,14 +35,14 @@ class DeliveryCompanyInfoService
     {
         $result = $this->deliveryCompanyInfoManager->update($request);
 
-        return $this->autoMapping->map(CompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
+        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
     }
 
     public function  getcompanyinfoById($id)
     {
         $result = $this->deliveryCompanyInfoManager->getcompanyinfoById($id);
 
-        return $this->autoMapping->map(CompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
+        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
   
     }
 

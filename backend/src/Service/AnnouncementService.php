@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\UpdateEntity;
+use App\Entity\AnnouncementEntity;
 use App\Manager\AnnouncementManager;
 use App\Request\AnnouncementCreateRequest;
 use App\Response\AnnouncementResponse;
@@ -23,20 +23,20 @@ class AnnouncementService
     {
         $item = $this->announcementManager->create($request);
 
-        return $this->autoMapping->map(UpdateEntity::class, AnnouncementResponse::class, $item);
+        return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $item);
     }
 
     public function update($request)
     {
         $result = $this->announcementManager->update($request);
 
-        return $this->autoMapping->map(UpdateEntity::class, AnnouncementResponse::class, $result);
+        return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
     }
 
     public function  getUpdateById($id)
     {
         $result = $this->announcementManager->getUpdateById($id);
-        return $this->autoMapping->map(UpdateEntity::class, AnnouncementResponse::class, $result);
+        return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
   
     }
 

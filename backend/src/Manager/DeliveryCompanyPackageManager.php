@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\PackageEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use App\Repository\DeliveryCompanyPackageEntityRepository;
 use App\Request\DeliveryCompanyPackageCreateRequest;
 use App\Request\DeliveryCompanyPackageUpdateStateRequest;
@@ -24,7 +24,7 @@ class DeliveryCompanyPackageManager
 
     public function create(DeliveryCompanyPackageCreateRequest $request)
     {
-        $packageEntity = $this->autoMapping->map(DeliveryCompanyPackageCreateRequest::class, PackageEntity::class, $request);
+        $packageEntity = $this->autoMapping->map(DeliveryCompanyPackageCreateRequest::class, DeliveryCompanyPackageEntity::class, $request);
 
         $this->entityManager->persist($packageEntity);
         $this->entityManager->flush();
@@ -54,7 +54,7 @@ class DeliveryCompanyPackageManager
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(DeliveryCompanyPackageUpdateStateRequest::class, PackageEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(DeliveryCompanyPackageUpdateStateRequest::class, DeliveryCompanyPackageEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 

@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\RecordEntity;
+use App\Entity\LogEntity;
 use App\Repository\LogEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -22,14 +22,14 @@ class LogManager
 
     public function create($record)
     {
-        $recordEntity = $this->autoMapping->map('array', RecordEntity::class, $record);
-        $recordEntity->setDate($recordEntity->getDate());
+        $logEntity = $this->autoMapping->map('array', LogEntity::class, $record);
+        $logEntity->setDate($logEntity->getDate());
         
-        $this->entityManager->persist($recordEntity);
+        $this->entityManager->persist($logEntity);
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        return $recordEntity;
+        return $logEntity;
     }
 
     public function getRecordByOrderId($orderId)

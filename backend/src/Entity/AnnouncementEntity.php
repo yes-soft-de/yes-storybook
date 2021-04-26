@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\TermsCaptainRepository;
+use App\Repository\AnnouncementEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TermsCaptainRepository::class)
+ * @ORM\Entity(repositoryClass=AnnouncementEntityRepository::class)
  */
-class TermsCaptain
+class AnnouncementEntity
 {
     /**
      * @ORM\Id
@@ -18,6 +18,11 @@ class TermsCaptain
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
      * @ORM\Column(type="text")
      */
     private $content;
@@ -25,6 +30,18 @@ class TermsCaptain
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     public function getContent(): ?string

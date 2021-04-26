@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\SubscriptionEntityRepository;
+use App\Repository\StoreOwnerSubscriptionEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass=SubscriptionEntityRepository::class)
+ * @ORM\Entity(repositoryClass=StoreOwner::class)
  */
-class SubscriptionEntity
+class StoreOwnerSubscriptionEntity
 {
     /**
      * @ORM\Id

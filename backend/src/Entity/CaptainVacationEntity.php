@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\VacationsEntityRepository;
+use App\Repository\CaptainVacationEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 /**
- * @ORM\Entity(repositoryClass=VacationsEntityRepository::class)
+ * @ORM\Entity(repositoryClass=CaptainVacationEntityRepository::class)
  */
-class VacationsEntity
+class CaptainVacationEntity
 {
     /**
      * @ORM\Id

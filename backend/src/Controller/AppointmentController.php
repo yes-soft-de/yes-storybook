@@ -60,9 +60,9 @@ class AppointmentController extends BaseController
       * @param                     Request $request
       * @return                    JsonResponse
       */
-      public function datings()
+      public function getAllAppointements()
       {
-          $result = $this->appointmentService->datings();
+          $result = $this->appointmentService->getAllAppointements();
   
           return $this->response($result, self::FETCH);
       }

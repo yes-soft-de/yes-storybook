@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\DatingEntity;
+use App\Entity\AppointmentEntity;
 use App\Repository\AppointmentEntityRepository;
 use App\Request\AppointmentCreateRequest;
 use App\Request\AppointmentUpdateIsDoneRequest;
@@ -24,7 +24,7 @@ class AppointmentManager
 
     public function create(AppointmentCreateRequest $request)
     {
-        $entity = $this->autoMapping->map(AppointmentCreateRequest::class, DatingEntity::class, $request);
+        $entity = $this->autoMapping->map(AppointmentCreateRequest::class, AppointmentEntity::class, $request);
         $entity->setIsDone(false);
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -33,9 +33,9 @@ class AppointmentManager
         return $entity;
     }
 
-    public function datings()
+    public function getAllAppointements()
     {
-        return $this->repository->datings();
+        return $this->repository->getAllAppointements();
     }
 
     public function update(AppointmentUpdateIsDoneRequest $request)
@@ -45,7 +45,7 @@ class AppointmentManager
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(AppointmentUpdateIsDoneRequest::class, DatingEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(AppointmentUpdateIsDoneRequest::class, AppointmentEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 

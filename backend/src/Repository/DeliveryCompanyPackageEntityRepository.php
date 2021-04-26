@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\PackageEntity;
+use App\Entity\DeliveryCompanyPackageEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method PackageEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method PackageEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method PackageEntity[]    findAll()
- * @method PackageEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DeliveryCompanyPackageEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DeliveryCompanyPackageEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DeliveryCompanyPackageEntity[]    findAll()
+ * @method DeliveryCompanyPackageEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DeliveryCompanyPackageEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PackageEntity::class);
+        parent::__construct($registry, DeliveryCompanyPackageEntity::class);
     }
 
     public function getPackages()

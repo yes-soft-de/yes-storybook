@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\TermsCaptain;
+use App\Entity\CaptainTermEntity;
 use App\Manager\CaptainTermManager;
 use App\Request\CaptainTermCreateRequest;
 use App\Request\CaptainTermUpdateRequest;
@@ -24,7 +24,7 @@ class CaptainTermService
     {
         $item = $this->captainTermManager->create($request);
 
-        return $this->autoMapping->map(TermsCaptain::class, captainTermCreateResponse::class, $item);
+        return $this->autoMapping->map(CaptainTermEntity::class, captainTermCreateResponse::class, $item);
     }
 
     public function getTermsCaptain() {
@@ -41,7 +41,7 @@ class CaptainTermService
        
         $item = $this->captainTermManager->getTermsCaptainById($id);
         
-        return $this->autoMapping->map(TermsCaptain::class, CaptainTermCreateResponse::class, $item);
+        return $this->autoMapping->map(CaptainTermEntity::class, CaptainTermCreateResponse::class, $item);
             
     }
 
@@ -49,6 +49,6 @@ class CaptainTermService
     {
         $item = $this->captainTermManager->update($request);
 
-        return $this->autoMapping->map(TermsCaptain::class, CaptainTermCreateResponse::class, $item);
+        return $this->autoMapping->map(CaptainTermEntity::class, CaptainTermCreateResponse::class, $item);
     }
 }
