@@ -97,6 +97,20 @@ class CaptainProfileEntity
      */
     private $newMessageStatus;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bankName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bankAccountNumber;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stcPay;
 
     public function getId(): ?int
     {
@@ -295,4 +309,39 @@ class CaptainProfileEntity
         return $this;
     }
 
+    public function getBankName(): ?string
+    {
+        return $this->bankName;
+    }
+
+    public function setBankName(?string $bankName): self
+    {
+        $this->bankName = $bankName;
+
+        return $this;
+    }
+
+    public function getBankAccountNumber(): ?string
+    {
+        return $this->bankAccountNumber;
+    }
+
+    public function setBankAccountNumber(string $bankAccountNumber): self
+    {
+        $this->bankAccountNumber = $bankAccountNumber;
+
+        return $this;
+    }
+
+    public function getStcPay(): ?string
+    {
+        return $this->stcPay;
+    }
+
+    public function setStcPay(?string $stcPay): self
+    {
+        $this->stcPay = $stcPay;
+
+        return $this;
+    }
 }

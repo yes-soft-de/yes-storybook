@@ -8,22 +8,19 @@ use App\Manager\StoreOwnerPaymentManager;
 use App\Request\StoreOwnerPaymentCreateRequest;
 use App\Response\StoreOwnerCreateResponse;
 use App\Service\StoreOwnerSubscriptionService;
-use App\Service\BankService;
 use App\Service\DateFactoryService;
 class StoreOwnerPaymentService
 {
     private $autoMapping;
     private $storeOwnerPaymentManager;
     private $storeOwnersubscriptionService;
-    private $bankService;
     private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, StoreOwnerSubscriptionService $storeOwnersubscriptionService, BankService $bankService, DateFactoryService $dateFactoryService)
+    public function __construct(AutoMapping $autoMapping, StoreOwnerPaymentManager $storeOwnerPaymentManager, StoreOwnerSubscriptionService $storeOwnersubscriptionService, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->storeOwnerPaymentManager = $storeOwnerPaymentManager;
         $this->storeOwnersubscriptionService = $storeOwnersubscriptionService;
-        $this->bankService = $bankService;
         $this->dateFactoryService = $dateFactoryService;
     }
 
@@ -39,7 +36,6 @@ class StoreOwnerPaymentService
        $response = [];
 
        $totalAmountOfSubscriptions= $this->storeOwnersubscriptionService->totalAmountOfSubscriptions($ownerId);
-       $bank= $this->bankService->getAccount($ownerId);
        
         $items = $this->storeOwnerPaymentManager->getpaymentsForOwner($ownerId);
       
@@ -67,7 +63,6 @@ class StoreOwnerPaymentService
       $arr['sumPayments'] = $sumPayments;
       $arr['totalAmountOfSubscriptions'] = $totalAmountOfSubscriptions;
       $arr['currentTotal'] = $total;
-      $arr['bank']= $bank;
       return $arr;
     }
 }

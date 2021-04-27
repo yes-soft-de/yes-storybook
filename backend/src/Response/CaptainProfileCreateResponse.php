@@ -48,11 +48,9 @@ class CaptainProfileCreateResponse
 
     public $bankName;
     
-    public $accountID;
+    public $bankAccountNumber;
     
     public $stcPay;
-    
-    public $bank;
 
     public $vacationStatus;
 

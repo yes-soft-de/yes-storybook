@@ -23,7 +23,6 @@ use App\Response\AllUsersResponse;
 use App\Response\RemainingOrdersResponse;
 use App\Response\CaptainTotalBounceResponse;
 use App\Service\CaptainPaymentService;
-use App\Service\BankService;
 use App\Service\RoomIdHelperService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -38,10 +37,9 @@ class UserService
     private $logService;
     private $params;
     private $captainPaymentService;
-    private $bankService;
     private $roomIdHelperService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService, BankService $bankService,  RoomIdHelperService $roomIdHelperService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService,  RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
@@ -50,7 +48,6 @@ class UserService
         $this->branchesService = $branchesService;
         $this->logService = $logService;
         $this->captainPaymentService = $captainPaymentService;
-        $this->bankService = $bankService;
         $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
@@ -90,12 +87,7 @@ class UserService
     public function userProfileUpdate(UserProfileUpdateRequest $request)
     {
         $item = $this->userManager->userProfileUpdate($request);
-        $bank = $this->bankService->updateFromProfile($request);
-        if ($bank) {
-        $item->bankName = $bank->bankName;
-        $item->accountID = $bank->accountID;
-        $item->stcPay = $bank->stcPay;
-        }
+        
         return $this->autoMapping->map(UserProfileEntity::class, UserProfileResponse::class, $item);
     }
 
@@ -117,7 +109,6 @@ class UserService
     public function getUserProfileByUserID($userID)
     {
         $item = $this->userManager->getUserProfileByUserID($userID);
-        $item['bank'] = $this->bankService->getAccountByUserId($userID);
         $item['branches'] = $this->branchesService->branchesByUserId($userID);
 
         try {
@@ -154,14 +145,7 @@ class UserService
         
         if ($captainProfile instanceof CaptainProfileEntity) {
            
-            $item = $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $captainProfile);
-
-            $bank = $this->bankService->createFromCaptain($request);
-            if ($bank) {
-                $item->bankName = $bank->bankName;
-                $item->accountID = $bank->accountID;
-                $item->stcPay = $bank->stcPay;
-            }
+            return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $captainProfile);
         }
         if ($captainProfile == true) {
             return $this->getcaptainprofileByCaptainID($request->getCaptainID());
@@ -171,19 +155,6 @@ class UserService
     public function captainprofileUpdate(CaptainProfileUpdateRequest $request)
     {
         $item = $this->userManager->captainprofileUpdate($request);
-        $bank = $this->bankService->updateFromCaptain($request);
-        if ($bank) {
-            $item->bankName = $bank->bankName;
-            $item->accountID = $bank->accountID;
-            $item->stcPay = $bank->stcPay;
-        }
-        if (!$bank) {
-            $bank = $this->bankService->updateFromCreateCaptain($request);
-            $item->bankName = $bank->bankName;
-            $item->accountID = $bank->accountID;
-            $item->stcPay = $bank->stcPay;
-        }
-
         
         return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $item);
     }
@@ -199,7 +170,6 @@ class UserService
     {
         return $this->userManager->captainvacationbyadmin($request);
 
-        // return $this->autoMapping->map(CaptainProfileEntity::class, VacationsCreateRequest::class, $item);
     }
 
     public function getcaptainprofileByCaptainID($captainID)
@@ -208,29 +178,22 @@ class UserService
 
         $item = $this->userManager->getcaptainprofileByCaptainID($captainID);
 
-        try {
-            $bounce = $this->totalBounceCaptain($item['id'], 'captain', $captainID);
+        $bounce = $this->totalBounceCaptain($item['id'], 'captain', $captainID);
 
-            $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($captainID);
+        $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($captainID);
 
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['drivingLicenceURL'] = $item['drivingLicence'];
-            $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-            $item['baseURL'] = $this->params;
-            $item['rating'] = $this->ratingService->getRatingByCaptainID($captainID);
-            $item['bank'] = $this->bankService->getAccountByUserId($captainID);
+        $item['imageURL'] = $item['image'];
+        $item['image'] = $this->params.$item['image'];
+        $item['drivingLicenceURL'] = $item['drivingLicence'];
+        $item['drivingLicence'] = $this->params.$item['drivingLicence'];
+        $item['baseURL'] = $this->params;
+        $item['rating'] = $this->ratingService->getRatingByCaptainID($captainID);
 
-            $response = $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
+        $response = $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
 
-            $response->bounce = $bounce;
-            $response->countOrdersDeliverd = $countOrdersDeliverd;
+        $response->bounce = $bounce;
+        $response->countOrdersDeliverd = $countOrdersDeliverd;
 
-        }
-        catch (\Exception $e)
-        {
-
-        }
         return $response;
     }
 
@@ -384,16 +347,14 @@ class UserService
         $response = [];
 
         $item = $this->userManager->totalBounceCaptain($captainProfileId);
-       
+     
         if ($user == "captain") { 
             $sumAmount = $this->captainPaymentService->getSumAmount($captainId);
             $payments = $this->captainPaymentService->getpayments($captainId);
-            $bank = $this->bankService->getAccount($captainId);
         }
         if ($user == "admin") { 
             $sumAmount = $this->captainPaymentService->getSumAmount($item[0]['captainID']);
             $payments = $this->captainPaymentService->getpayments($item[0]['captainID']);
-            $bank = $this->bankService->getAccount($item[0]['captainID']);
         }
 
         if ($item) {
@@ -405,7 +366,6 @@ class UserService
              $item['NetProfit'] = $item['bounce'] + $item[0]['salary'];
              $item['total'] = $item['sumPayments'] - ($item['bounce'] + $item[0]['salary']);
              $item['payments'] = $payments;
-             $item['bank'] = $bank;
             if ($user == "captain") {
                  $item['total'] = ($item['bounce'] + $item[0]['salary']) - $item['sumPayments'];
             }

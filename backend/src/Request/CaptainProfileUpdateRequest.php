@@ -26,7 +26,7 @@ class CaptainProfileUpdateRequest
     
     private $bankName;
 
-    private $accountID;
+    private $bankAccountNumber;
     
     private $stcPay;
 

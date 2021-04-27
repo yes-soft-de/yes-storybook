@@ -22,12 +22,16 @@ class CaptainProfileCreateRequest
 
     private $uuid;
     
-    public $specialLink;
+    private $specialLink;
     
-    public $phone;
+    private $phone;
+
+    private $userID;
 
     private $bankName;
+
     private $accountID;
+    
     private $stcPay;
 
     /**
@@ -198,6 +202,106 @@ class CaptainProfileCreateRequest
     public function setUuid(?string $uuid): self
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of phone
+     */ 
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set the value of phone
+     *
+     * @return  self
+     */ 
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of userID
+     */ 
+    public function getUserID()
+    {
+        return $this->userID;
+    }
+
+    /**
+     * Set the value of userID
+     *
+     * @return  self
+     */ 
+    public function setUserID($userID)
+    {
+        $this->userID = $userID;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of bankName
+     */ 
+    public function getBankName()
+    {
+        return $this->bankName;
+    }
+
+    /**
+     * Set the value of bankName
+     *
+     * @return  self
+     */ 
+    public function setBankName($bankName)
+    {
+        $this->bankName = $bankName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of accountID
+     */ 
+    public function getAccountID()
+    {
+        return $this->accountID;
+    }
+
+    /**
+     * Set the value of accountID
+     *
+     * @return  self
+     */ 
+    public function setAccountID($accountID)
+    {
+        $this->accountID = $accountID;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of stcPay
+     */ 
+    public function getStcPay()
+    {
+        return $this->stcPay;
+    }
+
+    /**
+     * Set the value of stcPay
+     *
+     * @return  self
+     */ 
+    public function setStcPay($stcPay)
+    {
+        $this->stcPay = $stcPay;
 
         return $this;
     }
