@@ -311,7 +311,7 @@ class UserService
          $response[] = $this->userManager->countOngoingCaptains();
          $response[] = $this->userManager->countDayOfCaptains();
 
-         $top5Captains = $this->acceptedOrderService->getTop5Captains();
+         $top5Captains = $this->acceptedOrderFilterService->getTop5Captains();
       
          foreach ($top5Captains as $item) {
            

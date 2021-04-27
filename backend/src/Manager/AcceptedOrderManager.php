@@ -26,7 +26,7 @@ class AcceptedOrderManager
         $this->orderManager = $orderManager;
     }
 
-    public function create(AcceptedOrderCreateRequest $request)
+    public function createAcceptedOrder(AcceptedOrderCreateRequest $request)
     {
         $item = $this->autoMapping->map(AcceptedOrderCreateRequest::class, AcceptedOrderEntity::class, $request);
        

@@ -17,6 +17,7 @@ use App\Service\RatingService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
+use App\Service\AcceptedOrderFilterService;
 
 class OrderService
 {
@@ -32,12 +33,13 @@ class OrderService
     // private $notificationService;
     private $roomIdHelperService;
     private $dateFactoryService;
+    private $acceptedOrderFilterService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
                                 LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
-                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService
+                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService
                                 )
     {
         $this->autoMapping = $autoMapping;
@@ -52,6 +54,7 @@ class OrderService
         $this->dateFactoryService = $dateFactoryService;
         $this->params = $params->get('upload_base_url') . '/';
         // $this->notificationService = $notificationService;
+        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
     public function create(OrderCreateRequest $request)
@@ -112,30 +115,12 @@ class OrderService
             if ($order['fromBranch']){
                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                 }
-            $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($orderId);
+            $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
             $record = $this->logService->getFirstDate($orderId);
         }
         $response = $this->autoMapping->map('array', OrderResponse::class, $order);
 
         if ($order) {
-            $response->acceptedOrder =  $acceptedOrder;
-            $response->record =  $record;
-        }
-
-        return $response;
-    }
-
-    public function orderById($orderId)
-    {
-        $acceptedOrder = [];
-        $order = $this->orderManager->orderById($orderId);
-        if ($order) {
-            $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($orderId);
-            $record = $this->logService->getLogByOrderId($orderId);
-        }
-        $response = $this->autoMapping->map('array', OrderResponse::class, $order);
-
-        if ($acceptedOrder) {
             $response->acceptedOrder =  $acceptedOrder;
             $response->record =  $record;
         }
@@ -153,7 +138,7 @@ class OrderService
             if ($order['fromBranch'] == true){
                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
             }
-            $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
             $order['record'] = $this->logService->getLogByOrderId($order['id']);
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
@@ -171,7 +156,7 @@ class OrderService
                }
             
             $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
-            $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($orderId);
+            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
 
             $order['record'] = $this->logService->getLogByOrderId($orderId);
         }
@@ -213,7 +198,7 @@ class OrderService
 
                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                 }
-            $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
           
             $order['record'] = $this->logService->getLogByOrderId($order['id']);
             
@@ -235,7 +220,7 @@ class OrderService
         if($item) {
             $acceptedOrderUpdateState = $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState());
         
-            $acceptedOrder = $this->acceptedOrderService->getAcceptedOrderByOrderId($item->getId());
+            $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item->getId());
             $record = $this->logService->getLogByOrderId($item->getId());
         }
         $response = $this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
@@ -315,7 +300,7 @@ class OrderService
             foreach ($items as $item) {
                 
                 $item['record'] = $this->logService->getLogsByOrderId($item['id']);
-                $item['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($item['id']);
+                $item['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item['id']);
 
                 $firstDate = $this->logService->getFirstDate($item['id']); 
                 $lastDate = $this->logService->getLastDate($item['id']);
@@ -334,7 +319,7 @@ class OrderService
             foreach ($items as $item) {
                 
                 $item['record'] = $this->logService->getLogsByOrderId($item['id']);
-                $item['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($item['id']);
+                $item['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item['id']);
                
                 $item['rating'] = $this->ratingService->ratingByCaptainID($item['acceptedOrder'][0]['captainID']);
                
@@ -361,7 +346,7 @@ class OrderService
                 $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                 }
 
-            $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
 
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
@@ -386,7 +371,7 @@ class OrderService
                     $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                     }
     
-                $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+                $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
                 $order['record'] = $this->logService->getLogByOrderId($order['id']); 
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
             }
@@ -394,9 +379,9 @@ class OrderService
 
         if ($userType == "captain") {
         
-            $response['countOrdersInMonth'] = $this->acceptedOrderService->countOrdersInMonthForCaptin($date[0], $date[1], $userId);
-            $response['countOrdersInDay'] = $this->acceptedOrderService->countOrdersInDay($userId, $date[0],$date[1]);
-            $acceptedInMonth = $this->acceptedOrderService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
+            $response['countOrdersInMonth'] = $this->acceptedOrderFilterService->countOrdersInMonthForCaptin($date[0], $date[1], $userId);
+            $response['countOrdersInDay'] = $this->acceptedOrderFilterService->countOrdersInDay($userId, $date[0],$date[1]);
+            $acceptedInMonth = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
             
             foreach ($acceptedInMonth as $item){
                 $ordersInMonth =  $this->orderManager->orderById($item['orderID']);  
@@ -408,7 +393,7 @@ class OrderService
                         $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
                         }
 
-                    $order['acceptedOrder'] = $this->acceptedOrderService->getAcceptedOrderByOrderId($order['id']);
+                    $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
                     $order['record'] = $this->logService->getLogByOrderId($order['id']); 
                     $firstDate = $this->logService->getFirstDate($order['id']); 
                     $lastDate = $this->logService->getLastDate($order['id']);

@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\AutoMapping;
 use App\Service\AcceptedOrderService;
-use App\Service\UserService;
 use App\Request\AcceptedOrderCreateRequest;
-use App\Request\AcceptedOrderUpdateRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,28 +13,29 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use stdClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Service\AcceptedOrderFilterService;
 
 class AcceptedOrderController extends BaseController
 {
     private $autoMapping;
     private $validator;
     private $acceptedOrderService;
-    private $userService;
+    private $acceptedOrderFilterService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, AcceptedOrderService $acceptedOrderService, UserService $userService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, AcceptedOrderService $acceptedOrderService, AcceptedOrderFilterService $acceptedOrderFilterService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
         $this->acceptedOrderService = $acceptedOrderService;
-        $this->userService = $userService;
+        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
     /**
      * @Route("/acceptedOrder",   name="createAcceptedOrder", methods={"POST"})
      * @IsGranted("ROLE_CAPTAIN")
      */
-    public function create(Request $request)
+    public function createAcceptedOrder(Request $request)
     {   
         // $response ="this captain inactive!!";
         // $status = $this->userService->captainIsActive($this->getUserId());
@@ -55,7 +54,7 @@ class AcceptedOrderController extends BaseController
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
 
-            $response = $this->acceptedOrderService->create($request);
+            $response = $this->acceptedOrderService->createAcceptedOrder($request);
             if (is_string($response)) {
                 return $this->response($response, self::ACCEPTED_ERROR);
             }
@@ -64,19 +63,6 @@ class AcceptedOrderController extends BaseController
         return $this->response($response, self::CREATE);
     }
 
-    // /**
-    //  * @Route("/getOrderStatusForCaptain/{orderId}", name="GetOrderStatusForCaptain", methods={"GET"})
-    //  * @IsGranted("ROLE_CAPTAIN")
-    //  * @param                                     Request $request
-    //  * @return                                    JsonResponse
-    //  */
-    // public function getOrderStatusForCaptain($orderId)
-    // {
-    //     $result = $this->acceptedOrderService->getOrderStatusForCaptain($this->getUserId(), $orderId);
-
-    //     return $this->response($result, self::FETCH);
-    // }
-
      /**
       * @Route("/getAcceptedOrder",        name="getAcceptedOrderByCaptainId", methods={"GET"})
       * @IsGranted("ROLE_CAPTAIN")
@@ -84,7 +70,7 @@ class AcceptedOrderController extends BaseController
       */
       public function getAcceptedOrderByCaptainId()
       {
-          $result = $this->acceptedOrderService->getAcceptedOrderByCaptainId($this->getUserId());
+          $result = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainId($this->getUserId());
   
           return $this->response($result, self::FETCH);
       }
@@ -96,23 +82,10 @@ class AcceptedOrderController extends BaseController
      */
     public function getTop5Captains()
     {
-        $result = $this->acceptedOrderService->getTop5Captains();
+        $result = $this->acceptedOrderFilterService->getTop5Captains();
 
         return $this->response($result, self::FETCH);
     }
-
-    // /**
-    //  * @Route("/getAllOrdersAndCountForCaptain/{year}/{month}/{ownerId}", name="getAllOrdersAndCountInMonthForCaptain",methods={"GET"})
-    //  * @IsGranted("ROLE_ADMIN")
-    //  * @param                                     Request $request
-    //  * @return                                    JsonResponse
-    //  */
-    // public function getAllOrdersAndCount($year, $month, $ownerId)
-    // {
-    //     $result = $this->orderService->getAllOrders($year, $month, $ownerId);
-
-    //     return $this->response($result, self::FETCH);
-    // }
 
      /**
      * @Route("/topCaptains", name="getTopCaptainsInThisMonth",methods={"GET"})
@@ -122,7 +95,7 @@ class AcceptedOrderController extends BaseController
      */
     public function getTopCaptainsInLastMonthDate()
     {
-        $result = $this->acceptedOrderService->getTopCaptainsInLastMonthDate();
+        $result = $this->acceptedOrderFilterService->getTopCaptainsInLastMonthDate();
 
         return $this->response($result, self::FETCH);
     }

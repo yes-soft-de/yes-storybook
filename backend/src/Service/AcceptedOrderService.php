@@ -7,40 +7,38 @@ use App\Entity\AcceptedOrderEntity;
 use App\Manager\AcceptedOrderManager;
 use App\Request\AcceptedOrderCreateRequest;
 use App\Response\AcceptedOrderResponse;
-use App\Response\AcceptedOrdersResponse;
 use App\Service\LogService;
 use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\Service\AcceptedOrderFilterService;
+
 class AcceptedOrderService
 {
     private $autoMapping;
     private $acceptedOrderManager;
     private $logService;
     private $roomIdHelperService;
-    private $params;
-    private $dateFactoryService;
+    private $acceptedOrderFilterService;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService)
+    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService,  RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService)
     {
         $this->autoMapping = $autoMapping;
         $this->acceptedOrderManager = $acceptedOrderManager;
         $this->logService = $logService;
         $this->roomIdHelperService = $roomIdHelperService;
         $this->dateFactoryService = $dateFactoryService;
-
-        $this->params = $params->get('upload_base_url') . '/';
+        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
-    public function create(AcceptedOrderCreateRequest $request)
+    public function createAcceptedOrder(AcceptedOrderCreateRequest $request)
     {   
         $response ="This order was received by another captain";
-        $acceptedOrder = $this->getAcceptedOrderByOrderId($request->getOrderID());
+        $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($request->getOrderID());
         if (!$acceptedOrder) {
-            $item = $this->acceptedOrderManager->create($request);
+            $item = $this->acceptedOrderManager->createAcceptedOrder($request);
             if ($item) {
                $this->logService->createLog($item->getOrderID(), $item->getState());
-               $data = $this->getOwnerIdAndUuid($item->getOrderID());
+               $data = $this->acceptedOrderFilterService->getOwnerIdAndUuid($item->getOrderID());
                $this->roomIdHelperService->create($data);
             }
             $response = $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $item);
@@ -49,87 +47,14 @@ class AcceptedOrderService
         return $response;
     }
 
-    public function countOrdersDeliverd($userID)
-    {
-        return $this->acceptedOrderManager->countOrdersDeliverd($userID);
-    }
-
     public function updateAcceptedOrderStateByCaptain($orderId, $state)
     {
-        $item = $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
+        $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
         $this->logService->createLog($orderId, $state);
-    }
-
-    public function getAcceptedOrderByOrderId($orderId)
-    {
-        return $this->acceptedOrderManager->getAcceptedOrderByOrderId($orderId);
-    }
-
-    public function getAcceptedOrderByCaptainId($captainId)
-    {
-        $response = [];
-        $orders = $this->acceptedOrderManager->getAcceptedOrderByCaptainId($captainId);
-        foreach ($orders as $order){
-            $order['record'] = $this->logService->getLogByOrderId($order['orderID']);
-            $response[] = $this->autoMapping->map('array', AcceptedOrdersResponse::class, $order);
-        }
-    
-    return $response;
     }
 
     public function countAcceptedOrder($captainId)
     {
         return $this->acceptedOrderManager->countAcceptedOrder($captainId);
-    }
-
-    public function getTop5Captains()
-     {
-        return $this->acceptedOrderManager->getTop5Captains();
-     }
-
-    public function countOrdersInMonthForCaptin($fromDate, $toDate, $captainId)
-     {
-         return $this->acceptedOrderManager->countOrdersInMonthForCaptin($fromDate, $toDate, $captainId);
-     }
-
-    public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)
-     {
-         return $this->acceptedOrderManager->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
-     }
-
-    public function getTopCaptainsInLastMonthDate():array
-    {
-       $response = [];
-       $date = $this->dateFactoryService->returnLastMonthDate();
-       $topCaptains = $this->acceptedOrderManager->getTopCaptainsInLastMonthDate($date[0],$date[1]);
-     
-        foreach ($topCaptains as $topCaptain) {
-            $topCaptain['imageURL'] = $topCaptain['image'];
-            $topCaptain['image'] = $this->params.$topCaptain['image'];
-            $topCaptain['drivingLicenceURL'] = $topCaptain['drivingLicence'];
-            $topCaptain['drivingLicence'] = $this->params.$topCaptain['drivingLicence'];
-            $topCaptain['baseURL'] = $this->params;
-            $response[] = $this->autoMapping->map('array', AcceptedOrdersResponse::class, $topCaptain);
-        }
-    
-       return $response;
-   }
-
-    public function specialLinkCheck($bool)
-    {
-        if (!$bool)
-        {
-            return $this->params;
-        }
-    }
-
-    public function countOrdersInDay($captainID, $fromDate, $toDate)
-     {
-         return $this->acceptedOrderManager->countOrdersInDay($captainID, $fromDate, $toDate);
-     }
-
-    public function getOwnerIdAndUuid($orderId)
-     {
-         return $this->acceptedOrderManager->getOwnerIdAndUuid($orderId);
-     }
+    }    
 }
