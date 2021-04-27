@@ -22,9 +22,9 @@ class CaptainVacationService
         $this->captainVacationManager = $captainVacationManager;
     }
 
-    public function create(CaptainVacationCreateRequest $request)
+    public function createCaptainVacation(CaptainVacationCreateRequest $request)
     {
-        $result = $this->captainVacationManager->create($request);
+        $result = $this->captainVacationManager->createCaptainVacation($request);
         if ($result) {
            $this->userService->captainvacationbyadmin($request); 
         }

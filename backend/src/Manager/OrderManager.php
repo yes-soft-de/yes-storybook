@@ -29,7 +29,7 @@ class OrderManager
         $this->repository = $repository;
     }
 
-    public function create(OrderCreateRequest $request, $uuid, $subscribeId)
+    public function createOrder(OrderCreateRequest $request, $uuid, $subscribeId)
     {
         $request->setUuid($uuid);
         $request->setSubscribeId($subscribeId);

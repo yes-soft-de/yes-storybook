@@ -22,7 +22,7 @@ class DeliveryCompanyPackageManager
         $this->deliveryCompanyPackageRepository = $deliveryCompanyPackageRepository;
     }
 
-    public function create(DeliveryCompanyPackageCreateRequest $request)
+    public function createDeliveryCompanyPackage(DeliveryCompanyPackageCreateRequest $request)
     {
         $packageEntity = $this->autoMapping->map(DeliveryCompanyPackageCreateRequest::class, DeliveryCompanyPackageEntity::class, $request);
 

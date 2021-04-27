@@ -20,9 +20,9 @@ class CaptainTermService
         $this->captainTermManager = $captainTermManager;
     }
 
-    public function create(CaptainTermCreateRequest $request)
+    public function createCaptainTerm(CaptainTermCreateRequest $request)
     {
-        $item = $this->captainTermManager->create($request);
+        $item = $this->captainTermManager->createCaptainTerm($request);
 
         return $this->autoMapping->map(CaptainTermEntity::class, captainTermCreateResponse::class, $item);
     }

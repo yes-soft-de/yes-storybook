@@ -23,7 +23,7 @@ class BranchesManager
         $this->branchesRepository = $branchesRepository;
     }
 
-    public function create(BranchesCreateRequest $request)
+    public function createBranches(BranchesCreateRequest $request)
     {
         $entity = $this->autoMapping->map(BranchesCreateRequest::class, BranchesEntity::class, $request);
         $entity->setIsActive(1);

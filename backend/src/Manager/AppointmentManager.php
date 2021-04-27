@@ -22,7 +22,7 @@ class AppointmentManager
         $this->repository = $repository;
     }
 
-    public function create(AppointmentCreateRequest $request)
+    public function createAppointment(AppointmentCreateRequest $request)
     {
         $entity = $this->autoMapping->map(AppointmentCreateRequest::class, AppointmentEntity::class, $request);
         $entity->setIsDone(false);

@@ -22,7 +22,7 @@ class DeliveryCompanyInfoManager
         $this->deliveryCompanyInfoEntityRepository = $deliveryCompanyInfoEntityRepository;
     }
 
-    public function create(DeliveryCompanyInfoRequest $request)
+    public function createDeliveryCompanyInfo(DeliveryCompanyInfoRequest $request)
     {
        $isfound = $this->getcompanyinfoAll();
         if ($isfound == null) {

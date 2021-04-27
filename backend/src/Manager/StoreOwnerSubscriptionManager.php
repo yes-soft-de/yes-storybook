@@ -25,7 +25,7 @@ class StoreOwnerSubscriptionManager
         $this->storeOwnersubscribeRepository = $storeOwnersubscribeRepository;
     }
 
-    public function create(StoreOwnerSubscriptionCreateRequest $request)
+    public function createStoreOwnerSubscription(StoreOwnerSubscriptionCreateRequest $request)
     { 
         // NOTE: change active to inactive 
         $request->setStatus('active');

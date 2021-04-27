@@ -36,7 +36,7 @@ class StoreOwnerSubscriptionController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createStoreOwnerSubscription(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -52,7 +52,7 @@ class StoreOwnerSubscriptionController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->storeOwnersubscriptionService->create($request);
+        $result = $this->storeOwnersubscriptionService->createStoreOwnerSubscription($request);
 
         return $this->response($result, self::CREATE);
     }

@@ -19,9 +19,9 @@ class DeliveryCompanyPackageService
         $this->deliveryCompanyPackageManager = $deliveryCompanyPackageManager;
     }
 
-    public function create(DeliveryCompanyPackageCreateRequest $request)
+    public function createDeliveryCompanyPackage(DeliveryCompanyPackageCreateRequest $request)
     {
-        $result = $this->deliveryCompanyPackageManager->create($request);
+        $result = $this->deliveryCompanyPackageManager->createDeliveryCompanyPackage($request);
 
         return $this->autoMapping->map(PackageEntity::class, DeliveryCompanyPackageResponse::class, $result);
     }

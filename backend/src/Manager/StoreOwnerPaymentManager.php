@@ -21,7 +21,7 @@ class StoreOwnerPaymentManager
         $this->repository = $repository;
     }
 
-    public function create(StoreOwnerPaymentCreateRequest $request)
+    public function createStoreOwnerPayment(StoreOwnerPaymentCreateRequest $request)
     {
         $entity = $this->autoMapping->map(StoreOwnerPaymentCreateRequest::class, StoreOwnerPaymentEntity::class, $request);
 

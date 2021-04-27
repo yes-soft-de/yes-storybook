@@ -19,9 +19,9 @@ class BranchesService
         $this->branchesManager = $branchesManager;
     }
 
-    public function create(BranchesCreateRequest $request)
+    public function createBranches(BranchesCreateRequest $request)
     {
-        $branche = $this->branchesManager->create($request);
+        $branche = $this->branchesManager->createBranches($request);
 
         return $this->autoMapping->map(BranchesEntity::class, BranchesResponse::class, $branche);
     }

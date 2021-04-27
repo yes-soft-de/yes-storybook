@@ -57,7 +57,7 @@ class OrderService
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
-    public function create(OrderCreateRequest $request)
+    public function createOrder(OrderCreateRequest $request)
     {  
         $response = "please subscribe!!";
         //get Subscribe id Current
@@ -70,7 +70,7 @@ class OrderService
             if ($status == 'active') {
                 $uuid = $this->roomIdHelperService->roomIdGenerate();
                 
-                $item = $this->orderManager->create($request, $uuid, $subscriptionCurrent['id']);
+                $item = $this->orderManager->createOrder($request, $uuid, $subscriptionCurrent['id']);
 
                 //start-----> notification
                 // try{

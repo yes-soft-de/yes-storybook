@@ -21,7 +21,7 @@ class SupportManager
         $this->repository = $repository;
     }
 
-    public function create(SupportCreateRequest $request, $uuid)
+    public function createSupport(SupportCreateRequest $request, $uuid)
     {
         $request->setUuid($uuid);
         $entity = $this->autoMapping->map(SupportCreateRequest::class, SupportEntity::class, $request);

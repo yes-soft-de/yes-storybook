@@ -34,7 +34,7 @@ class CaptainVacationController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createCaptainVacation(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -48,7 +48,7 @@ class CaptainVacationController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->captainVacationService->create($request);
+        $result = $this->captainVacationService->createCaptainVacation($request);
 
         return $this->response($result, self::CREATE);
     }

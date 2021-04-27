@@ -27,9 +27,9 @@ class StoreOwnerSubscriptionService
         $this->dateFactoryService = $dateFactoryService;
     }
 
-    public function create(StoreOwnerSubscriptionCreateRequest $request)
+    public function createStoreOwnerSubscription(StoreOwnerSubscriptionCreateRequest $request)
     {
-        $subscriptionResult = $this->storeOwnerSubscriptionManager->create($request);
+        $subscriptionResult = $this->storeOwnerSubscriptionManager->createStoreOwnerSubscription($request);
 
         return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $subscriptionResult);
     }

@@ -35,7 +35,7 @@ class CaptainTermController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createCaptainTerm(Request $request)
     {
             $data = json_decode($request->getContent(), true);
 
@@ -48,7 +48,7 @@ class CaptainTermController extends BaseController
 
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
-            $result = $this->captainTermService->create($request);
+            $result = $this->captainTermService->createCaptainTerm($request);
 
         return $this->response($result, self::CREATE);
     }

@@ -35,7 +35,7 @@ class AppointmentController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createAppointment(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -48,7 +48,7 @@ class AppointmentController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->appointmentService->create($request);
+            $result = $this->appointmentService->createAppointment($request);
             
 
         return $this->response($result, self::CREATE);

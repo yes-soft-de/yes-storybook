@@ -34,7 +34,7 @@ class SupportController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createSupport(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -49,7 +49,7 @@ class SupportController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->supportService->create($request);
+            $result = $this->supportService->createSupport($request);
             
 
         return $this->response($result, self::CREATE);

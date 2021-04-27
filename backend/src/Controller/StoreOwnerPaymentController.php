@@ -34,7 +34,7 @@ class StoreOwnerPaymentController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createStoreOwnerPayment(Request $request)
     {
             $data = json_decode($request->getContent(), true);
 
@@ -47,7 +47,7 @@ class StoreOwnerPaymentController extends BaseController
 
                 return new JsonResponse($violationsString, Response::HTTP_OK);
             }
-            $result = $this->storeOwnerPaymentService->create($request);
+            $result = $this->storeOwnerPaymentService->createStoreOwnerPayment($request);
 
         return $this->response($result, self::CREATE);
     }

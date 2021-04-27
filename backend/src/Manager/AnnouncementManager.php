@@ -22,7 +22,7 @@ class AnnouncementManager
         $this->announcementEntityRepository = $announcementEntityRepository;
     }
 
-    public function create(AnnouncementCreateRequest $request)
+    public function createAnnouncement(AnnouncementCreateRequest $request)
     {
         $entity = $this->autoMapping->map(AnnouncementCreateRequest::class, AnnouncementEntity::class, $request);
 

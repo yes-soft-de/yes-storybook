@@ -48,7 +48,7 @@ class OrderController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
             }
 
-            $response = $this->orderService->create($request);
+            $response = $this->orderService->createOrder($request);
       
         if (is_string($response)) {
             return $this->response($response, self::SUBSCRIBE_ERROR);

@@ -36,7 +36,7 @@ class BranchesController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createBranches(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -51,7 +51,7 @@ class BranchesController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->branchesService->create($request);
+            $result = $this->branchesService->createBranches($request);
             
 
         return $this->response($result, self::CREATE);

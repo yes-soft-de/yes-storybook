@@ -36,7 +36,7 @@ class AnnouncementController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createAnnouncement(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -49,7 +49,7 @@ class AnnouncementController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-        $result = $this->announcementService->create($request);
+        $result = $this->announcementService->createAnnouncement($request);
             
 
         return $this->response($result, self::CREATE);

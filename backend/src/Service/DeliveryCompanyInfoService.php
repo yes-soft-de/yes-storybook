@@ -19,9 +19,9 @@ class DeliveryCompanyInfoService
         $this->deliveryCompanyInfoManager = $deliveryCompanyInfoManager;
     }
 
-    public function create(DeliveryCompanyInfoRequest $request)
+    public function createDeliveryCompanyInfo(DeliveryCompanyInfoRequest $request)
     {
-        $item = $this->deliveryCompanyInfoManager->create($request);
+        $item = $this->deliveryCompanyInfoManager->createDeliveryCompanyInfo($request);
         if ($item instanceof DeliveryCompanyInfoEntity) {
         return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $item);
         }

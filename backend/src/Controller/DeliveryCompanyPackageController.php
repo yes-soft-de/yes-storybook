@@ -35,7 +35,7 @@ class DeliveryCompanyPackageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request)
+    public function createDeliveryCompanyPackage(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -49,7 +49,7 @@ class DeliveryCompanyPackageController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->deliveryCompanyPackageService->create($request);
+        $result = $this->deliveryCompanyPackageService->createDeliveryCompanyPackage($request);
 
         return $this->response($result, self::CREATE);
     }

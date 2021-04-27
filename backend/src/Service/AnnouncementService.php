@@ -19,9 +19,9 @@ class AnnouncementService
         $this->announcementManager = $announcementManager;
     }
 
-    public function create(AnnouncementCreateRequest $request)
+    public function createAnnouncement(AnnouncementCreateRequest $request)
     {
-        $item = $this->announcementManager->create($request);
+        $item = $this->announcementManager->createAnnouncement($request);
 
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $item);
     }

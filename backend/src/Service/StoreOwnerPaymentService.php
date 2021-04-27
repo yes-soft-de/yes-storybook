@@ -24,9 +24,9 @@ class StoreOwnerPaymentService
         $this->dateFactoryService = $dateFactoryService;
     }
 
-    public function create(StoreOwnerPaymentCreateRequest $request)
+    public function createStoreOwnerPayment(StoreOwnerPaymentCreateRequest $request)
     {
-        $item = $this->storeOwnerPaymentManager->create($request);
+        $item = $this->storeOwnerPaymentManager->createStoreOwnerPayment($request);
 
         return $this->autoMapping->map(StoreOwnerPaymentEntity::class, StoreOwnerCreateResponse::class, $item);
     }

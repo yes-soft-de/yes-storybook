@@ -22,7 +22,7 @@ class CaptainTermManager
         $this->captainTermEntityRepository = $captainTermEntityRepository;
     }
 
-    public function create(CaptainTermCreateRequest $request)
+    public function createCaptainTerm(CaptainTermCreateRequest $request)
     {
         $entity = $this->autoMapping->map(CaptainTermCreateRequest::class, CaptainTermEntity::class, $request);
 

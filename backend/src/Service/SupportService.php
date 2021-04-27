@@ -22,11 +22,11 @@ class SupportService
         $this->roomIdHelperService = $roomIdHelperService;
     }
 
-    public function create(SupportCreateRequest $request)
+    public function createSupport(SupportCreateRequest $request)
     {
         $uuid = $this->roomIdHelperService->roomIdGenerate();
         
-        $reprot = $this->supportManager->create($request, $uuid);
+        $reprot = $this->supportManager->createSupport($request, $uuid);
 
         return $this->autoMapping->map(SupportEntity::class, SupportResponse::class, $reprot);
     }

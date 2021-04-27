@@ -21,7 +21,7 @@ class CaptainVacationManager
         $this->captainVacationRepository = $captainVacationRepository;
     }
 
-    public function create(CaptainVacationCreateRequest $request)
+    public function createCaptainVacation(CaptainVacationCreateRequest $request)
     {
         $entity = $this->autoMapping->map(CaptainVacationCreateRequest::class, CaptainVacationEntity::class, $request);
 
