@@ -24,27 +24,27 @@ class AdminManager
         $this->userRepository = $userRepository;
     }
 
-    public function adminCreate(AdminCreateRequest $request)
+    public function createAdmin(AdminCreateRequest $request)
     {
-        $adminCreate = $this->autoMapping->map(AdminCreateRequest::class, UserEntity::class, $request);
+        $createAdmin = $this->autoMapping->map(AdminCreateRequest::class, UserEntity::class, $request);
 
         $user = new UserEntity($request->getUserID());
 
         if ($request->getPassword()) {
-            $adminCreate->setPassword($this->encoder->encodePassword($user, $request->getPassword()));
+            $createAdmin->setPassword($this->encoder->encodePassword($user, $request->getPassword()));
         }
 
-        $adminCreate->setCreateDate(new \DateTime('now'));
+        $createAdmin->setCreateDate(new \DateTime('now'));
 
         if ($request->getRoles() == null) {
             $request->setRoles(['user']);
         }
-        $adminCreate->setRoles($request->getRoles());
+        $createAdmin->setRoles($request->getRoles());
 
-        $this->entityManager->persist($adminCreate);
+        $this->entityManager->persist($createAdmin);
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        return $adminCreate;
+        return $createAdmin;
     }
 }

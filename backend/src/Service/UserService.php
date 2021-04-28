@@ -5,24 +5,16 @@ namespace App\Service;
 use App\AutoMapping;
 use App\Entity\UserEntity;
 use App\Entity\UserProfileEntity;
-use App\Entity\CaptainProfileEntity;
 use App\Manager\UserManager;
 use App\Request\UserProfileCreateRequest;
 use App\Request\UserProfileUpdateRequest;
 use App\Request\userProfileUpdateByAdminRequest;
-use App\Request\CaptainProfileCreateRequest;
-use App\Request\CaptainVacationCreateRequest;
-use App\Request\CaptainProfileUpdateRequest;
-use App\Request\CaptainProfileUpdateByAdminRequest;
 use App\Request\UserRegisterRequest;
 use App\Response\UserProfileCreateResponse;
-use App\Response\CaptainProfileCreateResponse;
 use App\Response\UserProfileResponse;
 use App\Response\UserRegisterResponse;
 use App\Response\AllUsersResponse;
 use App\Response\RemainingOrdersResponse;
-use App\Response\CaptainTotalBounceResponse;
-use App\Service\CaptainPaymentService;
 use App\Service\RoomIdHelperService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -31,23 +23,16 @@ class UserService
 {
     private $autoMapping;
     private $userManager;
-    private $acceptedOrderService;
-    private $ratingService;
     private $branchesService;
-    private $logService;
     private $params;
-    private $captainPaymentService;
     private $roomIdHelperService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager, AcceptedOrderService $acceptedOrderService, RatingService $ratingService, BranchesService $branchesService, LogService $logService, ParameterBagInterface $params, CaptainPaymentService $captainPaymentService,  RoomIdHelperService $roomIdHelperService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager,  RatingService $ratingService, BranchesService $branchesService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
-        $this->acceptedOrderService = $acceptedOrderService;
         $this->ratingService = $ratingService;
         $this->branchesService = $branchesService;
-        $this->logService = $logService;
-        $this->captainPaymentService = $captainPaymentService;
         $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
@@ -74,7 +59,7 @@ class UserService
         $uuid = $this->roomIdHelperService->roomIdGenerate();
         $userProfile = $this->userManager->userProfileCreate($request, $uuid);
 
-        if ($userProfile instanceof UserProfile) {
+        if ($userProfile instanceof UserProfileEntity) {
 
             return $this->autoMapping->map(UserProfileEntity::class,UserProfileCreateResponse::class, $userProfile);
        }
@@ -122,7 +107,6 @@ class UserService
         catch(\Exception $e) {
 
         }
-
         
         return $this->autoMapping->map('array', UserProfileCreateResponse::class, $item);
     }
@@ -138,340 +122,37 @@ class UserService
         return $respons;
     }
 
-    public function captainprofileCreate(CaptainProfileCreateRequest $request)
-    { 
-        $uuid = $this->roomIdHelperService->roomIdGenerate();
-        $captainProfile = $this->userManager->captainprofileCreate($request, $uuid);
-        
-        if ($captainProfile instanceof CaptainProfileEntity) {
+//هذا غير مستخدم ولكن يجب أن تتأكد
+    // public function getCaptainsState($state)
+    // {
+    //     $response = [];
+    //     $items = $this->userManager->getCaptainsState($state);
+
+    //     foreach( $items as  $item ) {
            
-            return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $captainProfile);
-        }
-        if ($captainProfile == true) {
-            return $this->getcaptainprofileByCaptainID($request->getCaptainID());
-        }
-    }
+    //         $item['totalBounce'] = $this->totalBounceCaptain($item['id'], 'admin');
+    //         $item['imageURL'] = $item['image'];
+    //         $item['image'] = $this->params.$item['image'];
+    //         $item['drivingLicenceURL'] = $item['drivingLicence'];
+    //         $item['drivingLicence'] = $this->params.$item['drivingLicence'];
+    //         $item['baseURL'] = $this->params;
 
-    public function captainprofileUpdate(CaptainProfileUpdateRequest $request)
-    {
-        $item = $this->userManager->captainprofileUpdate($request);
-        
-        return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $item);
-    }
-
-    public function captainprofileUpdateByAdmin(CaptainProfileUpdateByAdminRequest $request)
-    {
-        $item = $this->userManager->captainprofileUpdateByAdmin($request);
-
-        return $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $item);
-    }
-
-    public function captainvacationbyadmin(CaptainVacationCreateRequest $request)
-    {
-        return $this->userManager->captainvacationbyadmin($request);
-
-    }
-
-    public function getcaptainprofileByCaptainID($captainID)
-    {
-        $response=[];
-
-        $item = $this->userManager->getcaptainprofileByCaptainID($captainID);
-
-        $bounce = $this->totalBounceCaptain($item['id'], 'captain', $captainID);
-
-        $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($captainID);
-
-        $item['imageURL'] = $item['image'];
-        $item['image'] = $this->params.$item['image'];
-        $item['drivingLicenceURL'] = $item['drivingLicence'];
-        $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-        $item['baseURL'] = $this->params;
-        $item['rating'] = $this->ratingService->getRatingByCaptainID($captainID);
-
-        $response = $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
-
-        $response->bounce = $bounce;
-        $response->countOrdersDeliverd = $countOrdersDeliverd;
-
-        return $response;
-    }
-
-    public function getCaptainprofileByID($captainProfileId)
-    {
-        $response=[];
-        $totalBounce=[];
-        $countOrdersDeliverd=[];
-        $item = $this->userManager->getCaptainprofileByID($captainProfileId);
-        if($item) {
-            $totalBounce = $this->totalBounceCaptain($item['id'],'admin');
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['drivingLicenceURL'] = $item['drivingLicence'];
-            $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-            $item['baseURL'] = $this->params;
-            $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($item['captainID']);
-
-            $item['rating'] = $this->ratingService->getRatingByCaptainID($item['captainID']);
-        }
-        $response =  $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
-        if($item) {
-            $response->totalBounce = $totalBounce;
-            $response->countOrdersDeliverd = $countOrdersDeliverd;
-        }
-        return $response;
-    }
-
-    public function getCaptainprofileByIDStateDayOff($captainProfileId)
-    {
-        $response=[];
-        $totalBounce=[];
-        $countOrdersDeliverd=[];
-        $item = $this->userManager->getCaptainprofileByIDStateDayOff($captainProfileId);
-        if($item) {
-            $totalBounce = $this->totalBounceCaptain($item['id'], 'admin');
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['drivingLicenceURL'] = $item['drivingLicence'];
-            $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-            $item['baseURL'] = $this->params;
-
-            $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($item['captainID']);
-
-            $item['rating'] = $this->ratingService->getRatingByCaptainID($item['captainID']);
-        }
-        $response =  $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
-        if($item) {
-            $response->totalBounce = $totalBounce;
-            $response->countOrdersDeliverd = $countOrdersDeliverd;
-        }
-        return $response;
-    }
-
-    public function getUserInactive($userType)
-    {
-        $response = [];
-        $items = $this->userManager->getUserInactive($userType);
-
-        if($userType == "captain") {
-            foreach( $items as  $item ) {
-                $item['imageURL'] = $item['image'];
-                $item['image'] = $this->params.$item['image'];
-                $item['drivingLicenceURL'] = $item['drivingLicence'];
-                $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-                $item['baseURL'] = $this->params;
-                $response[]  = $this->autoMapping->map('array', CaptainProfileEntity::class, $item);
-            }
-        }
-        if($userType == "owner") {
-            foreach( $items as  $item ) {
-                $response[]  = $this->autoMapping->map('array', UserProfileResponse::class, $item);
-            }
-        }
-     return $response;
-    }
-    public function getCaptainsState($state)
-    {
-        $response = [];
-        $items = $this->userManager->getCaptainsState($state);
-
-        foreach( $items as  $item ) {
+    //         $item['countOrdersDeliverd'] = $this->acceptedOrderService->countAcceptedOrder($item['captainID']);
            
-            $item['totalBounce'] = $this->totalBounceCaptain($item['id'], 'admin');
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['drivingLicenceURL'] = $item['drivingLicence'];
-            $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-            $item['baseURL'] = $this->params;
-
-            $item['countOrdersDeliverd'] = $this->acceptedOrderService->countAcceptedOrder($item['captainID']);
-           
-            $item['rating'] = $this->ratingService->getRatingByCaptainID($item['captainID']);
+    //         $item['rating'] = $this->ratingService->getRatingByCaptainID($item['captainID']);
             
-            $response[]  = $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
-            }
-        return $response;
-    }
+    //         $response[]  = $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $item);
+    //         }
+    //     return $response;
+    // }
 
-    public function captainIsActive($captainID)
-    {
-        $item = $this->userManager->captainIsActive($captainID);
-        if ($item) {
-          return  $item[0]['status'];
-        }
-
-        return $item ;
-     }
-
-     public function dashboardCaptains()
-     {
-         $response = [];
-
-         $response[] = $this->userManager->countpendingCaptains();
-         $response[] = $this->userManager->countOngoingCaptains();
-         $response[] = $this->userManager->countDayOfCaptains();
-
-         $top5Captains = $this->acceptedOrderFilterService->getTop5Captains();
-      
-         foreach ($top5Captains as $item) {
-           
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['baseURL'] = $this->params;   
-
-            $response[]  = $this->autoMapping->map('array',CaptainProfileCreateResponse::class,  $item);
-         }         
-         return $response;
-     }
-
-     public function GetDayOfCaptains()
-     {
-         $response = [];
-
-         $dayOfCaptains = $this->userManager->getDayOfCaptains();
-      
-         foreach ($dayOfCaptains as $item) {
-            $item['imageURL'] = $item['image'];
-            $item['image'] = $this->params.$item['image'];
-            $item['drivingLicenceURL'] = $item['drivingLicence'];
-            $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-            $item['baseURL'] = $this->params;
-
-            $response[]  = $this->autoMapping->map('array',CaptainProfileCreateResponse::class,  $item);
-         }         
-         return $response;
-     }
-
-     public function totalBounceCaptain($captainProfileId,  $user='null', $captainId='null')
+    public function getAllStoreOwners()
     {
         $response = [];
-
-        $item = $this->userManager->totalBounceCaptain($captainProfileId);
-     
-        if ($user == "captain") { 
-            $sumAmount = $this->captainPaymentService->getSumAmount($captainId);
-            $payments = $this->captainPaymentService->getpayments($captainId);
-        }
-        if ($user == "admin") { 
-            $sumAmount = $this->captainPaymentService->getSumAmount($item[0]['captainID']);
-            $payments = $this->captainPaymentService->getpayments($item[0]['captainID']);
-        }
-
-        if ($item) {
-             $countAcceptedOrder = $this->acceptedOrderService->countAcceptedOrder($item[0]['captainID']);
-
-             $item['bounce'] = $item[0]['bounce'] * $countAcceptedOrder[0]['countOrdersDeliverd'];
-             $item['countOrdersDeliverd'] = $countAcceptedOrder[0]['countOrdersDeliverd'];
-             $item['sumPayments'] = $sumAmount[0]['sumPayments'];
-             $item['NetProfit'] = $item['bounce'] + $item[0]['salary'];
-             $item['total'] = $item['sumPayments'] - ($item['bounce'] + $item[0]['salary']);
-             $item['payments'] = $payments;
-            if ($user == "captain") {
-                 $item['total'] = ($item['bounce'] + $item[0]['salary']) - $item['sumPayments'];
-            }
-             $response = $this->autoMapping->map('array', CaptainTotalBounceResponse::class,  $item);
-            
-        }
-
+        $owners = $this->userManager->getAllStoreOwners();
+        foreach ($owners as $owner) {
+            $response[] = $this->autoMapping->map('array', UserProfileCreateResponse::class, $owner);
+            }        
         return $response;
-    }
-
-    public function getUsers($userType)
-    {
-        $respons = [];
-        if ($userType == "owner") {
-            $items = $this->userManager->getOwners();
-
-            foreach ($items as $item) {
-                $respons[] = $this->autoMapping->map('array', AllUsersResponse::class, $item);
-            }
-        }
-        if ($userType == "captain") {
-            $items = $this->userManager->getCaptains($userType);
-
-            foreach ($items as $item) {
-                $item['imageURL'] = $item['image'];
-                $item['image'] = $this->params.$item['image'];
-                $item['drivingLicenceURL'] = $item['drivingLicence'];
-                $item['drivingLicence'] = $this->params.$item['drivingLicence'];
-                $item['baseURL'] = $this->params;
-                $respons[] = $this->autoMapping->map('array', AllUsersResponse::class, $item);
-            }
-        }
-        return $respons;
-    }
-
-    public function getAllUsers($userType)
-    {
-        $response = [];
-        if ($userType == "owner") {
-            $owners = $this->userManager->getAllOwners();
-            
-            foreach ($owners as $owner) {
-                $response[] = $this->autoMapping->map('array', UserProfileCreateResponse::class, $owner);
-            }
-        }
-
-        if ($userType == "captain") {
-            $captains = $this->userManager->getAllCaptains();
-           
-            foreach ($captains as $captain) {
-                $captain['imageURL'] = $captain['image'];
-                $captain['image'] = $this->params.$captain['image'];
-                $captain['drivingLicenceURL'] = $captain['drivingLicence'];
-                $captain['drivingLicence'] = $this->params.$captain['drivingLicence'];
-                $captain['baseURL'] = $this->params;
-
-            $response[]  = $this->autoMapping->map('array',CaptainProfileCreateResponse::class,  $captain);
-            } 
-        }        
-        return $response;
-    }
-
-    public function specialLinkCheck($bool)
-    {
-        if (!$bool)
-        {
-            return $this->params;
-        }
-    }
-
-    public function getCaptainMybalance($captainID)
-    {
-        $item = $this->userManager->getcaptainprofileByCaptainID($captainID);
-        return $this->totalBounceCaptain($item['id'], 'captain', $captainID);
-    }
-
-    public function remainingcaptain()
-    {
-        $response = [];
-        $result = [];
-        $captains = $this->userManager->getAllCaptains();
-         
-        foreach ($captains as $captain) {
-                
-                $item = $this->userManager->getCaptainprofileByID($captain['id']);
-       
-                 $totalBounce = $this->totalBounceCaptain($item['id'],'admin');
-                 $total=(array)$totalBounce;
-                 $captain['totalBounce'] = $total;
-        
-                if ($captain['totalBounce']['total'] < 0 ){
-                
-                $response[] =  $this->autoMapping->map('array', CaptainProfileCreateResponse::class, $captain);
-            }
-        } 
-        $result['response']=$response;
-        return $result;
-    }
-
-    public function update($request, $NewMessageStatus)
-    {
-        $item = $this->userManager->getcaptainByUuid($request->getRoomID());
-   
-       $response = $this->userManager->update($item, $NewMessageStatus);
-    
-       return  $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $response);
-      
     }
 }

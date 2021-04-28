@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
 use App\Service\AcceptedOrderFilterService;
+use App\Service\CaptainService;
 
 class OrderService
 {
@@ -34,12 +35,13 @@ class OrderService
     private $roomIdHelperService;
     private $dateFactoryService;
     private $acceptedOrderFilterService;
+    private $captainService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
                                 LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
-                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService
+                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService,                                CaptainService $captainService
                                 )
     {
         $this->autoMapping = $autoMapping;
@@ -55,6 +57,7 @@ class OrderService
         $this->params = $params->get('upload_base_url') . '/';
         // $this->notificationService = $notificationService;
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
+        $this->captainService = $captainService;
     }
 
     public function createOrder(OrderCreateRequest $request)
@@ -168,7 +171,7 @@ class OrderService
     public function closestOrders($userId)
     {
         // $response ="this captain inactive!!";
-        // $status = $this->userService->captainIsActive($userId);
+        // $status = $this->captainService->captainIsActive($userId);
         // if ($status == 'active') {
             $response = [];
             $orders = $this->orderManager->closestOrders();

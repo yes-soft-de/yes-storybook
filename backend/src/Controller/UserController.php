@@ -11,6 +11,7 @@ use App\Request\CaptainProfileUpdateByAdminRequest;
 use App\Request\userProfileUpdateByAdminRequest;
 use App\Request\UserRegisterRequest;
 use App\Service\UserService;
+use App\Service\CaptainService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,14 +27,16 @@ class UserController extends BaseController
     private $autoMapping;
     private $validator;
     private $userService;
+    private $captainService;
    
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, UserService $userService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, UserService $userService, CaptainService $captainService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
         $this->userService = $userService;
+        $this->captainService = $captainService;
         
     }
 
@@ -176,7 +179,7 @@ class UserController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function captainprofileCreate(Request $request)
+    public function createCaptainProfile(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -191,7 +194,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->userService->captainprofileCreate($request);
+        $response = $this->captainService->createCaptainProfile($request);
 
         return $this->response($response, self::CREATE);
     }
@@ -202,7 +205,7 @@ class UserController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function captainprofileUpdate(Request $request)
+    public function UpdateCaptainProfile(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -216,7 +219,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->userService->captainprofileUpdate($request);
+        $response = $this->captainService->UpdateCaptainProfile($request);
 
         return $this->response($response, self::UPDATE);
     }
@@ -227,7 +230,7 @@ class UserController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function captainprofileUpdateByAdmin(Request $request)
+    public function updateCaptainProfileByAdmin(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -241,19 +244,20 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->userService->captainprofileUpdateByAdmin($request);
+        $response = $this->captainService->UpdateCaptainProfileByAdmin($request);
 
         return $this->response($response, self::UPDATE);
     }
 
+    
     /**
      * @Route("/captainprofile", name="getCaptainprofileByCaptainID",methods={"GET"})
      * @IsGranted("ROLE_CAPTAIN")
      *  @return JsonResponse
      */
-    public function getcaptainprofileByCaptainID()
+    public function getCaptainProfileByCaptainID()
     {
-        $response = $this->userService->getcaptainprofileByCaptainID($this->getUserId());
+        $response = $this->captainService->getCaptainProfileByCaptainID($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }
@@ -263,48 +267,52 @@ class UserController extends BaseController
      * @IsGranted("ROLE_ADMIN")
      *  @return JsonResponse
      */
-    public function getCaptainprofileByID($captainProfileId)
+    public function getCaptainProfileByID($captainProfileId)
     {
-        $response = $this->userService->getCaptainprofileByID($captainProfileId);
+        $response = $this->captainService->getCaptainProfileByID($captainProfileId);
 
         return $this->response($response, self::FETCH);
     }
 
+// هذا الروت مستخدم ضممن السي فور دي 
+// لا فائدة من جلب صاحب المتجر الغير مفعل 
+// بالنسبة لصاحب المتجر لدينا تفعيل الإشتراك
+// تم بناء إند بوينت لجلب الكباتن الغير مفعلين
+    // /**
+    //  * @Route("/getUserInactive/{userType}", name="getOwnerOrCaptainPending",methods={"GET"})
+    //  * @IsGranted("ROLE_ADMIN")
+    //  *  @return JsonResponse
+    //  */
+    // public function getUserInactive($userType)
+    // {
+    //     $response = $this->userService->getUserInactive($userType);
+
+    //     return $this->response($response, self::FETCH);
+    // }
+
     /**
-     * @Route("/captainprofileStateDayOff/{captainProfileId}", name="getCaptainprofileBycaptainProfileIdStateDayOff",methods={"GET"})
+     * @Route("/getcaptainsinactive", name="getCaptainsPending",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      *  @return JsonResponse
      */
-    public function getCaptainprofileByIDStateDayOff($captainProfileId)
+    public function getCaptainsInactive()
     {
-        $response = $this->userService->getCaptainprofileByIDStateDayOff($captainProfileId);
+        $response = $this->captainService->getCaptainsInactive();
 
         return $this->response($response, self::FETCH);
     }
+//هذا غير مستخدم ولكن يجب أن تتأكد
+    // /**
+    //  * @Route("/getCaptainsState/{state}", name="getCaptainsState",methods={"GET"})
+    //  * @IsGranted("ROLE_ADMIN")
+    //  *  @return JsonResponse
+    //  */
+    // public function getCaptainsState($state)
+    // {
+    //     $response = $this->userService->getCaptainsState($state);
 
-    /**
-     * @Route("/getUserInactive/{userType}", name="getOwnerOrCaptainPending",methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
-     *  @return JsonResponse
-     */
-    public function getUserInactive($userType)
-    {
-        $response = $this->userService->getUserInactive($userType);
-
-        return $this->response($response, self::FETCH);
-    }
-
-    /**
-     * @Route("/getCaptainsState/{state}", name="getCaptainsState",methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
-     *  @return JsonResponse
-     */
-    public function getCaptainsState($state)
-    {
-        $response = $this->userService->getCaptainsState($state);
-
-        return $this->response($response, self::FETCH);
-    }
+    //     return $this->response($response, self::FETCH);
+    // }
 
     /**
      * @Route("/dashboardCaptains", name="dashboardCaptains",methods={"GET"})
@@ -314,7 +322,7 @@ class UserController extends BaseController
      */
     public function dashboardCaptains()
     {
-        $result = $this->userService->dashboardCaptains();
+        $result = $this->captainService->dashboardCaptains();
 
         return $this->response($result, self::FETCH);
     }
@@ -322,12 +330,12 @@ class UserController extends BaseController
     /**
      * @Route("/getDayOfCaptains", name="getDayOfCaptains",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function getDayOfCaptains()
+    public function getCaptainsInVacation()
     {
-        $result = $this->userService->getDayOfCaptains();
+        $result = $this->captainService->getCaptainsInVacation();
 
         return $this->response($result, self::FETCH);
     }
@@ -335,35 +343,35 @@ class UserController extends BaseController
     /**
      * @Route("/totalBounceCaptain/{captainProfileId}", name="TotalBounceCaptain",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function totalBounceCaptain($captainProfileId)
     {
-        $result = $this->userService->totalBounceCaptain($captainProfileId,'admin');
+        $result = $this->captainService->totalBounceCaptain($captainProfileId,'admin');
 
         return $this->response($result, self::FETCH);
     }
 
      /**
-     * @Route("/getUsers/{userType}", name="getUsers",methods={"GET"})
+     * @Route("/storeowners", name="getAllStoreOwners",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      * @return JsonResponse
      */
-    public function getUsers($userType)
+    public function getAllStoreOwners()
     {
-        $response = $this->userService->getUsers($userType);
+        $response = $this->userService->getAllStoreOwners();
 
         return $this->response($response, self::FETCH);
     }
      /**
-     * @Route("/getAllUsers/{userType}", name="getAllUsers",methods={"GET"})
+     * @Route("/captains", name="getCaptains",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      * @return JsonResponse
      */
-    public function getAllUsers($userType)
+    public function getAllCaptains()
     {
-        $response = $this->userService->getAllUsers($userType);
+        $response = $this->captainService->getAllCaptains();
 
         return $this->response($response, self::FETCH);
     }
@@ -375,19 +383,19 @@ class UserController extends BaseController
      */
     public function getCaptainMybalance()
     {
-        $response = $this->userService->getCaptainMybalance($this->getUserId());
+        $response = $this->captainService->getCaptainMybalance($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }
 
      /**
-     * @Route("/remainingcaptain", name="TheRemainingCaptainHasABoost",methods={"GET"})
+     * @Route("/remainingcaptain", name="TheRemainingCaptainHasAPayment",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      * @return JsonResponse
      */
     public function remainingcaptain()
     {
-        $response = $this->userService->remainingcaptain();
+        $response = $this->captainService->remainingcaptain();
 
         return $this->response($response, self::FETCH);
     }
@@ -398,13 +406,13 @@ class UserController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function captainUpdateNewMessageStatus(Request $request)
+    public function updateCaptainNewMessageStatus(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
         $request = $this->autoMapping->map(stdClass::class,CaptainProfileUpdateByAdminRequest::class,(object)$data);
         
-        $response = $this->userService->update($request,false);
+        $response = $this->captainService->updateCaptainNewMessageStatus($request,false);
 
         return $this->response($response, self::CREATE);
     }

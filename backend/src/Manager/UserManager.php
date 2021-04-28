@@ -134,7 +134,7 @@ class UserManager
         return $this->profileRepository->getremainingOrders($userID);
     }
 
-    public function captainprofileCreate(CaptainProfileCreateRequest $request, $uuid)
+    public function createCaptainProfile(CaptainProfileCreateRequest $request, $uuid)
     {
         $request->setUuid($uuid);
         $isCaptainProfile = $this->captainProRepository->getcaptainprofileByCaptainID($request->getCaptainID());
@@ -143,7 +143,7 @@ class UserManager
 
             $captainProfile = $this->autoMapping->map(CaptainProfileCreateRequest::class, CaptainProfileEntity::class, $request);
             
-            //change this to inactive
+            //change setStatus to inactive
             $captainProfile->setStatus('active');
 
             $captainProfile->setIsOnline('active');
@@ -159,7 +159,7 @@ class UserManager
         }
     }
 
-    public function captainprofileUpdate(CaptainProfileUpdateRequest $request)
+    public function UpdateCaptainProfile(CaptainProfileUpdateRequest $request)
     {
         $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getUserID());
         if ($item) {
@@ -171,7 +171,7 @@ class UserManager
         }
     }
 
-    public function captainprofileUpdateByAdmin(CaptainProfileUpdateByAdminRequest $request)
+    public function updateCaptainProfileByAdmin(CaptainProfileUpdateByAdminRequest $request)
     {
         $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getCaptainID());
         if ($item) {
@@ -183,7 +183,7 @@ class UserManager
         }
     }
 
-    public function captainvacationbyadmin(CaptainVacationCreateRequest $request)
+    public function updateCaptainStateByAdmin(CaptainVacationCreateRequest $request)
     {  
         $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getCaptainId());
         
@@ -196,29 +196,19 @@ class UserManager
         }
     }
 
-    public function getcaptainprofileByCaptainID($captainID)
+    public function getCaptainProfileByCaptainID($captainID)
     {
-        return $this->captainProRepository->getcaptainprofileByCaptainID($captainID);
+        return $this->captainProRepository->getCaptainProfileByCaptainID($captainID);
     }
     
-    public function getCaptainprofileByID($captainProfileId)
+    public function getCaptainProfileByID($captainProfileId)
     {
-        return $this->captainProRepository->getCaptainprofileByID($captainProfileId);
+        return $this->captainProRepository->getCaptainProfileByID($captainProfileId);
     }
 
-    public function getCaptainprofileByIDStateDayOff($captainProfileId)
+    public function getCaptainsInactive()
     {
-        return $this->captainProRepository->getCaptainprofileByIDStateDayOff($captainProfileId);
-    }
-
-    public function getUserInactive($userType)
-    {
-        if ($userType == "owner") {
-            return $this->profileRepository->getUserInactive();
-        }
-        if ($userType == "captain") {
-            return $this->captainProRepository->getUserInactive();
-        }
+            return $this->captainProRepository->getCaptainsInactive();
     }
 
     public function captainIsActive($captainID)
@@ -246,29 +236,29 @@ class UserManager
         return $this->captainProRepository->countDayOfCaptains();
     }
    
-    public function getDayOfCaptains()
+    public function getCaptainsInVacation()
     {
-        return $this->captainProRepository->getDayOfCaptains();
+        return $this->captainProRepository->getCaptainsInVacation();
     }
 
     public function totalBounceCaptain($id)
     {
         return $this->captainProRepository->totalBounceCaptain($id);
     }
-
+//لا داعي له ولكن تركته لتأكد
     public function getOwners()
     {
         return $this->profileRepository->getOwners();
     }
-
+//لا داعي له ولكن تركته لتأكد
     public function getCaptains($userID)
     {
         return $this->captainProRepository->getCaptains($userID);
     }
 
-    public function getAllOwners()
+    public function getAllStoreOwners()
     {
-        return $this->profileRepository->getAllOwners();
+        return $this->profileRepository->getAllStoreOwners();
     }
     
     public function getAllCaptains()
@@ -281,7 +271,7 @@ class UserManager
         return $this->captainProRepository->getcaptainByUuid($uuid);
     }
 
-    public function update($request, $NewMessageStatus)
+    public function updateCaptainNewMessageStatus($request, $NewMessageStatus)
     {
         if ($request) {
            

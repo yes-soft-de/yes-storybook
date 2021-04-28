@@ -7,18 +7,18 @@ use App\Entity\CaptainVacationEntity;
 use App\Manager\CaptainVacationManager;
 use App\Request\CaptainVacationCreateRequest;
 use App\Response\CaptainVacationResponse;
-use App\Service\UserService;
+use App\Service\CaptainService;
 
 class CaptainVacationService
 {
     private $autoMapping;
     private $captainVacationManager;
-    private $userService;
+    private $captainService;
 
-    public function __construct(AutoMapping $autoMapping, CaptainVacationManager $captainVacationManager, UserService $userService)
+    public function __construct(AutoMapping $autoMapping, CaptainVacationManager $captainVacationManager, CaptainService $captainService)
     {
         $this->autoMapping = $autoMapping;
-        $this->userService = $userService;
+        $this->captainService = $captainService;
         $this->captainVacationManager = $captainVacationManager;
     }
 
@@ -26,7 +26,7 @@ class CaptainVacationService
     {
         $result = $this->captainVacationManager->createCaptainVacation($request);
         if ($result) {
-           $this->userService->captainvacationbyadmin($request); 
+           $this->captainService->updateCaptainStateByAdmin($request); 
         }
         $respnose = $this->autoMapping->map(CaptainVacationEntity::class, CaptainVacationResponse::class, $result);
         

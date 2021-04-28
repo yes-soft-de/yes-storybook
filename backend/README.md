@@ -454,12 +454,10 @@ methods: PUT
 methods: GET
 ```
 
-### get owner or captain pending (inactive)
-
-userType = owner or captain.
+### get captain pending (inactive)
 
 ```
-/getUserInactive/{userType}
+/getcaptainsinactive
 methods: GET
 ```
 

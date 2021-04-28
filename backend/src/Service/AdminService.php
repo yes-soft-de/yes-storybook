@@ -19,9 +19,9 @@ class AdminService
         $this->adminManager = $adminManager;
     }
 
-    public function adminCreate(AdminCreateRequest $request)
+    public function createAdmin(AdminCreateRequest $request)
     {
-        $adminCreate = $this->adminManager->adminCreate($request);
+        $adminCreate = $this->adminManager->createAdmin($request);
 
         $response = $this->autoMapping->map(UserEntity::class, AdminCreateResponse::class, $adminCreate);
 

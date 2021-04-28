@@ -7,7 +7,6 @@ use App\Entity\AcceptedOrderEntity;
 use App\Entity\UserProfileEntity;
 use App\Entity\OrderEntity;
 use App\Entity\BranchesEntity;
-use App\Entity\BankEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -36,7 +35,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getcaptainprofileByCaptainID($captainID)
+    public function getCaptainProfileByCaptainID($captainID)
     {
         return $this->createQueryBuilder('captainProfile')
             ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state', 'captainProfile.specialLink', 'captainProfile.phone', 'captainProfile.isOnline', 'captainProfile.bankName', 'captainProfile.bankAccountNumber', 'captainProfile.stcPay')
@@ -59,15 +58,14 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getCaptainprofileByID($captainProfileId)
+    public function getCaptainProfileByID($captainProfileId)
     {
         return $this->createQueryBuilder('captainProfile')
-            ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state as vacationStatus', 'captainProfile.bounce', 'captainProfile.uuid', 'captainProfile.specialLink', 'captainProfile.isOnline', 'captainProfile.newMessageStatus')
+            ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state as vacationStatus', 'captainProfile.bounce', 'captainProfile.uuid', 'captainProfile.specialLink', 'captainProfile.isOnline', 'captainProfile.newMessageStatus', 'captainProfile.bankName', 'captainProfile.bankAccountNumber', 'captainProfile.stcPay')
             ->addSelect('acceptedOrderEntity.state')
-            ->addSelect('bankEntity.bankName', 'bankEntity.accountID', 'bankEntity.stcPay')
+            ->addSelect()
 
             ->leftJoin(AcceptedOrderEntity::class, 'acceptedOrderEntity', Join::WITH, 'acceptedOrderEntity.captainID = captainProfile.captainID')
-            ->leftJoin(BankEntity::class, 'bankEntity', Join::WITH, 'bankEntity.userID = captainProfile.captainID')
 
             ->andWhere('captainProfile.id=:captainProfileId')
             
@@ -77,20 +75,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getCaptainprofileByIDStateDayOff($captainProfileId)
-    {
-        return $this->createQueryBuilder('captainProfile')
-            ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state', 'captainProfile.bounce', 'captainProfile.uuid', 'captainProfile.specialLink', 'captainProfile.isOnline')
-
-            ->andWhere('captainProfile.id=:captainProfileId')
-            
-            ->setParameter('captainProfileId', $captainProfileId)
-
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    public function getUserInactive()
+    public function getCaptainsInactive()
     {
         return $this->createQueryBuilder('captainProfile')
             ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.specialLink')
@@ -177,7 +162,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
    
-    public function getDayOfCaptains()
+    public function getCaptainsInVacation()
     {
         return $this->createQueryBuilder('captainProfile')
             ->select('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state', 'captainProfile.specialLink')
@@ -228,7 +213,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
     public function getAllCaptains()
     {
         return $this->createQueryBuilder('captainProfile')
-            ->select('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state', 'captainProfile.uuid', 'captainProfile.bounce', 'captainProfile.specialLink', 'captainProfile.isOnline', 'captainProfile.newMessageStatus')
+            ->select('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state', 'captainProfile.uuid', 'captainProfile.bounce', 'captainProfile.specialLink', 'captainProfile.isOnline', 'captainProfile.newMessageStatus', 'captainProfile.bankName', 'captainProfile.bankAccountNumber', 'captainProfile.stcPay')
 
             ->getQuery()
             ->getResult();

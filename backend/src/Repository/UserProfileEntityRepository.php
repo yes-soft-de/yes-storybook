@@ -83,18 +83,6 @@ class UserProfileEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getUserInactive()
-    {
-        return $this->createQueryBuilder('profile')
-
-            ->select('profile.id', 'profile.userName', 'profile.image', 'profile.story', 'profile.status', 'profile.free', 'profile.branch')
-
-            ->andWhere("profile.status = 'inactive' ")
-
-            ->getQuery()
-            ->getResult();
-    }
-
     public function getOwners()
     {
         return $this->createQueryBuilder('profile')
@@ -114,7 +102,7 @@ class UserProfileEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getAllOwners()
+    public function getAllStoreOwners()
     {
         return $this->createQueryBuilder('profile')
 
