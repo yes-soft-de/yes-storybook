@@ -389,13 +389,13 @@ class UserController extends BaseController
     }
 
      /**
-     * @Route("/remainingcaptain", name="TheRemainingCaptainHasAPayment",methods={"GET"})
+     * @Route("/remainingcaptain", name="getCaptainsWithUnfinishedPayments",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      * @return JsonResponse
      */
-    public function remainingcaptain()
+    public function getCaptainsWithUnfinishedPayments()
     {
-        $response = $this->captainService->remainingcaptain();
+        $response = $this->captainService->getCaptainsWithUnfinishedPayments();
 
         return $this->response($response, self::FETCH);
     }

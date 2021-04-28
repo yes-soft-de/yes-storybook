@@ -263,7 +263,7 @@ class CaptainService
         }
     }
 
-    public function remainingcaptain()
+    public function getCaptainsWithUnfinishedPayments()
     {
         $response = [];
         $result = [];
