@@ -285,6 +285,5 @@ class CaptainService
        $response = $this->userManager->updateCaptainNewMessageStatus($item, $NewMessageStatus);
     
        return  $this->autoMapping->map(CaptainProfileEntity::class, CaptainProfileCreateResponse::class, $response);
-      
     }
 }
