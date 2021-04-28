@@ -312,7 +312,7 @@ class OrderService
                     $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
                 }
 
-                $response []= $this->autoMapping->map('array', OrderResponse::class, $item);
+                $response[] = $this->autoMapping->map('array', OrderResponse::class, $item);
             }
         }
 
@@ -332,7 +332,7 @@ class OrderService
                 if($firstDate[0]['date'] && $lastDate[0]['date']) {
                     $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
                 }
-                $response []= $this->autoMapping->map('array', OrderResponse::class, $item);
+                $response[] = $this->autoMapping->map('array', OrderResponse::class, $item);
             }
         }
         return $response;

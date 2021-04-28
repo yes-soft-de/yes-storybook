@@ -38,8 +38,8 @@ class CaptainPaymentManager
         return $this->repository->getpayments($captainId);
     }
 
-    public function getSumAmount($captainId)
+    public function getSumPayments($captainId)
     {
-        return $this->repository->getSumAmount($captainId);
+        return $this->repository->getSumPayments($captainId);
     }
 }

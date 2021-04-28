@@ -346,9 +346,9 @@ class UserController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function totalBounceCaptain($captainProfileId)
+    public function getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId)
     {
-        $result = $this->captainService->totalBounceCaptain($captainProfileId,'admin');
+        $result = $this->captainService->getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId);
 
         return $this->response($result, self::FETCH);
     }
@@ -381,9 +381,9 @@ class UserController extends BaseController
      * @IsGranted("ROLE_CAPTAIN")
      *  @return JsonResponse
      */
-    public function getCaptainMybalance()
+    public function getCaptainFinancialAccountDetailsByCaptainId()
     {
-        $response = $this->captainService->getCaptainMybalance($this->getUserId());
+        $response = $this->captainService->getCaptainFinancialAccountDetailsByCaptainId($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }

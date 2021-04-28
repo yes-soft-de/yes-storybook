@@ -63,7 +63,6 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('captainProfile')
             ->addSelect('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.state as vacationStatus', 'captainProfile.bounce', 'captainProfile.uuid', 'captainProfile.specialLink', 'captainProfile.isOnline', 'captainProfile.newMessageStatus', 'captainProfile.bankName', 'captainProfile.bankAccountNumber', 'captainProfile.stcPay')
             ->addSelect('acceptedOrderEntity.state')
-            ->addSelect()
 
             ->leftJoin(AcceptedOrderEntity::class, 'acceptedOrderEntity', Join::WITH, 'acceptedOrderEntity.captainID = captainProfile.captainID')
 
@@ -173,7 +172,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function totalBounceCaptain($id)
+    public function getCaptainAsArray($id)
     {
         return $this->createQueryBuilder('captainProfile')
 
@@ -181,6 +180,18 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
 
             ->andWhere('captainProfile.id =:id')
             ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCaptainAsArrayByCaptainId($captainId)
+    {
+        return $this->createQueryBuilder('captainProfile')
+
+            ->select('captainProfile.id', 'captainProfile.captainID', 'captainProfile.name', 'captainProfile.image', 'captainProfile.location', 'captainProfile.age', 'captainProfile.car', 'captainProfile.drivingLicence', 'captainProfile.salary', 'captainProfile.status', 'captainProfile.bounce', 'captainProfile.specialLink', 'captainProfile.bankName', 'captainProfile.bankAccountNumber', 'captainProfile.stcPay')
+
+            ->andWhere('captainProfile.captainID =:captainID')
+            ->setParameter('captainID', $captainId)
             ->getQuery()
             ->getResult();
     }

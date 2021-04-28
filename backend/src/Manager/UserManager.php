@@ -241,9 +241,14 @@ class UserManager
         return $this->captainProRepository->getCaptainsInVacation();
     }
 
-    public function totalBounceCaptain($id)
+    public function getCaptainAsArray($id)
     {
-        return $this->captainProRepository->totalBounceCaptain($id);
+        return $this->captainProRepository->getCaptainAsArray($id);
+    }
+
+    public function getCaptainAsArrayByCaptainId($captainID)
+    {
+        return $this->captainProRepository->getCaptainAsArrayByCaptainId($captainID);
     }
 //لا داعي له ولكن تركته لتأكد
     public function getOwners()

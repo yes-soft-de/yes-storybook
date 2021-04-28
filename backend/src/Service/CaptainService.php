@@ -9,8 +9,7 @@ use App\Request\CaptainVacationCreateRequest;
 use App\Request\CaptainProfileUpdateRequest;
 use App\Request\CaptainProfileUpdateByAdminRequest;
 use App\Response\CaptainProfileCreateResponse;
-use App\Response\AllUsersResponse;
-use App\Response\CaptainTotalBounceResponse;
+use App\Response\CaptainFinancialAccountDetailsResponse;
 use App\Service\CaptainPaymentService;
 use App\Service\RoomIdHelperService;
 use App\Service\AcceptedOrderService;
@@ -82,9 +81,9 @@ class CaptainService
     {
         $response=[];
 
-        $item = $this->userManager->getCaptainsInVacation($captainID);
+        $item = $this->userManager->getCaptainProfileByCaptainID($captainID);
 
-        $bounce = $this->totalBounceCaptain($item['id'], 'captain', $captainID);
+        $bounce = $this->getCaptainFinancialAccountDetailsByCaptainId($captainID);
 
         $countOrdersDeliverd = $this->acceptedOrderService->countAcceptedOrder($captainID);
 
@@ -110,7 +109,7 @@ class CaptainService
         $countOrdersDeliverd=[];
         $item = $this->userManager->getCaptainProfileByID($captainProfileId);
         if($item) {
-            $totalBounce = $this->totalBounceCaptain($item['id'],'admin');
+            $totalBounce = $this->getCaptainFinancialAccountDetailsByCaptainProfileId($item['id']);
             $item['imageURL'] = $item['image'];
             $item['image'] = $this->params.$item['image'];
             $item['drivingLicenceURL'] = $item['drivingLicence'];
@@ -191,35 +190,50 @@ class CaptainService
          }         
          return $response;
      }
-//الأفضل أن تقسم إلى 2 فنكشن
-     public function totalBounceCaptain($captainProfileId,  $user='null', $captainId='null')
+ 
+     public function getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId):object 
     {
         $response = [];
-
-        $item = $this->userManager->totalBounceCaptain($captainProfileId);
-     
-        if ($user == "captain") { 
-            $sumAmount = $this->captainPaymentService->getSumAmount($captainId);
-            $payments = $this->captainPaymentService->getpayments($captainId);
-        }
-        if ($user == "admin") { 
-            $sumAmount = $this->captainPaymentService->getSumAmount($item[0]['captainID']);
+        //get captain info as Array
+        $item = $this->userManager->getCaptainAsArray($captainProfileId);
+        
+        if ($item) {
+            $sumPayments = $this->captainPaymentService->getSumPayments($item[0]['captainID']);
             $payments = $this->captainPaymentService->getpayments($item[0]['captainID']);
-        }
+            $countAcceptedOrder = $this->acceptedOrderService->countAcceptedOrder($item[0]['captainID']);
 
+             $item['countOrdersDeliverd'] = $countAcceptedOrder[0]['countOrdersDeliverd'];
+             //bounce = total bounce
+             $item['bounce'] = $item[0]['bounce'] *  $item['countOrdersDeliverd'];
+             $item['sumPayments'] = $sumPayments[0]['sumPayments'];
+             $item['NetProfit'] = $item['bounce'] + $item[0]['salary'];
+             $item['total'] = $item['sumPayments'] - $item['NetProfit'];
+             $item['payments'] = $payments;
+
+             $response = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);  
+        }
+        return $response;
+    }
+
+     public function getCaptainFinancialAccountDetailsByCaptainId($captainId)
+    {
+        $response=[];
+
+        $item = $this->userManager->getCaptainAsArrayByCaptainId($captainId);
+        // dd($item);
+        $sumPayments = $this->captainPaymentService->getSumPayments($captainId);
+        $payments = $this->captainPaymentService->getpayments($captainId);
+        
         if ($item) {
              $countAcceptedOrder = $this->acceptedOrderService->countAcceptedOrder($item[0]['captainID']);
-
-             $item['bounce'] = $item[0]['bounce'] * $countAcceptedOrder[0]['countOrdersDeliverd'];
              $item['countOrdersDeliverd'] = $countAcceptedOrder[0]['countOrdersDeliverd'];
-             $item['sumPayments'] = $sumAmount[0]['sumPayments'];
+             $item['bounce'] = $item[0]['bounce'] * $item['countOrdersDeliverd'];
+             $item['sumPayments'] = $sumPayments[0]['sumPayments'];
              $item['NetProfit'] = $item['bounce'] + $item[0]['salary'];
-             $item['total'] = $item['sumPayments'] - ($item['bounce'] + $item[0]['salary']);
+             $item['total'] = $item['NetProfit'] - $item['sumPayments'];
              $item['payments'] = $payments;
-            if ($user == "captain") {
-                 $item['total'] = ($item['bounce'] + $item[0]['salary']) - $item['sumPayments'];
-            }
-             $response = $this->autoMapping->map('array', CaptainTotalBounceResponse::class,  $item);
+
+             $response = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);
             
         }
         return $response;
@@ -249,12 +263,6 @@ class CaptainService
         }
     }
 
-    public function getCaptainMybalance($captainID)
-    {
-        $item = $this->userManager->getcaptainprofileByCaptainID($captainID);
-        return $this->totalBounceCaptain($item['id'], 'captain', $captainID);
-    }
-
     public function remainingcaptain()
     {
         $response = [];
@@ -265,7 +273,7 @@ class CaptainService
                 
                 $item = $this->userManager->getCaptainProfileByID($captain['id']);
        
-                 $totalBounce = $this->totalBounceCaptain($item['id'],'admin');
+                 $totalBounce = $this->getCaptainFinancialAccountDetailsByCaptainProfileId($item['id']);
                  $total=(array)$totalBounce;
                  $captain['totalBounce'] = $total;
         

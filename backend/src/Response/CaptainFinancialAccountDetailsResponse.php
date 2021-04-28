@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-class CaptainTotalBounceResponse
+class CaptainFinancialAccountDetailsResponse
 {
     public $bounce;
 

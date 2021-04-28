@@ -32,7 +32,7 @@ class CaptainPaymentEntityRepository extends ServiceEntityRepository
                ->getResult();
     }
     
-    public function getSumAmount($captainId)
+    public function getSumPayments($captainId)
     {
         return $this->createQueryBuilder('PaymentsCaptain')
                ->select('sum(PaymentsCaptain.amount) as sumPayments')
