@@ -6,20 +6,19 @@ use App\AutoMapping;
 use App\Entity\CaptainPaymentEntity;
 use App\Repository\CaptainPaymentEntityRepository;
 use App\Request\CaptainPaymentCreateRequest;
-// use App\Request\RatingUpdateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CaptainPaymentManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $captainPaymentEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, CaptainPaymentEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, CaptainPaymentEntityRepository $captainPaymentEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->captainPaymentEntityRepository = $captainPaymentEntityRepository;
     }
 
     public function createCaptainPayment(CaptainPaymentCreateRequest $request)
@@ -35,11 +34,11 @@ class CaptainPaymentManager
 
     public function getpayments($captainId)
     {
-        return $this->repository->getpayments($captainId);
+        return $this->captainPaymentEntityRepository->getpayments($captainId);
     }
 
     public function getSumPayments($captainId)
     {
-        return $this->repository->getSumPayments($captainId);
+        return $this->captainPaymentEntityRepository->getSumPayments($captainId);
     }
 }

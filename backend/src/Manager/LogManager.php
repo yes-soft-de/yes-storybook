@@ -11,13 +11,13 @@ class LogManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $logEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, LogEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, LogEntityRepository $logEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->logEntityRepository = $logEntityRepository;
     }
 
     public function create($record)
@@ -34,21 +34,21 @@ class LogManager
 
     public function getLogByOrderId($orderId)
     {
-        return $this->repository->getLogByOrderId($orderId);
+        return $this->logEntityRepository->getLogByOrderId($orderId);
     }
 
     public function getLogsByOrderId($orderId)
     {
-        return $this->repository->getLogsByOrderId($orderId);
+        return $this->logEntityRepository->getLogsByOrderId($orderId);
     }
 
     public function getFirstDate($orderId)
     {
-        return $this->repository->getFirstDate($orderId);
+        return $this->logEntityRepository->getFirstDate($orderId);
     }
     
     public function getLastDate($orderId)
     {
-        return $this->repository->getLastDate($orderId);
+        return $this->logEntityRepository->getLastDate($orderId);
     }
 }

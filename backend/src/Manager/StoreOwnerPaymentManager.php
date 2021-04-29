@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\StoreOwnerPaymentEntity;
-use App\Repository\storeOwnerPaymentEntityRepository;
+use App\Repository\StoreOwnerPaymentEntityRepository;
 use App\Request\StoreOwnerPaymentCreateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -12,13 +12,13 @@ class StoreOwnerPaymentManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $storeOwnerPaymentEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, storeOwnerPaymentEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, StoreOwnerPaymentEntityRepository $storeOwnerPaymentEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->storeOwnerPaymentEntityRepository = $storeOwnerPaymentEntityRepository;
     }
 
     public function createStoreOwnerPayment(StoreOwnerPaymentCreateRequest $request)
@@ -34,16 +34,16 @@ class StoreOwnerPaymentManager
 
     public function getpaymentsForOwner($ownerId)
     {
-        return $this->repository->getpaymentsForOwner($ownerId);
+        return $this->storeOwnerPaymentEntityRepository->getpaymentsForOwner($ownerId);
     }
 
     public function getSumAmount($ownerId)
     {
-        return $this->repository->getSumAmount($ownerId);
+        return $this->storeOwnerPaymentEntityRepository->getSumAmount($ownerId);
     }
 
     public function getNewAmount($ownerId)
     {
-        return $this->repository->getNewAmount($ownerId);
+        return $this->storeOwnerPaymentEntityRepository->getNewAmount($ownerId);
     }
 }

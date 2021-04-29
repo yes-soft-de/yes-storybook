@@ -13,13 +13,13 @@ class AppointmentManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $appointmentEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, AppointmentEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, AppointmentEntityRepository $appointmentEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->appointmentEntityRepository = $appointmentEntityRepository;
     }
 
     public function createAppointment(AppointmentCreateRequest $request)
@@ -35,12 +35,12 @@ class AppointmentManager
 
     public function getAllAppointements()
     {
-        return $this->repository->getAllAppointements();
+        return $this->appointmentEntityRepository->getAllAppointements();
     }
 
     public function update(AppointmentUpdateIsDoneRequest $request)
     {
-        $entity = $this->repository->find($request->getId());
+        $entity = $this->appointmentEntityRepository->find($request->getId());
 
         if (!$entity) {
             return null;

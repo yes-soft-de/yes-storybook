@@ -12,13 +12,13 @@ class SupportManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $supportEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, SupportEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, SupportEntityRepository $supportEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->supportEntityRepository = $supportEntityRepository;
     }
 
     public function createSupport(SupportCreateRequest $request, $uuid)
@@ -35,23 +35,23 @@ class SupportManager
 
     public function getReports()
     {
-        return $this->repository->getReports();
+        return $this->supportEntityRepository->getReports();
     }
 
     public function getReport($id)
     {
-        return $this->repository->getReport($id);
+        return $this->supportEntityRepository->getReport($id);
     }
 
     public function getReportByUuid($uuid)
     {
-        return $this->repository->getreortByUuid($uuid);
+        return $this->supportEntityRepository->getreortByUuid($uuid);
     }
 
     public function update($request, $NewMessageStatus)
     {
         if ($request) {
-            $entity = $this->repository->find($request->getId());
+            $entity = $this->supportEntityRepository->find($request->getId());
             
             if (!$entity) {
                 return null;
@@ -70,7 +70,7 @@ class SupportManager
     public function updateReportNewMessageStatus($id)
     {
         
-            $entity = $this->repository->find($id);
+            $entity = $this->supportEntityRepository->find($id);
             
             if (!$entity) {
                 return null;

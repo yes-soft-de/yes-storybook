@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method StoreOwnerPaymentEntity[]    findAll()
  * @method StoreOwnerPaymentEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class storeOwnerPaymentEntityRepository extends ServiceEntityRepository
+class StoreOwnerPaymentEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

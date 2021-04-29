@@ -14,15 +14,15 @@ class AcceptedOrderManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $acceptedOrderEntityRepository;
     private $orderManager;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, AcceptedOrderEntityRepository $repository,OrderManager $orderManager)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, AcceptedOrderEntityRepository $acceptedOrderEntityRepository,OrderManager $orderManager)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
-        $this->repository = $repository;
+        $this->acceptedOrderEntityRepository = $acceptedOrderEntityRepository;
         $this->orderManager = $orderManager;
     }
 
@@ -47,12 +47,12 @@ class AcceptedOrderManager
 
     public function countOrdersDeliverd($userID)
     {
-        return $this->repository->countOrdersDeliverd($userID);
+        return $this->acceptedOrderEntityRepository->countOrdersDeliverd($userID);
     }
 
     public function updateAcceptedOrderStateByCaptain($orderId, $state)
     {
-        $acceptedOrderEntity = $this->repository->getByOrderId($orderId);
+        $acceptedOrderEntity = $this->acceptedOrderEntityRepository->getByOrderId($orderId);
 
         if (!$acceptedOrderEntity) {
             return null;
@@ -69,46 +69,46 @@ class AcceptedOrderManager
 
     public function getAcceptedOrderByOrderId($orderId)
     {
-        return $this->repository->getAcceptedOrderByOrderId($orderId);
+        return $this->acceptedOrderEntityRepository->getAcceptedOrderByOrderId($orderId);
     }
 
     public function getAcceptedOrderByCaptainId($captainId)
     {
-        return $this->repository->getAcceptedOrderByCaptainId($captainId);
+        return $this->acceptedOrderEntityRepository->getAcceptedOrderByCaptainId($captainId);
     }
 
     public function  countAcceptedOrder($captainId)
     {
-        return $this->repository->countAcceptedOrder($captainId);
+        return $this->acceptedOrderEntityRepository->countAcceptedOrder($captainId);
     }
 
     public function getTop5Captains()
     {        
-        return $this->repository->getTop5Captains( );
+        return $this->acceptedOrderEntityRepository->getTop5Captains( );
     }
 
     public function countOrdersInMonthForCaptin($fromDate, $toDate, $captainId)
     {
-        return $this->repository->countOrdersInMonthForCaptin($fromDate, $toDate, $captainId);
+        return $this->acceptedOrderEntityRepository->countOrdersInMonthForCaptin($fromDate, $toDate, $captainId);
     }
 
     public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)
     {
-        return $this->repository->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
+        return $this->acceptedOrderEntityRepository->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
     }
 
     public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
     {
-        return $this->repository->getTopCaptainsInLastMonthDate($fromDate, $toDate);
+        return $this->acceptedOrderEntityRepository->getTopCaptainsInLastMonthDate($fromDate, $toDate);
     }
 
     public function countOrdersInDay($captainID, $fromDate, $toDate)
     {
-        return $this->repository->countOrdersInDay($captainID, $fromDate, $toDate);
+        return $this->acceptedOrderEntityRepository->countOrdersInDay($captainID, $fromDate, $toDate);
     }
 
     public function getOwnerIdAndUuid($orderId)
     {
-        return $this->repository->getOwnerIdAndUuid($orderId);
+        return $this->acceptedOrderEntityRepository->getOwnerIdAndUuid($orderId);
     }
 }

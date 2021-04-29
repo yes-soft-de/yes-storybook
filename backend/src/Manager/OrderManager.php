@@ -8,25 +8,21 @@ use App\Repository\OrderEntityRepository;
 use App\Request\OrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
-use App\Request\GetByIdRequest;
 use App\Request\DeleteRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class OrderManager
 {
     private $autoMapping;
     private $entityManager;
-    private $encoder;
-    private $repository;
+    private $orderEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, OrderEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, OrderEntityRepository $orderEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->encoder = $encoder;
-        $this->repository = $repository;
+        $this->orderEntityRepository = $orderEntityRepository;
     }
 
     public function createOrder(OrderCreateRequest $request, $uuid, $subscribeId)
@@ -47,42 +43,37 @@ class OrderManager
 
     public function getOrderById($orderId)
     {
-        return $this->repository->getOrderById($orderId);
+        return $this->orderEntityRepository->getOrderById($orderId);
     }
 
     public function orderById($orderId)
     {
-        return $this->repository->orderById($orderId);
+        return $this->orderEntityRepository->orderById($orderId);
     }
 
     public function getOrdersByOwnerID($userID)
     {
-        return $this->repository->getOrdersByOwnerID($userID);
+        return $this->orderEntityRepository->getOrdersByOwnerID($userID);
     }
 
     public function orderStatus($orderId)
     {
-        return $this->repository->orderStatus($orderId);
+        return $this->orderEntityRepository->orderStatus($orderId);
     }
-//for delete
-    // public function orderStatusForCaptain($userID, $orderId)
-    // {
-    //     return $this->repository->orderStatusForCaptain($userID, $orderId);
-    // }
 
     public function closestOrders()
     {
-        return $this->repository->closestOrders();
+        return $this->orderEntityRepository->closestOrders();
     }
 
     public function getPendingOrders()
     {
-        return $this->repository->getPendingOrders();
+        return $this->orderEntityRepository->getPendingOrders();
     }
 
     public function update(OrderUpdateRequest $request)
     {
-        $item = $this->repository->find($request->getId());
+        $item = $this->orderEntityRepository->find($request->getId());
        
 
         if ($item) {
@@ -99,7 +90,7 @@ class OrderManager
 
     public function orderUpdateStateByCaptain(OrderUpdateStateByCaptainRequest $request)
     {
-        $item = $this->repository->find($request->getId());
+        $item = $this->orderEntityRepository->find($request->getId());
        
 
         if ($item) {
@@ -116,7 +107,7 @@ class OrderManager
 
     public function orderUpdateStateByCaptain2($orderID)
     {
-        $item = $this->repository->find($orderID);
+        $item = $this->orderEntityRepository->find($orderID);
        
 
         if ($item) {
@@ -131,7 +122,7 @@ class OrderManager
 
     public function delete(DeleteRequest $request)
     {
-        $entity = $this->repository->find($request->getId());
+        $entity = $this->orderEntityRepository->find($request->getId());
         if ($entity) {
         
             $this->entityManager->remove($entity);
@@ -142,61 +133,61 @@ class OrderManager
 
     public function countAllOrders()
     {
-        return $this->repository->countAllOrders();
+        return $this->orderEntityRepository->countAllOrders();
     }
 
     public function countpendingOrders()
     {
-        return $this->repository->countpendingOrders();
+        return $this->orderEntityRepository->countpendingOrders();
     }
 
     public function countOngoingOrders()
     {
-        return $this->repository->countOngoingOrders();
+        return $this->orderEntityRepository->countOngoingOrders();
     }
 
     public function countCancelledOrders()
     {
-        return $this->repository->countCancelledOrders();
+        return $this->orderEntityRepository->countCancelledOrders();
     }
 
     public function ongoingOrders()
     {
-        return $this->repository->ongoingOrders();
+        return $this->orderEntityRepository->ongoingOrders();
     }
 
     public function getRecords($user)
     {
-        return $this->repository->getRecords($user);
+        return $this->orderEntityRepository->getRecords($user);
     }
 
     public function getRecordsForCaptain($user)
     {
-        return $this->repository->getRecordsForCaptain($user);
+        return $this->orderEntityRepository->getRecordsForCaptain($user);
     }
 
     public function getOrders()
     {
-        return $this->repository->getOrders();
+        return $this->orderEntityRepository->getOrders();
     }
 
     public function countOrdersInMonthForOwner($fromDate, $toDate, $ownerId)
     {
-        return $this->repository->countOrdersInMonthForOwner($fromDate, $toDate, $ownerId);
+        return $this->orderEntityRepository->countOrdersInMonthForOwner($fromDate, $toDate, $ownerId);
     }
 
     public function getAllOrders($fromDate, $toDate, $ownerId)
     {
-        return $this->repository->getAllOrders($fromDate, $toDate, $ownerId);
+        return $this->orderEntityRepository->getAllOrders($fromDate, $toDate, $ownerId);
     }
 
     public function getTopOwners($fromDate, $toDate)
     {
-        return $this->repository->getTopOwners($fromDate, $toDate);
+        return $this->orderEntityRepository->getTopOwners($fromDate, $toDate);
     }
 
     public function countOrdersInDay($ownerID, $fromDate, $toDate)
     {
-        return $this->repository->countOrdersInDay($ownerID, $fromDate, $toDate);
+        return $this->orderEntityRepository->countOrdersInDay($ownerID, $fromDate, $toDate);
     }
 }

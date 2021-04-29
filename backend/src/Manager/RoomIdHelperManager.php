@@ -6,19 +6,18 @@ use App\AutoMapping;
 use App\Entity\RoomIdHelperEntity;
 use App\Repository\RoomIdHelperEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Request\RoomIdHelperCreateRequest;
 
 class RoomIdHelperManager
 {
     private $autoMapping;
     private $entityManager;
-    private $repository;
+    private $roomIdHelperEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, RoomIdHelperEntityRepository $repository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, RoomIdHelperEntityRepository $roomIdHelperEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->roomIdHelperEntityRepository = $roomIdHelperEntityRepository;
     }
 
     public function create($request)
@@ -37,6 +36,6 @@ class RoomIdHelperManager
 
     public function getByRoomID($roomID)
     {
-        return $this->repository->getByRoomID($roomID);
+        return $this->roomIdHelperEntityRepository->getByRoomID($roomID);
     }
 }

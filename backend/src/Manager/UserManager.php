@@ -26,16 +26,16 @@ class UserManager
     private $entityManager;
     private $encoder;
     private $userRepository;
-    private $captainProRepository;
+    private $captainProfileEntityRepository;
     private $profileRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, UserEntityRepository $userRepository, CaptainProfileEntityRepository $captainProRepository, UserProfileEntityRepository $profileRepository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, UserEntityRepository $userRepository, CaptainProfileEntityRepository $captainProfileEntityRepository, UserProfileEntityRepository $profileRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
         $this->userRepository = $userRepository;
-        $this->captainProRepository = $captainProRepository;
+        $this->captainProfileEntityRepository = $captainProfileEntityRepository;
         $this->profileRepository = $profileRepository;
     }
 
@@ -137,7 +137,7 @@ class UserManager
     public function createCaptainProfile(CaptainProfileCreateRequest $request, $uuid)
     {
         $request->setUuid($uuid);
-        $isCaptainProfile = $this->captainProRepository->getcaptainprofileByCaptainID($request->getCaptainID());
+        $isCaptainProfile = $this->captainProfileEntityRepository->getcaptainprofileByCaptainID($request->getCaptainID());
 
         if ($isCaptainProfile == null) {
 
@@ -161,7 +161,7 @@ class UserManager
 
     public function UpdateCaptainProfile(CaptainProfileUpdateRequest $request)
     {
-        $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getUserID());
+        $item = $this->captainProfileEntityRepository->getByCaptainIDForUpdate($request->getUserID());
         if ($item) {
             $item = $this->autoMapping->mapToObject(CaptainProfileUpdateRequest::class, CaptainProfileEntity::class, $request, $item);
             $this->entityManager->flush();
@@ -173,7 +173,7 @@ class UserManager
 
     public function updateCaptainProfileByAdmin(CaptainProfileUpdateByAdminRequest $request)
     {
-        $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getCaptainID());
+        $item = $this->captainProfileEntityRepository->getByCaptainIDForUpdate($request->getCaptainID());
         if ($item) {
             $item = $this->autoMapping->mapToObject(CaptainProfileUpdateByAdminRequest::class, CaptainProfileEntity::class, $request, $item);
             $this->entityManager->flush();
@@ -185,7 +185,7 @@ class UserManager
 
     public function updateCaptainStateByAdmin(CaptainVacationCreateRequest $request)
     {  
-        $item = $this->captainProRepository->getByCaptainIDForUpdate($request->getCaptainId());
+        $item = $this->captainProfileEntityRepository->getByCaptainIDForUpdate($request->getCaptainId());
         
         if ($item) {
             $item = $this->autoMapping->mapToObject(CaptainVacationCreateRequest::class, CaptainProfileEntity::class, $request, $item);
@@ -198,57 +198,57 @@ class UserManager
 
     public function getCaptainProfileByCaptainID($captainID)
     {
-        return $this->captainProRepository->getCaptainProfileByCaptainID($captainID);
+        return $this->captainProfileEntityRepository->getCaptainProfileByCaptainID($captainID);
     }
     
     public function getCaptainProfileByID($captainProfileId)
     {
-        return $this->captainProRepository->getCaptainProfileByID($captainProfileId);
+        return $this->captainProfileEntityRepository->getCaptainProfileByID($captainProfileId);
     }
 
     public function getCaptainsInactive()
     {
-            return $this->captainProRepository->getCaptainsInactive();
+            return $this->captainProfileEntityRepository->getCaptainsInactive();
     }
 
     public function captainIsActive($captainID)
     {
-        return $this->captainProRepository->captainIsActive($captainID);
+        return $this->captainProfileEntityRepository->captainIsActive($captainID);
     }
 
     public function getCaptainsState($state)
     {
-        return $this->captainProRepository->getCaptainsState($state);
+        return $this->captainProfileEntityRepository->getCaptainsState($state);
     }
 
     public function countpendingCaptains()
     {
-        return $this->captainProRepository->countpendingCaptains();
+        return $this->captainProfileEntityRepository->countpendingCaptains();
     }
    
     public function countOngoingCaptains()
     {
-        return $this->captainProRepository->countOngoingCaptains();
+        return $this->captainProfileEntityRepository->countOngoingCaptains();
     }
    
     public function countDayOfCaptains()
     {
-        return $this->captainProRepository->countDayOfCaptains();
+        return $this->captainProfileEntityRepository->countDayOfCaptains();
     }
    
     public function getCaptainsInVacation()
     {
-        return $this->captainProRepository->getCaptainsInVacation();
+        return $this->captainProfileEntityRepository->getCaptainsInVacation();
     }
 
     public function getCaptainAsArray($id)
     {
-        return $this->captainProRepository->getCaptainAsArray($id);
+        return $this->captainProfileEntityRepository->getCaptainAsArray($id);
     }
 
     public function getCaptainAsArrayByCaptainId($captainID)
     {
-        return $this->captainProRepository->getCaptainAsArrayByCaptainId($captainID);
+        return $this->captainProfileEntityRepository->getCaptainAsArrayByCaptainId($captainID);
     }
 //لا داعي له ولكن تركته لتأكد
     public function getOwners()
@@ -258,7 +258,7 @@ class UserManager
 //لا داعي له ولكن تركته لتأكد
     public function getCaptains($userID)
     {
-        return $this->captainProRepository->getCaptains($userID);
+        return $this->captainProfileEntityRepository->getCaptains($userID);
     }
 
     public function getAllStoreOwners()
@@ -268,19 +268,19 @@ class UserManager
     
     public function getAllCaptains()
     {
-        return $this->captainProRepository->getAllCaptains();
+        return $this->captainProfileEntityRepository->getAllCaptains();
     }
 
     public function getcaptainByUuid($uuid)
     {
-        return $this->captainProRepository->getcaptainByUuid($uuid);
+        return $this->captainProfileEntityRepository->getcaptainByUuid($uuid);
     }
 
     public function updateCaptainNewMessageStatus($request, $NewMessageStatus)
     {
         if ($request) {
            
-            $entity = $this->captainProRepository->find($request->getId());
+            $entity = $this->captainProfileEntityRepository->find($request->getId());
         
             if (!$entity) {
                 return null;
