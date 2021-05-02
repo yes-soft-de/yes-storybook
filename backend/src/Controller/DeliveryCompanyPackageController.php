@@ -94,7 +94,7 @@ class DeliveryCompanyPackageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function updatePackageState(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -108,7 +108,7 @@ class DeliveryCompanyPackageController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->deliveryCompanyPackageService->update($request);
+        $result = $this->deliveryCompanyPackageService->updatePackageState($request);
 
         return $this->response($result, self::UPDATE);
     }

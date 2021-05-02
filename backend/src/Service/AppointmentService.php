@@ -19,14 +19,14 @@ class AppointmentService
         $this->appointmentManager = $appointmentManager;
     }
 
-    public function createAppointment(AppointmentCreateRequest $request)
+    public function createAppointment(AppointmentCreateRequest $request):object
     {
         $reprot = $this->appointmentManager->createAppointment($request);
 
         return $this->autoMapping->map(AppointmentEntity::class, AppointmentResponse::class, $reprot);
     }
 
-    public function getAllAppointements()
+    public function getAllAppointements():array
     {
         $response = [];
         $items = $this->appointmentManager->getAllAppointements();
@@ -36,7 +36,7 @@ class AppointmentService
         return $response;
     }
 
-    public function update($request)
+    public function update($request):object
     {
         $result = $this->appointmentManager->update($request);
 

@@ -57,8 +57,8 @@ class AppointmentController extends BaseController
     /**
       * @Route("/datings", name="Getdatings", methods={"GET"})
       * @IsGranted("ROLE_ADMIN")
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getAllAppointements()
       {

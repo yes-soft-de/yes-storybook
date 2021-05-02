@@ -26,6 +26,11 @@ class LogEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $userID;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $state;
 
     /**
@@ -53,6 +58,18 @@ class LogEntity
     public function setOrderID(string $orderID): self
     {
         $this->orderID = $orderID;
+
+        return $this;
+    }
+
+    public function getUserID(): ?string
+    {
+        return $this->userID;
+    }
+
+    public function setUserID(string $userID): self
+    {
+        $this->userID = $userID;
 
         return $this;
     }

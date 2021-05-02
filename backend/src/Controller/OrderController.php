@@ -32,10 +32,10 @@ class OrderController extends BaseController
         $this->orderService = $orderService;
     }
     /**
-     * @Route("order",         name="createOrder", methods={"POST"})
+     * @Route("order", name="createOrder", methods={"POST"})
      * @IsGranted("ROLE_OWNER")
      */
-    public function create(Request $request)
+    public function createOrder(Request $request)
     {  
         $data = json_decode($request->getContent(), true);
 
@@ -60,8 +60,8 @@ class OrderController extends BaseController
      /**
       * @Route("/order/{orderId}", name="GetOrderByIDForAdmin", methods={"GET"})
       * @IsGranted("ROLE_ADMIN")
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
     public function getOrderById($orderId)
     {
@@ -71,9 +71,9 @@ class OrderController extends BaseController
     }
 
      /**
-      * @Route("orders",        name="GetOrdersByOwnerID", methods={"GET"})
+      * @Route("orders", name="GetOrdersByOwnerID", methods={"GET"})
       * @IsGranted("ROLE_OWNER")
-      * @return                  JsonResponse
+      * @return JsonResponse
       */
     public function getOrdersByOwnerID()
     {
@@ -84,8 +84,8 @@ class OrderController extends BaseController
 
     /**
      * @Route("/orderStatus/{orderId}", name="orderStatus", methods={"GET"})
-     * @param                           Request $request
-     * @return                          JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function orderStatus($orderId)
     {
@@ -97,7 +97,7 @@ class OrderController extends BaseController
     /**
      * @Route("/closestOrders",   name="GetPendingOrdersForCaptain", methods={"GET"})
      * @IsGranted("ROLE_CAPTAIN")
-     * @return                    JsonResponse
+     * @return JsonResponse
      */
     public function closestOrders()
     {
@@ -107,23 +107,22 @@ class OrderController extends BaseController
     }
 
     /**
-     * @Route("/getPendingOrders",   name="GetPendingOrders", methods={"GET"})
+     * @Route("/getPendingOrders", name="GetPendingOrders", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @return                    JsonResponse
+     * @return JsonResponse
      */
     public function getPendingOrders()
     {    
          $result = $this->orderService->getPendingOrders();
-        
 
         return $this->response($result, self::FETCH);
     }
 
     /**
-     * @Route("/order",         name="orderUpdate", methods={"PUT"})
+     * @Route("/order", name="orderUpdate", methods={"PUT"})
      * @IsGranted("ROLE_OWNER")
-     * @param                   Request $request
-     * @return                  JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function update(Request $request)
     {
@@ -138,27 +137,27 @@ class OrderController extends BaseController
     }
 
     /**
-     * @Route("/orderUpdateState",         name="orderUpdateStateByCaptain", methods={"PUT"})
+     * @Route("/orderUpdateState", name="orderUpdateStateByCaptain", methods={"PUT"})
      * @IsGranted("ROLE_CAPTAIN")
-     * @param                   Request $request
-     * @return                  JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function orderUpdateStateByCaptain(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
         $request = $this->autoMapping->map(stdClass::class, OrderUpdateStateByCaptainRequest::class, (object) $data);
-
+        $request->setCaptainID($this->getUserId());
         $response = $this->orderService->orderUpdateStateByCaptain($request);
       
         return $this->response($response, self::UPDATE);
     }
 
     /**
-     * @Route("order/{id}",     name="deleteOrder", methods={"DELETE"})
+     * @Route("order/{id}", name="deleteOrder", methods={"DELETE"})
      * @IsGranted("ROLE_OWNER")
-     * @param                   Request $request
-     * @return                  JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function delete(Request $request)
     {
@@ -170,9 +169,9 @@ class OrderController extends BaseController
     }
 
      /**
-      * @Route("/countAllOrders",        name="CountAllOrders", methods={"GET"})
+      * @Route("/countAllOrders", name="CountAllOrders", methods={"GET"})
       * @IsGranted("ROLE_ADMIN")
-      * @return                  JsonResponse
+      * @return JsonResponse
       */
       public function countAllOrders()
       {
@@ -184,8 +183,8 @@ class OrderController extends BaseController
     /**
      * @Route("/dashboardOrders", name="dashboardOrders",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function dashboardOrders()
     {
@@ -195,26 +194,9 @@ class OrderController extends BaseController
     }
 
     /**
-     * @Route("/getRecords",   name="getRecords", methods={"GET"})
-     * @return                    JsonResponse
-     */
-    public function getRecords()
-    {    
-        if( $this->isGranted('ROLE_OWNER') ) {
-         $result = $this->orderService->getRecords($this->getUserId(), 'ROLE_OWNER');
-        }
-
-        if( $this->isGranted('ROLE_CAPTAIN') ) {
-         $result = $this->orderService->getRecords($this->getUserId(), 'ROLE_CAPTAIN');
-        }
-        
-        return $this->response($result, self::FETCH);
-    }
-
-    /**
-      * @Route("/getOrders",        name="getOrdersForAdmin", methods={"GET"})
+      * @Route("/getOrders", name="getOrdersForAdmin", methods={"GET"})
       * @IsGranted("ROLE_ADMIN")
-      * @return                  JsonResponse
+      * @return JsonResponse
       */
       public function getOrders()
       {
@@ -226,8 +208,8 @@ class OrderController extends BaseController
      /**
      * @Route("/getAllOrdersAndCount/{year}/{month}/{userId}/{userType}", name="getAllOrdersAndCountInMonthForOwner",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getAllOrdersAndCount($year, $month, $userId, $userType)
     {
@@ -239,8 +221,8 @@ class OrderController extends BaseController
      /**
      * @Route("/getTopOwners", name="getTopOwnersInThisMonthAndCountOrdersForOwnerInDay",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTopOwners()
     {

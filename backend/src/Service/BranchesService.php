@@ -33,7 +33,7 @@ class BranchesService
         return $this->autoMapping->map(BranchesEntity::class, BranchesResponse::class, $result);
     }
 
-    public function getBranchesByUserId($userId)
+    public function getBranchesByUserId($userId):array
     {
         $response = [];
         $items = $this->branchesManager->getBranchesByUserId($userId);

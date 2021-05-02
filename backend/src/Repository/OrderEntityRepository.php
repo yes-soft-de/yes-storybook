@@ -172,19 +172,6 @@ class OrderEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getRecords($ownerID)
-    {
-        return $this->createQueryBuilder('OrderEntity')
-            ->addSelect('OrderEntity.id', 'OrderEntity.ownerID', 'OrderEntity.source', 'OrderEntity.destination', 'OrderEntity.date as orderDate', 'OrderEntity.updateDate as updateOrderDate', 'OrderEntity.note', 'OrderEntity.payment', 'OrderEntity.recipientName', 'OrderEntity.recipientPhone', 'OrderEntity.state', 'OrderEntity.fromBranch','branchesEntity.location','branchesEntity.brancheName','branchesEntity.city as branchCity') 
-
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'branchesEntity.id = OrderEntity.fromBranch')
-
-            ->andWhere("OrderEntity.ownerID = :ownerID ")
-            ->setParameter('ownerID', $ownerID) 
-            ->getQuery()
-            ->getResult();
-    }
-
     public function getRecordsForCaptain($CaptainId)
     {
         return $this->createQueryBuilder('OrderEntity')

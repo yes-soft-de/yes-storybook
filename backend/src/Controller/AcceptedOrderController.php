@@ -32,7 +32,7 @@ class AcceptedOrderController extends BaseController
     }
 
     /**
-     * @Route("/acceptedOrder",   name="createAcceptedOrder", methods={"POST"})
+     * @Route("/acceptedOrder", name="createAcceptedOrder", methods={"POST"})
      * @IsGranted("ROLE_CAPTAIN")
      */
     public function createAcceptedOrder(Request $request)
@@ -58,9 +58,9 @@ class AcceptedOrderController extends BaseController
     }
 
      /**
-      * @Route("/getAcceptedOrder",        name="getAcceptedOrderByCaptainId", methods={"GET"})
+      * @Route("/getAcceptedOrder", name="getAcceptedOrderByCaptainId", methods={"GET"})
       * @IsGranted("ROLE_CAPTAIN")
-      * @return                  JsonResponse
+      * @return JsonResponse
       */
       public function getAcceptedOrderByCaptainId()
       {
@@ -71,8 +71,8 @@ class AcceptedOrderController extends BaseController
     
     /**
      * @Route("/getTop5Captains", name="GetTop5Captains",methods={"GET"})
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTop5Captains()
     {
@@ -84,8 +84,8 @@ class AcceptedOrderController extends BaseController
      /**
      * @Route("/topCaptains", name="getTopCaptainsInThisMonth",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTopCaptainsInLastMonthDate()
     {

@@ -31,9 +31,9 @@ class DeliveryCompanyInfoService
         }
     }
 
-    public function update($request)
+    public function updateCompanyInfo($request)
     {
-        $result = $this->deliveryCompanyInfoManager->update($request);
+        $result = $this->deliveryCompanyInfoManager->updateCompanyInfo($request);
 
         return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
     }

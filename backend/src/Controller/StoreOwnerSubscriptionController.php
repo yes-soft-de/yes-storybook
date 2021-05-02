@@ -139,8 +139,8 @@ class StoreOwnerSubscriptionController extends BaseController
     /**
      * @Route("/dashboardContracts/{year}/{month}", name="dashboardContracts",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function dashboardContracts($year, $month)
     {
@@ -152,8 +152,8 @@ class StoreOwnerSubscriptionController extends BaseController
     /**
      * @Route("/packagebalance", name="packagebalanceForOwner",methods={"GET"})
      * @IsGranted("ROLE_OWNER")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function packagebalance()
     {

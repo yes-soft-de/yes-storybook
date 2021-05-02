@@ -77,9 +77,9 @@ class CaptainService
 
     }
 
-    public function getCaptainProfileByCaptainID($captainID)
+    public function getCaptainProfileByCaptainID($captainID):object
     {
-        $response=[];
+        $response=(object)[];
 
         $item = $this->userManager->getCaptainProfileByCaptainID($captainID);
 
@@ -127,7 +127,7 @@ class CaptainService
         return $response;
     }
 
-    public function getCaptainsInactive()
+    public function getCaptainsInactive():array
     {
         $response = [];
         $items = $this->userManager->getCaptainsInactive();
@@ -152,7 +152,7 @@ class CaptainService
         return $item ;
      }
 
-     public function dashboardCaptains()
+     public function dashboardCaptains():array
      {
          $response = [];
 
@@ -173,7 +173,7 @@ class CaptainService
          return $response;
      }
 
-     public function getCaptainsInVacation()
+     public function getCaptainsInVacation():array
      {
          $response = [];
 
@@ -191,7 +191,7 @@ class CaptainService
          return $response;
      }
  
-     public function getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId):object 
+     public function getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId):array 
     {
         $response = [];
         //get captain info as Array
@@ -210,12 +210,12 @@ class CaptainService
              $item['total'] = $item['sumPayments'] - $item['NetProfit'];
              $item['payments'] = $payments;
 
-             $response = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);  
+             $response[] = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);  
         }
         return $response;
     }
 
-     public function getCaptainFinancialAccountDetailsByCaptainId($captainId)
+     public function getCaptainFinancialAccountDetailsByCaptainId($captainId):array
     {
         $response=[];
 
@@ -233,13 +233,13 @@ class CaptainService
              $item['total'] = $item['NetProfit'] - $item['sumPayments'];
              $item['payments'] = $payments;
 
-             $response = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);
+             $response[] = $this->autoMapping->map('array', CaptainFinancialAccountDetailsResponse::class,  $item);
             
         }
         return $response;
     }
 
-    public function getAllCaptains()
+    public function getAllCaptains():array
     {
         $response = [];
         $captains = $this->userManager->getAllCaptains();

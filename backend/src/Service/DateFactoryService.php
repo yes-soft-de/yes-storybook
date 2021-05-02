@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Service;
+use App\Constant\ResponseConstant;
 use DateTime;
 
-class DateFactoryService
+class DateFactoryService extends ResponseConstant
 {
     public function returnLastMonthDate():array
     {
@@ -63,7 +64,7 @@ class DateFactoryService
           return $this->format_interval($difference);
       }
       if($now >= $dateAfterMonth) {
-          return "it is time for payment";
+          return self::$ITS_PAYMENT_TIME;
       }
      }
 }

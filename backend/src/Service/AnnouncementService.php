@@ -19,28 +19,28 @@ class AnnouncementService
         $this->announcementManager = $announcementManager;
     }
 
-    public function createAnnouncement(AnnouncementCreateRequest $request)
+    public function createAnnouncement(AnnouncementCreateRequest $request):object
     {
         $item = $this->announcementManager->createAnnouncement($request);
 
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $item);
     }
 
-    public function update($request)
+    public function update($request):object
     {
         $result = $this->announcementManager->update($request);
 
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
     }
 
-    public function  getAnnouncementById($id)
+    public function  getAnnouncementById($id):object
     {
         $result = $this->announcementManager->getAnnouncementById($id);
         return $this->autoMapping->map(AnnouncementEntity::class, AnnouncementResponse::class, $result);
   
     }
 
-    public function  getAllAnnouncements()
+    public function  getAllAnnouncements():array
     {
         $respons=[];
         $results = $this->announcementManager->getAllAnnouncements();

@@ -47,7 +47,7 @@ class DeliveryCompanyPackageManager
         return $this->deliveryCompanyPackageRepository->getpackagesById($id);
     }
 
-    public function update(DeliveryCompanyPackageUpdateStateRequest $request)
+    public function updatePackageState(DeliveryCompanyPackageUpdateStateRequest $request)
     {
         $entity = $this->deliveryCompanyPackageRepository->find($request->getId());
 

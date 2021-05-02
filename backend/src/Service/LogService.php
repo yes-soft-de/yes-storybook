@@ -20,11 +20,13 @@ class LogService
         $this->dateFactoryService = $dateFactoryService;
     }
 
-    public function createLog($orderID, $state)
+    public function createLog($orderID, $state, $userID)
     {
         $item['orderID'] = $orderID;
         $item['state'] = $state;
-        $result = $this->logManager->create($item);
+        $item['userID'] = $userID;
+        
+        $result = $this->logManager->createLog($item);
 
         return $this->autoMapping->map(LogEntity::class, LogResponse::class, $result);
     }
@@ -43,7 +45,7 @@ class LogService
     {
         $response=[];
         $items = $this->getLogsByOrderId($orderId);
-      
+     
         foreach ($items as $item) {
          
             $firstDate = $this->getFirstDate($item['orderID']); 
@@ -52,12 +54,10 @@ class LogService
             if($firstDate[0]['date'] && $lastDate[0]['date']) {
                 $state['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']);
             }
-            
-            $state['finalOrder'] = $lastDate[0]['state'] ;
-            $orderStatus = $this->autoMapping->map('array', LogResponse::class, $state);
             $record[] = $this->autoMapping->map('array', LogResponse::class, $item);
-
-    } 
+        } 
+        $state['currentStage'] = $lastDate[0]['state'] ;
+        $orderStatus[] = $this->autoMapping->map('array', LogResponse::class, $state);
         if($firstDate && $lastDate) {
             $response['orderStatus'] = $orderStatus ;
             $response['record'] = $record ;
@@ -74,4 +74,47 @@ class LogService
     {
         return $this->logManager->getLastDate($orderId);
     } 
+
+    public function getLogsByStoreOwner($ownerID)
+    {
+        $response = [];
+      
+        $items = $this->logManager->getOrderIdByOwnerId($ownerID);
+     
+            foreach ($items as $item) {
+                $item['record'] = $this->getLogsByOrderId($item['orderID']);
+               
+                $firstDate = $this->getFirstDate($item['orderID']); 
+                $lastDate = $this->getLastDate($item['orderID']);
+               
+                $item['currentStage'] =  $lastDate;
+                if($firstDate[0]['date'] && $lastDate[0]['date']) {
+                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']);
+                }
+                $response[] = $this->autoMapping->map('array', LogResponse::class, $item);
+            }
+            return $response;
+    }
+
+    public function getLogsByCaptain($captainID)
+    {
+         $response = [];
+      
+        $items = $this->logManager->getOrderIdByCaptainId($captainID);
+   
+            foreach ($items as $item) {
+                $item['record'] = $this->getLogsByOrderId($item['orderID']);
+               
+                $firstDate = $this->getFirstDate($item['orderID']); 
+                $lastDate = $this->getLastDate($item['orderID']);
+               
+                $item['currentStage'] =  $lastDate;
+                if($firstDate[0]['date'] && $lastDate[0]['date']) {
+                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']);
+                }
+                $response[] = $this->autoMapping->map('array', LogResponse::class, $item);
+            }
+            return $response;
+    }
+
 }

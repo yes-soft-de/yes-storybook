@@ -9,42 +9,39 @@ use App\Entity\NotificationTokenEntity;
 use App\Manager\NotificationManager;
 use App\Service\RoomIdHelperService;
 use App\Service\SupportService;
-use App\Service\UserService;
+use App\Service\CaptainService;
 use App\Request\NotificationTokenRequest;
 use App\Response\NotificationTokenResponse;
 use Kreait\Firebase\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
+use App\Constant\MessageConstant;
 
-class NotificationService
+class NotificationService extends MessageConstant
 {
     private $messaging;
     private $notificationManager;
     private $roomIdHelperService;
     private $supportService;
-    private $userService;
     private $autoMapping;
+    private $captainService;
 
     const CAPTAIN_TOPIC = 'captains';
-    const MESSAGE_CAPTAIN_NEW_ORDER = 'هناك طلب جديد، الرجاء تفقد قائمة الطلبات لديك';
-    const MESSAGE_ORDER_UPDATE = 'هناك تحديث في حالة الطلبات';
-    const MESSAGE_NEW_CHAT = 'لديك رسالة جديدة';
-    const MESSAGE_NEW_CHAT_FROM_ADMIN = 'لديك رسالة جديدة من الإدارة';
 
-    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, supportService $supportService, UserService $userService)
+    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, supportService $supportService, CaptainService $captainService)
     {
         $this->messaging = $messaging;
         $this->notificationManager = $notificationManager;
         $this->autoMapping = $autoMapping;
         $this->roomIdHelperService = $roomIdHelperService;
         $this->supportService = $supportService;
-        $this->userService = $userService;
+        $this->captainService = $captainService;
     }
 
     public function notificationToCaptain()
     {
         $message = CloudMessage::withTarget('topic', $this::CAPTAIN_TOPIC)
-            ->withNotification(Notification::create('C4D', $this::MESSAGE_CAPTAIN_NEW_ORDER));
+            ->withNotification(Notification::create('C4D', self::$MESSAGE_CAPTAIN_NEW_ORDER));
 
         $this->messaging->send($message);
     }
@@ -58,7 +55,7 @@ class NotificationService
         $devicesToken[] = $userTokenTwo;
 
         $message = CloudMessage::new()
-            ->withNotification(Notification::create('C4D', $this::MESSAGE_ORDER_UPDATE));
+            ->withNotification(Notification::create('C4D', self::$MESSAGE_CAPTAIN_NEW_ORDER));
 
         $this->messaging->sendMulticast($message, $devicesToken);
     }
@@ -75,7 +72,7 @@ class NotificationService
             $devicesToken[] = $userTokenTwo;
 
             $message = CloudMessage::new()
-                ->withNotification(Notification::create('C4D', $this::MESSAGE_NEW_CHAT));
+                ->withNotification(Notification::create('C4D', self::$MESSAGE_NEW_CHAT));
 
             $this->messaging->sendMulticast($message, $devicesToken);   
         }    
@@ -96,7 +93,7 @@ class NotificationService
     {
         $response=[];
         //NewMessageStatus = true
-        $item = $this->userService->update($request,true);
+        $item = $this->captainService->updateCaptainNewMessageStatus($request,true);
         if($item) {
             $response[] =  $this->autoMapping->map('array', NotificationTokenResponse::class, $item);
         }
@@ -113,7 +110,7 @@ class NotificationService
             $userTokenOne = $this->getNotificationTokenByUserID($item[0]['captainID']);
             $devicesToken[] = $userTokenOne;
             $message = CloudMessage::new()
-                ->withNotification(Notification::create('C4D', $this::MESSAGE_NEW_CHAT_FROM_ADMIN));
+                ->withNotification(Notification::create('C4D', self::$MESSAGE_NEW_CHAT_FROM_ADMIN));
 
             $this->messaging->sendMulticast($message, $devicesToken); 
             $this->messaging->sendMulticast($message, $devicesToken);  
@@ -132,7 +129,7 @@ class NotificationService
             $userTokenOne = $this->getNotificationTokenByUserID($item[0]['userId']);
             $devicesToken[] = $userTokenOne;
             $message = CloudMessage::new()
-                ->withNotification(Notification::create('C4D', $this::MESSAGE_NEW_CHAT_FROM_ADMIN));
+                ->withNotification(Notification::create('C4D', self::$MESSAGE_NEW_CHAT_FROM_ADMIN));
 
             $this->messaging->sendMulticast($message, $devicesToken);  
             $response[]= $this->autoMapping->map('array',NotificationTokenResponse::class, $devicesToken);

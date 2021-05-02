@@ -2,7 +2,7 @@
 
 namespace App\Constant;
 
-class UserConstant
+abstract class UserConstant
 {
     static $ADMIN = "admin";
     

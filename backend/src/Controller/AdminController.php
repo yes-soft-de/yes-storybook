@@ -32,7 +32,7 @@ class AdminController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function adminCreate(Request $request)
+    public function createAdmin(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -45,7 +45,7 @@ class AdminController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->adminService->adminCreate($request);
+        $response = $this->adminService->createAdmin($request);
 
         return $this->response($response, self::CREATE);
     }

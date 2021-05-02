@@ -39,7 +39,7 @@ class DeliveryCompanyInfoManager
         }
     }
 
-    public function update(DeliveryCompanyInfoUpdateRequest $request)
+    public function updateCompanyInfo(DeliveryCompanyInfoUpdateRequest $request)
     {
         $entity = $this->deliveryCompanyInfoEntityRepository->find($request->getId());
 

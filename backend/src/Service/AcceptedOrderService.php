@@ -30,27 +30,26 @@ class AcceptedOrderService
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
-    public function createAcceptedOrder(AcceptedOrderCreateRequest $request)
+    public function createAcceptedOrder(AcceptedOrderCreateRequest $request):object
     {   
-        $response ="This order was received by another captain";
+        $response =(object)"This order was received by another captain";
         $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($request->getOrderID());
         if (!$acceptedOrder) {
             $item = $this->acceptedOrderManager->createAcceptedOrder($request);
             if ($item) {
-               $this->logService->createLog($item->getOrderID(), $item->getState());
+               $this->logService->createLog($item->getOrderID(), $item->getState(), $request->getCaptainID());
                $data = $this->acceptedOrderFilterService->getOwnerIdAndUuid($item->getOrderID());
                $this->roomIdHelperService->create($data);
             }
             $response = $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $item);
         }
-       
         return $response;
     }
 
-    public function updateAcceptedOrderStateByCaptain($orderId, $state)
+    public function updateAcceptedOrderStateByCaptain($orderId, $state, $captainID)
     {
         $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
-        $this->logService->createLog($orderId, $state);
+        $this->logService->createLog($orderId, $state, $captainID);
     }
 
     public function countAcceptedOrder($captainId)

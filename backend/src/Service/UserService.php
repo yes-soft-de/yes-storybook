@@ -14,7 +14,7 @@ use App\Response\UserProfileCreateResponse;
 use App\Response\UserProfileResponse;
 use App\Response\UserRegisterResponse;
 use App\Response\AllUsersResponse;
-use App\Response\RemainingOrdersResponse;
+use App\Response\StoreOwnerRemainingOrdersResponse;
 use App\Service\RoomIdHelperService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -109,17 +109,6 @@ class UserService
         }
         
         return $this->autoMapping->map('array', UserProfileCreateResponse::class, $item);
-    }
-
-    public function getremainingOrders($userID)
-    {
-        $respons = [];
-        $items = $this->userManager->getremainingOrders($userID);
-
-        foreach ($items as $item) {
-            $respons = $this->autoMapping->map('array', RemainingOrdersResponse::class, $item);
-        }
-        return $respons;
     }
 
 //هذا غير مستخدم ولكن يجب أن تتأكد

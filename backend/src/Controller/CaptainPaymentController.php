@@ -56,8 +56,8 @@ class CaptainPaymentController extends BaseController
      /**
       * @Route("/paymentscaptain", name="GetpaymentsForCaptain", methods={"GET"})
       * @IsGranted("ROLE_CAPTAIN")
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getpaymentsForCaptain()
       {

@@ -68,8 +68,8 @@ class StoreOwnerPaymentController extends BaseController
     /**
       * @Route("/payments", name="GetpaymentsForOwner", methods={"GET"})
       * @IsGranted("ROLE_OWNER")
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getpaymentsForOwner()
       {

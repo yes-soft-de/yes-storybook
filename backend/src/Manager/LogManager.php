@@ -20,7 +20,7 @@ class LogManager
         $this->logEntityRepository = $logEntityRepository;
     }
 
-    public function create($record)
+    public function createLog($record)
     {
         $logEntity = $this->autoMapping->map('array', LogEntity::class, $record);
         $logEntity->setDate($logEntity->getDate());
@@ -50,5 +50,15 @@ class LogManager
     public function getLastDate($orderId)
     {
         return $this->logEntityRepository->getLastDate($orderId);
+    }
+
+    public function getOrderIdByOwnerId($ownerID)
+    {
+        return $this->logEntityRepository->getOrderIdByOwnerId($ownerID);
+    }
+
+    public function getOrderIdByCaptainId($captainID)
+    {
+        return $this->logEntityRepository->getOrderIdByCaptainId($captainID);
     }
 }

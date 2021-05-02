@@ -2,7 +2,7 @@
 
 namespace App\Constant;
 
-class ResponseConstant
+abstract class ResponseConstant
 {
     static $PLEASE_SUBSCRIBE = "please subscribe!";
 

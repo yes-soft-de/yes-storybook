@@ -9,7 +9,7 @@ use App\Request\StoreOwnerSubscriptionCreateRequest;
 use App\Request\StoreOwnerSubscriptionNextRequest;
 use App\Request\StoreOwnerSubscriptionChangeIsFutureRequest;
 use App\Request\StoreOwnerSubscriptionUpdateStateRequest;
-use App\Request\StoreOwnerSubscriptionUpdateFinisheRequest;
+use App\Request\StoreOwnerUpdateSubscribeStatusRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 class StoreOwnerSubscriptionManager
@@ -84,7 +84,7 @@ class StoreOwnerSubscriptionManager
         return $subscribeEntity;
     }
 
-    public function updateFinishe($id, $status)
+    public function updateSubscribeStatus($id, $status)
     {
         $subscribeEntity = $this->storeOwnersubscribeRepository->find($id);
         
@@ -94,7 +94,7 @@ class StoreOwnerSubscriptionManager
             return null;
         }
 
-        $subscribeEntity = $this->autoMapping->map(StoreOwnerSubscriptionUpdateFinisheRequest::class, StoreOwnerSubscriptionEntity::class, $subscribeEntity);
+        $subscribeEntity = $this->autoMapping->map(StoreOwnerUpdateSubscribeStatusRequest::class, StoreOwnerSubscriptionEntity::class, $subscribeEntity);
 
         $this->entityManager->flush();
 

@@ -26,7 +26,7 @@ class AcceptedOrderFilterService
         $this->dateFactoryService = $dateFactoryService;
     }
 
-    public function countOrdersDeliverd($userID)
+    public function countOrdersDeliverd($userID):object
     {
         return $this->acceptedOrderManager->countOrdersDeliverd($userID);
     }
@@ -36,7 +36,7 @@ class AcceptedOrderFilterService
         return $this->acceptedOrderManager->getAcceptedOrderByOrderId($orderId);
     }
 
-    public function getAcceptedOrderByCaptainId($captainId)
+    public function getAcceptedOrderByCaptainId($captainId):array
     {
         $response = [];
         $orders = $this->acceptedOrderManager->getAcceptedOrderByCaptainId($captainId);
@@ -59,9 +59,9 @@ class AcceptedOrderFilterService
         return $this->acceptedOrderManager->getTop5Captains();
      }
 
-    public function countOrdersInMonthForCaptin($fromDate, $toDate, $captainId)
+    public function countOrdersInMonthForCaptain($fromDate, $toDate, $captainId)
      {
-         return $this->acceptedOrderManager->countOrdersInMonthForCaptin($fromDate, $toDate, $captainId);
+         return $this->acceptedOrderManager->countOrdersInMonthForCaptain($fromDate, $toDate, $captainId);
      }
 
     public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)

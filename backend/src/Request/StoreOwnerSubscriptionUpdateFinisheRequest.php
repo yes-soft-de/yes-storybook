@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class StoreOwnerSubscriptionUpdateFinisheRequest
+class StoreOwnerUpdateSubscribeStatusRequest
 {
     private $id;
 

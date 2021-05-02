@@ -59,7 +59,7 @@ class DeliveryCompanyInfoController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function updateCompanyInfo(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -73,7 +73,7 @@ class DeliveryCompanyInfoController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->deliveryCompanyInfoService->update($request);
+        $result = $this->deliveryCompanyInfoService->updateCompanyInfo($request);
 
         return $this->response($result, self::UPDATE);
     }

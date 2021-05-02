@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\LogEntity;
+use App\Entity\OrderEntity;
+use App\Entity\BranchesEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method LogEntity|null find($id, $lockMode = null, $lockVersion = null)
@@ -66,6 +69,26 @@ class LogEntityRepository extends ServiceEntityRepository
             ->setParameter('orderId', $orderId)
             ->setMaxResults(1)
             ->addOrderBy('RecordEntity.id','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getOrderIdByOwnerId($ownerID)
+    {
+        return $this->createQueryBuilder('RecordEntity')
+            ->select('RecordEntity.id, RecordEntity.state, RecordEntity.date, RecordEntity.userID, RecordEntity.orderID')
+            ->andWhere("RecordEntity.userID = :ownerID ")
+            ->setParameter('ownerID', $ownerID) 
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getOrderIdByCaptainId($captainID)
+    {
+        return $this->createQueryBuilder('RecordEntity')
+            ->select('RecordEntity.id, RecordEntity.state, RecordEntity.date, RecordEntity.userID, RecordEntity.orderID')
+            ->andWhere("RecordEntity.userID = :captainID ")
+            ->setParameter('captainID', $captainID) 
             ->getQuery()
             ->getResult();
     }

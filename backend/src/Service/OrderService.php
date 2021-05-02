@@ -19,8 +19,9 @@ use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
 use App\Service\AcceptedOrderFilterService;
 use App\Service\CaptainService;
+use App\Constant\StatusConstant;
 
-class OrderService
+class OrderService extends StatusConstant
 {
     private $autoMapping;
     private $orderManager;
@@ -62,7 +63,7 @@ class OrderService
 
     public function createOrder(OrderCreateRequest $request)
     {  
-        $response = "please subscribe!!";
+        $response = self::$PLEASE_SUBSCRIBE;
         //get Subscribe id Current
         $subscriptionCurrent =  $this->storeOwnerSubscriptionService->getSubscriptionCurrent($request->getOwnerID());
       
@@ -85,24 +86,24 @@ class OrderService
         
                 // }
                 if ($item) {
-                    $this->logService->createLog($item->getId(), $item->getState());
+                    $this->logService->createLog($item->getId(), $item->getState(), $request->getOwnerID());
                 }
                 $response =$this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
             }
             
-            if ($status == 'inactive') {
-                $response ="subscribe is awaiting activation!!";
+            if ($status == self::$INACTIVE) {
+                $response = self::$SUBSCRIBE_IS_AWAITING_ACTIVATION;
             }
-            if ($status == 'orders finished') {
-                $response ="subscripe finished, count orders is finished!!";
-            }
-
-            if ($status == 'date finished') {
-                $response ="subscripe finished, date is finished!!";
+            if ($status == self::$ORDERS_FINISHED) {
+                $response = self::$SUBSCRIBE_AND_COUNT_ORDER_FINISHED;
             }
 
-            if ($status == 'unaccept') {
-                $response ="subscribe unaccept!!";
+            if ($status == self::$DATE_FINISHED) {
+                $response = self::$SUBSCRIBE_AND_DATE_FINISHED;
+            }
+
+            if ($status == self::$UNACCEPT) {
+                $response = self::$SUBSCRIBE_UNACCEPTED;
             }
     }
         return $response;
@@ -221,7 +222,7 @@ class OrderService
     {
         $item = $this->orderManager->orderUpdateStateByCaptain($request);
         if($item) {
-            $acceptedOrderUpdateState = $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState());
+            $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState(), $request->getCaptainID());
         
             $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item->getId());
             $record = $this->logService->getLogByOrderId($item->getId());
@@ -263,7 +264,7 @@ class OrderService
         return $this->orderManager->countAllOrders();
     }
     
-    public function dashboardOrders()
+    public function dashboardOrders():array
     {
         $response = [];
         $response[] = $this->orderManager->countpendingOrders();
@@ -291,50 +292,6 @@ class OrderService
             $response[]  = $this->autoMapping->map('array',OrdersongoingResponse::class,  $ongoingOrder);
            
         }  
-        return $response;
-    }
-
-    public function getRecords($userId, $userType)
-    {
-        $response = [];
-        if($userType == 'ROLE_OWNER') {
-            $items = $this->orderManager->getRecords($userId);
-        
-            foreach ($items as $item) {
-                
-                $item['record'] = $this->logService->getLogsByOrderId($item['id']);
-                $item['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item['id']);
-
-                $firstDate = $this->logService->getFirstDate($item['id']); 
-                $lastDate = $this->logService->getLastDate($item['id']);
-                $item['currentStage'] =  $lastDate;
-                if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
-                }
-
-                $response[] = $this->autoMapping->map('array', OrderResponse::class, $item);
-            }
-        }
-
-        if($userType == 'ROLE_CAPTAIN') {
-            $items = $this->orderManager->getRecordsForCaptain($userId);
-            
-            foreach ($items as $item) {
-                
-                $item['record'] = $this->logService->getLogsByOrderId($item['id']);
-                $item['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item['id']);
-               
-                $item['rating'] = $this->ratingService->ratingByCaptainID($item['acceptedOrder'][0]['captainID']);
-               
-                $firstDate = $this->logService->getFirstDate($item['id']); 
-                $lastDate = $this->logService->getLastDate($item['id']);
-                $item['currentStage'] =  $lastDate;
-                if($firstDate[0]['date'] && $lastDate[0]['date']) {
-                    $item['completionTime'] = $this->dateFactoryService->subtractTwoDates($firstDate[0]['date'], $lastDate[0]['date']); 
-                }
-                $response[] = $this->autoMapping->map('array', OrderResponse::class, $item);
-            }
-        }
         return $response;
     }
 
@@ -382,7 +339,7 @@ class OrderService
 
         if ($userType == "captain") {
         
-            $response['countOrdersInMonth'] = $this->acceptedOrderFilterService->countOrdersInMonthForCaptin($date[0], $date[1], $userId);
+            $response['countOrdersInMonth'] = $this->acceptedOrderFilterService->countOrdersInMonthForCaptain($date[0], $date[1], $userId);
             $response['countOrdersInDay'] = $this->acceptedOrderFilterService->countOrdersInDay($userId, $date[0],$date[1]);
             $acceptedInMonth = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
             

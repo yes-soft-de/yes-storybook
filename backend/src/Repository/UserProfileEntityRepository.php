@@ -63,26 +63,6 @@ class UserProfileEntityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getremainingOrders($userID)
-    {
-        return $this->createQueryBuilder('profile')
-            ->select('subscriptionEntity.id as subscriptionID', 'subscriptionEntity.status as subscriptionstatus', 'subscriptionEntity.packageID as packageID', 'packageEntity.name as packagename', 'packageEntity.orderCount - count(orderEntity.id) as remainingOrders', 'count(orderEntity.id) as countOrdersDelivered', 'subscriptionEntity.startDate as subscriptionStartDate', 'subscriptionEntity.endDate as subscriptionEndDate')
-
-            ->leftJoin(StoreOwnerSubscriptionEntity::class, 'subscriptionEntity', Join::WITH, 'subscriptionEntity.ownerID = profile.userID')
-
-            ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscriptionEntity.packageID')
-
-            ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'orderEntity.ownerID = profile.userID')
-            
-            ->andWhere('profile.userID=:userID')
-            ->andWhere("orderEntity.state ='deliverd'")
-
-            ->setParameter('userID', $userID)
-
-            ->getQuery()
-            ->getResult();
-    }
-
     public function getOwners()
     {
         return $this->createQueryBuilder('profile')

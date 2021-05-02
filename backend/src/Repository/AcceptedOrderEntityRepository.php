@@ -122,7 +122,7 @@ class AcceptedOrderEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countOrdersInMonthForCaptin($fromDate, $toDate, $captainId)
+    public function countOrdersInMonthForCaptain($fromDate, $toDate, $captainId)
     {
         return $this->createQueryBuilder('AcceptedOrderEntity')
 

@@ -47,9 +47,9 @@ class DeliveryCompanyPackageService
         return $this->deliveryCompanyPackageManager->getpackagesById($id);
     }
 
-    public function update($request)
+    public function updatePackageState($request)
     {
-        $result = $this->deliveryCompanyPackageManager->update($request);
+        $result = $this->deliveryCompanyPackageManager->updatePackageState($request);
 
         return $this->autoMapping->map(PackageEntity::class, DeliveryCompanyPackageResponse::class, $result);
     }

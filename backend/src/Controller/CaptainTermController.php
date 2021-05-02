@@ -55,8 +55,8 @@ class CaptainTermController extends BaseController
 
     /**
       * @Route("/termscaptain", name="GetTermsCaptain", methods={"GET"})
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getTermsCaptain()
       {
@@ -67,8 +67,8 @@ class CaptainTermController extends BaseController
 
     /**
       * @Route("/termscaptainbyid/{id}", name="GetTermsCaptainById", methods={"GET"})
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getTermsCaptainById($id)
       {
@@ -80,8 +80,8 @@ class CaptainTermController extends BaseController
       /**
      * @Route("/termscaptain", name="termsUpdate", methods={"PUT"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                   Request $request
-     * @return                  JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function update(Request $request)
     {

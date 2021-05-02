@@ -162,18 +162,6 @@ class UserController extends BaseController
     }
 
     /**
-     * @Route("/remainingOrders", name="GetremainingOrdersSpecificOwner", methods={"GET"})
-     * @IsGranted("ROLE_OWNER")
-     * @return JsonResponse
-     */
-    public function getremainingOrders()
-    {
-        $response = $this->userService->getremainingOrders($this->getUserId());
-
-        return $this->response($response, self::FETCH);
-    }
-
-    /**
      * @Route("/captainprofile", name="captainprofileCreate", methods={"POST"})
      * @IsGranted("ROLE_CAPTAIN")
      * @param Request $request
@@ -274,22 +262,6 @@ class UserController extends BaseController
         return $this->response($response, self::FETCH);
     }
 
-// هذا الروت مستخدم ضممن السي فور دي 
-// لا فائدة من جلب صاحب المتجر الغير مفعل 
-// بالنسبة لصاحب المتجر لدينا تفعيل الإشتراك
-// تم بناء إند بوينت لجلب الكباتن الغير مفعلين
-    // /**
-    //  * @Route("/getUserInactive/{userType}", name="getOwnerOrCaptainPending",methods={"GET"})
-    //  * @IsGranted("ROLE_ADMIN")
-    //  *  @return JsonResponse
-    //  */
-    // public function getUserInactive($userType)
-    // {
-    //     $response = $this->userService->getUserInactive($userType);
-
-    //     return $this->response($response, self::FETCH);
-    // }
-
     /**
      * @Route("/getcaptainsinactive", name="getCaptainsPending",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
@@ -317,8 +289,8 @@ class UserController extends BaseController
     /**
      * @Route("/dashboardCaptains", name="dashboardCaptains",methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
-     * @param                                     Request $request
-     * @return                                    JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function dashboardCaptains()
     {

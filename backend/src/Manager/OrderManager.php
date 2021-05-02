@@ -155,12 +155,7 @@ class OrderManager
     {
         return $this->orderEntityRepository->ongoingOrders();
     }
-
-    public function getRecords($user)
-    {
-        return $this->orderEntityRepository->getRecords($user);
-    }
-
+    
     public function getRecordsForCaptain($user)
     {
         return $this->orderEntityRepository->getRecordsForCaptain($user);

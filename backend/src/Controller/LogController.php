@@ -20,8 +20,8 @@ class LogController extends BaseController
     
     /**
       * @Route("/record/{orderId}", name="GetRecordByOrderId", methods={"GET"})
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getLogByOrderId($orderId)
       {
@@ -29,11 +29,11 @@ class LogController extends BaseController
   
           return $this->response($result, self::FETCH);
       }
-
+      
     /**
       * @Route("/records/{orderId}", name="GetRecordsByOrderId", methods={"GET"})
-      * @param                     Request $request
-      * @return                    JsonResponse
+      * @param Request $request
+      * @return JsonResponse
       */
       public function getLogsByOrderId($orderId)
       {
@@ -41,4 +41,23 @@ class LogController extends BaseController
   
           return $this->response($result, self::FETCH);
       }
+
+     /**
+      * @Route("/records", name="GetLogsByUserId", methods={"GET"})
+      * @param Request $request
+      * @return JsonResponse
+      */
+    public function getLogsByUserID()
+    {    
+        if( $this->isGranted('ROLE_OWNER') ) {
+         $result = $this->logService->getLogsByStoreOwner($this->getUserId());
+        }
+
+        if( $this->isGranted('ROLE_CAPTAIN') ) {
+         $result = $this->logService->getLogsByCaptain($this->getUserId());
+        }
+        
+        return $this->response($result, self::FETCH);
+    }
+
 }

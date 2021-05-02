@@ -75,10 +75,10 @@ class StoreOwnerSubscriptionService
 
         return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
-
-    public function updateFinishe($id, $status)
+    
+    public function updateSubscribeStatus($id, $status)
     {
-        $result = $this->storeOwnerSubscriptionManager->updateFinishe($id, $status);
+        $result = $this->storeOwnerSubscriptionManager->updateSubscribeStatus($id, $status);
 
         return $this->autoMapping->map(StoreOwnerSubscriptionEntity::class, StoreOwnerSubscriptionResponse::class, $result);
     }
@@ -125,7 +125,8 @@ class StoreOwnerSubscriptionService
      }
 
     // check subscription , if time is finishe or order count is finishe, change status value to 'finished'
-    public function saveFinisheAuto($ownerID, $subscribeId)
+    //return full information for the current subscription
+    public function saveFinisheAuto($ownerID, $subscribeId):object
     {
         $response = [];
         //Get full information for the current subscription
@@ -138,7 +139,7 @@ class StoreOwnerSubscriptionService
 
             if ( $endDate <= $now)  {
 
-                $this->updateFinishe($remainingOrdersOfPackage['subscriptionID'], 'date finished');
+                $this->updateSubscribeStatus($remainingOrdersOfPackage['subscriptionID'], 'date finished');
                 if($this->getNextSubscription($ownerID)) {
                     $this->changeIsFutureToFalse($this->getNextSubscription($ownerID));
                     }
@@ -147,7 +148,7 @@ class StoreOwnerSubscriptionService
 
             if ($remainingOrdersOfPackage['remainingOrders'] == 0)  {
         
-                $this->updateFinishe($remainingOrdersOfPackage['subscriptionID'], 'orders finished');
+                $this->updateSubscribeStatus($remainingOrdersOfPackage['subscriptionID'], 'orders finished');
                 if($this->getNextSubscription($ownerID)) {
                 $this->changeIsFutureToFalse($this->getNextSubscription($ownerID));
                 }
