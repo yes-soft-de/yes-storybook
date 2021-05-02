@@ -1,4 +1,4 @@
-# c4d App Backend  🚧
+#  Backend  🚧
 *. env file and private-public keys not enclosed .*
 ## Project setup
 
@@ -8,7 +8,7 @@ composer update
 ```
 ### Database setup
 First add to** .env** file correct connection string
-`DATABASE_URL=mysql://root@127.0.0.1:3306/animeDB?serverVersion=5.7`
+`DATABASE_URL=mysql://root@127.0.0.1:3306/DB?serverVersion=8`
 
 Then, create database
 ```
