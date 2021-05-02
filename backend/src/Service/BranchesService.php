@@ -26,9 +26,9 @@ class BranchesService
         return $this->autoMapping->map(BranchesEntity::class, BranchesResponse::class, $branche);
     }
 
-    public function update($request)
+    public function updateBranche($request)
     {
-        $result = $this->branchesManager->update($request);
+        $result = $this->branchesManager->updateBranche($request);
 
         return $this->autoMapping->map(BranchesEntity::class, BranchesResponse::class, $result);
     }

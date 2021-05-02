@@ -39,7 +39,7 @@ class AcceptedOrderService
             if ($item) {
                $this->logService->createLog($item->getOrderID(), $item->getState(), $request->getCaptainID());
                $data = $this->acceptedOrderFilterService->getOwnerIdAndUuid($item->getOrderID());
-               $this->roomIdHelperService->create($data);
+               $this->roomIdHelperService->createRoomIdHelper($data);
             }
             $response = $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $item);
         }

@@ -20,7 +20,7 @@ class RoomIdHelperManager
         $this->roomIdHelperEntityRepository = $roomIdHelperEntityRepository;
     }
 
-    public function create($request)
+    public function createRoomIdHelper($request)
     {
         $entity = $this->autoMapping->map('array', RoomIdHelperEntity::class, $request);
         $entity->setCaptainID($request[0]['captainID']);

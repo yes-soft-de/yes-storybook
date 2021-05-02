@@ -75,7 +75,7 @@ class LogService
         return $this->logManager->getLastDate($orderId);
     } 
 
-    public function getLogsByStoreOwner($ownerID)
+    public function getLogsByStoreOwner($ownerID):array
     {
         $response = [];
       
@@ -96,7 +96,7 @@ class LogService
             return $response;
     }
 
-    public function getLogsByCaptain($captainID)
+    public function getLogsByCaptain($captainID):array
     {
          $response = [];
       

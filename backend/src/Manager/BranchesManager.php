@@ -34,7 +34,7 @@ class BranchesManager
         return $entity;
     }
 
-    public function update(BranchesUpdateRequest $request)
+    public function updateBranche(BranchesUpdateRequest $request)
     {
         $entity = $this->branchesRepository->find($request->getId());
 

@@ -18,9 +18,9 @@ class RoomIdHelperService
         $this->roomIdHelperManager = $roomIdHelperManager;
     }
 
-    public function create($request)
+    public function createRoomIdHelper($request)
     {   
-        $item = $this->roomIdHelperManager->create($request);
+        $item = $this->roomIdHelperManager->createRoomIdHelper($request);
         return $this->autoMapping->map(RoomIdHelperEntity::class, RoomIdHelperResponse::class, $item);
     }
 
