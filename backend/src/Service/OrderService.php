@@ -19,6 +19,7 @@ use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
 use App\Service\AcceptedOrderFilterService;
 use App\Service\CaptainService;
+use App\Service\StoreOwnerBranchService;
 use App\Constant\StatusConstant;
 
 class OrderService extends StatusConstant
@@ -27,7 +28,7 @@ class OrderService extends StatusConstant
     private $orderManager;
     private $acceptedOrderService;
     private $logService;
-    private $branchesService;
+    private $storeOwnerBranchService;
     private $storeOwnerSubscriptionService;
     private $userService;
     private $params;
@@ -39,7 +40,7 @@ class OrderService extends StatusConstant
     private $captainService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
-                                LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
+                                LogService $logService, StoreOwnerBranchService $storeOwnerBranchService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
                                 UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
                                , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService,                                CaptainService $captainService
@@ -49,7 +50,7 @@ class OrderService extends StatusConstant
         $this->orderManager = $orderManager;
         $this->acceptedOrderService = $acceptedOrderService;
         $this->logService = $logService;
-        $this->branchesService = $branchesService;
+        $this->storeOwnerBranchService = $storeOwnerBranchService;
         $this->storeOwnerSubscriptionService = $storeOwnerSubscriptionService;
         $this->userService = $userService;
         $this->ratingService = $ratingService;
@@ -117,7 +118,7 @@ class OrderService extends StatusConstant
      
         if ($order){
             if ($order['fromBranch']){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
             $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
             $record = $this->logService->getFirstDate($orderId);
@@ -140,7 +141,7 @@ class OrderService extends StatusConstant
         foreach ($orders as $order) {
 
             if ($order['fromBranch'] == true){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
             }
             $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
             $order['record'] = $this->logService->getLogByOrderId($order['id']);
@@ -156,7 +157,7 @@ class OrderService extends StatusConstant
         $order = $this->orderManager->orderStatus( $orderId);
         if ($order){
                if ($order['fromBranch'] == true) {
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                }
             
             $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
@@ -179,7 +180,7 @@ class OrderService extends StatusConstant
 
             foreach ($orders as $order) {
                 if ($order['fromBranch'] == true){
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
                 $order['record'] = $this->logService->getLogByOrderId($order['id']);
                
@@ -200,7 +201,7 @@ class OrderService extends StatusConstant
 
             if ($order['fromBranch']){
 
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
             $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
           
@@ -284,7 +285,7 @@ class OrderService extends StatusConstant
             $ongoingOrder['baseURL'] = $this->params;
             
             if ($ongoingOrder['fromBranch']){
-                $ongoingOrder['fromBranch'] = $this->branchesService->getBrancheById($ongoingOrder['fromBranch']);
+                $ongoingOrder['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($ongoingOrder['fromBranch']);
                 }
                 
             $ongoingOrder['record'] = $this->logService->getFirstDate($ongoingOrder['orderID']);
@@ -303,7 +304,7 @@ class OrderService extends StatusConstant
         foreach ($orders as $order) {
 
             if ($order['fromBranch']){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
 
             $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
@@ -328,7 +329,7 @@ class OrderService extends StatusConstant
             foreach ($ordersInMonth as $order) {
 
                 if ($order['fromBranch']){
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                     }
     
                 $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
@@ -350,7 +351,7 @@ class OrderService extends StatusConstant
                 foreach ($ordersInMonth as $order) {
         
                     if ($order['fromBranch']){
-                        $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                        $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                         }
 
                     $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);

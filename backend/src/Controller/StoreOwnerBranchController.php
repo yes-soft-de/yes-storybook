@@ -5,7 +5,7 @@ use App\AutoMapping;
 use App\Request\BranchesCreateRequest;
 use App\Request\BranchesUpdateRequest;
 use App\Request\BranchesDeleteRequest;
-use App\Service\BranchesService;
+use App\Service\StoreOwnerBranchService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,18 +16,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
-class BranchesController extends BaseController
+class StoreOwnerBranchController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $branchesService;
+    private $storeOwnerBranchService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, BranchesService $branchesService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, StoreOwnerBranchService $storeOwnerBranchService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->branchesService = $branchesService;
+        $this->storeOwnerBranchService = $storeOwnerBranchService;
     }
     
     /**
@@ -51,7 +51,7 @@ class BranchesController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-            $result = $this->branchesService->createBranches($request);
+            $result = $this->storeOwnerBranchService->createBranches($request);
             
 
         return $this->response($result, self::CREATE);
@@ -77,7 +77,7 @@ class BranchesController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->branchesService->updateBranche($request);
+        $result = $this->storeOwnerBranchService->updateBranche($request);
 
         return $this->response($result, self::UPDATE);
     }
@@ -89,7 +89,7 @@ class BranchesController extends BaseController
      */
     public function getBranchesByUserId()
     {
-        $result = $this->branchesService->getBranchesByUserId($this->getUserId());
+        $result = $this->storeOwnerBranchService->getBranchesByUserId($this->getUserId());
 
         return $this->response($result, self::FETCH);
     }
@@ -114,7 +114,7 @@ class BranchesController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->branchesService->updateBranchAvailability($request);
+        $result = $this->storeOwnerBranchService->updateBranchAvailability($request);
 
         return $this->response($result, self::UPDATE);
     }

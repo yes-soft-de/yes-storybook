@@ -6,7 +6,7 @@ use App\Entity\CaptainProfileEntity;
 use App\Entity\AcceptedOrderEntity;
 use App\Entity\UserProfileEntity;
 use App\Entity\OrderEntity;
-use App\Entity\BranchesEntity;
+use App\Entity\StoreOwnerBranchEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -213,7 +213,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'acceptedOrderEntity.orderID  = orderEntity.id')
 
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
+            ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
 
             ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'orderEntity.ownerID = userProfileEntity.userID')
 

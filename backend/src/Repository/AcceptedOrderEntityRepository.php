@@ -7,7 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\CaptainProfileEntity;
 use App\Entity\OrderEntity;
-use App\Entity\BranchesEntity;
+use App\Entity\StoreOwnerBranchEntity;
 use App\Entity\UserProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -61,7 +61,7 @@ class AcceptedOrderEntityRepository extends ServiceEntityRepository
             ->leftJoin(CaptainProfileEntity::class, 'captainProfileEntity', Join::WITH, 'captainProfileEntity.captainID = AcceptedOrderEntity.captainID')
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'orderEntity.id = AcceptedOrderEntity.orderID')
             ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = orderEntity.ownerID')
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'branchesEntity.id = orderEntity.fromBranch')
+            ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'branchesEntity.id = orderEntity.fromBranch')
 
             ->andWhere('AcceptedOrderEntity.captainID = :captainID')
             ->setParameter('captainID', $captainID)

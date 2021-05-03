@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\UserProfileEntity;
 use App\Entity\StoreOwnerSubscriptionEntity;
 use App\Entity\DeliveryCompanyPackageEntity;
-use App\Entity\BranchesEntity;
+use App\Entity\StoreOwnerBranchEntity;
 use App\Entity\OrderEntity;
 use App\Entity\CaptainProfileEntity;
 use App\Entity\AcceptedOrderEntity;
@@ -72,7 +72,7 @@ class UserProfileEntityRepository extends ServiceEntityRepository
        
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'profile.userID = orderEntity.ownerID')
 
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
+            ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
 
             ->leftJoin(AcceptedOrderEntity::class, 'acceptedOrderEntity', Join::WITH, 'orderEntity.id = acceptedOrderEntity.orderID')
 

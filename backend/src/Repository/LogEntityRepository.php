@@ -3,11 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\LogEntity;
-use App\Entity\OrderEntity;
-use App\Entity\BranchesEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method LogEntity|null find($id, $lockMode = null, $lockVersion = null)
