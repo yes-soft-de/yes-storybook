@@ -3,30 +3,30 @@
 namespace App\Manager;
 
 use App\AutoMapping;
-use App\Entity\DeliveryCompanyInfoEntity;
-use App\Repository\DeliveryCompanyInfoEntityRepository;
+use App\Entity\DeliveryCompanyProfileEntity;
+use App\Repository\DeliveryCompanyProfileEntityRepository;
 use App\Request\DeliveryCompanyInfoRequest;
 use App\Request\DeliveryCompanyInfoUpdateRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DeliveryCompanyInfoManager
+class DeliveryCompanyProfileManager
 {
     private $autoMapping;
     private $entityManager;
-    private $deliveryCompanyInfoEntityRepository;
+    private $deliveryCompanyProfileEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, DeliveryCompanyInfoEntityRepository $deliveryCompanyInfoEntityRepository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, DeliveryCompanyProfileEntityRepository $deliveryCompanyProfileEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->deliveryCompanyInfoEntityRepository = $deliveryCompanyInfoEntityRepository;
+        $this->deliveryCompanyProfileEntityRepository = $deliveryCompanyProfileEntityRepository;
     }
 
     public function createDeliveryCompanyInfo(DeliveryCompanyInfoRequest $request)
     {
        $isfound = $this->getcompanyinfoAll();
         if ($isfound == null) {
-        $entity = $this->autoMapping->map(DeliveryCompanyInfoRequest::class, DeliveryCompanyInfoEntity::class, $request);
+        $entity = $this->autoMapping->map(DeliveryCompanyInfoRequest::class, DeliveryCompanyProfileEntity::class, $request);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -41,12 +41,12 @@ class DeliveryCompanyInfoManager
 
     public function updateCompanyInfo(DeliveryCompanyInfoUpdateRequest $request)
     {
-        $entity = $this->deliveryCompanyInfoEntityRepository->find($request->getId());
+        $entity = $this->deliveryCompanyProfileEntityRepository->find($request->getId());
 
         if (!$entity) {
             return null;
         }
-        $entity = $this->autoMapping->mapToObject(DeliveryCompanyInfoUpdateRequest::class, DeliveryCompanyInfoEntity::class, $request, $entity);
+        $entity = $this->autoMapping->mapToObject(DeliveryCompanyInfoUpdateRequest::class, DeliveryCompanyProfileEntity::class, $request, $entity);
 
         $this->entityManager->flush();
 
@@ -55,21 +55,21 @@ class DeliveryCompanyInfoManager
 
     public function getcompanyinfoById($id)
     {
-        return $this->deliveryCompanyInfoEntityRepository->getcompanyinfoById($id);
+        return $this->deliveryCompanyProfileEntityRepository->getcompanyinfoById($id);
     }
 
     public function getcompanyinfoAll()
     {
-       return $this->deliveryCompanyInfoEntityRepository->getcompanyinfoAll();
+       return $this->deliveryCompanyProfileEntityRepository->getcompanyinfoAll();
     }
 
     public function getAllCompanyInfoForStoreOwner($userId)
     {
-       return $this->deliveryCompanyInfoEntityRepository->getAllCompanyInfoForStoreOwner($userId);
+       return $this->deliveryCompanyProfileEntityRepository->getAllCompanyInfoForStoreOwner($userId);
     }
 
     public function getAllCompanyInfoForCaptain($userId)
     {
-       return $this->deliveryCompanyInfoEntityRepository->getAllCompanyInfoForCaptain($userId);
+       return $this->deliveryCompanyProfileEntityRepository->getAllCompanyInfoForCaptain($userId);
     }
 }

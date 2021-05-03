@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\DeliveryCompanyInfoEntityRepository;
+use App\Repository\DeliveryCompanyProfileEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DeliveryCompanyInfoEntityRepository::class)
+ * @ORM\Entity(repositoryClass=DeliveryCompanyProfileEntityRepository::class)
  */
-class DeliveryCompanyInfoEntity
+class DeliveryCompanyProfileEntity
 {
     /**
      * @ORM\Id

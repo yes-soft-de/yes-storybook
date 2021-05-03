@@ -3,27 +3,27 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\DeliveryCompanyInfoEntity;
-use App\Manager\DeliveryCompanyInfoManager;
+use App\Entity\DeliveryCompanyProfileEntity;
+use App\Manager\DeliveryCompanyProfileManager;
 use App\Request\DeliveryCompanyInfoRequest;
 use App\Response\DeliveryCompanyInfoResponse;
 
-class DeliveryCompanyInfoService
+class DeliveryCompanyProfileService
 {
     private $autoMapping;
-    private $deliveryCompanyInfoManager;
+    private $deliveryCompanyProfileManager;
 
-    public function __construct(AutoMapping $autoMapping, DeliveryCompanyInfoManager $deliveryCompanyInfoManager)
+    public function __construct(AutoMapping $autoMapping, DeliveryCompanyProfileManager $deliveryCompanyProfileManager)
     {
         $this->autoMapping = $autoMapping;
-        $this->deliveryCompanyInfoManager = $deliveryCompanyInfoManager;
+        $this->deliveryCompanyProfileManager = $deliveryCompanyProfileManager;
     }
 
     public function createDeliveryCompanyInfo(DeliveryCompanyInfoRequest $request)
     {
-        $item = $this->deliveryCompanyInfoManager->createDeliveryCompanyInfo($request);
-        if ($item instanceof DeliveryCompanyInfoEntity) {
-        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $item);
+        $item = $this->deliveryCompanyProfileManager->createDeliveryCompanyInfo($request);
+        if ($item instanceof DeliveryCompanyProfileEntity) {
+        return $this->autoMapping->map(DeliveryCompanyProfileEntity::class, DeliveryCompanyInfoResponse::class, $item);
         }
         if ($item == true) {
           
@@ -33,23 +33,23 @@ class DeliveryCompanyInfoService
 
     public function updateCompanyInfo($request)
     {
-        $result = $this->deliveryCompanyInfoManager->updateCompanyInfo($request);
+        $result = $this->deliveryCompanyProfileManager->updateCompanyInfo($request);
 
-        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
+        return $this->autoMapping->map(DeliveryCompanyProfileEntity::class, DeliveryCompanyInfoResponse::class, $result);
     }
 
     public function  getcompanyinfoById($id)
     {
-        $result = $this->deliveryCompanyInfoManager->getcompanyinfoById($id);
+        $result = $this->deliveryCompanyProfileManager->getcompanyinfoById($id);
 
-        return $this->autoMapping->map(DeliveryCompanyInfoEntity::class, DeliveryCompanyInfoResponse::class, $result);
+        return $this->autoMapping->map(DeliveryCompanyProfileEntity::class, DeliveryCompanyInfoResponse::class, $result);
   
     }
 
     public function  getcompanyinfoAll()
     {
         $respons=[];
-        $results = $this->deliveryCompanyInfoManager->getcompanyinfoAll();
+        $results = $this->deliveryCompanyProfileManager->getcompanyinfoAll();
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', DeliveryCompanyInfoResponse::class, $result);
@@ -61,7 +61,7 @@ class DeliveryCompanyInfoService
      public function  getAllCompanyInfoForStoreOwner($userId)
     {
         $respons=[];
-        $results = $this->deliveryCompanyInfoManager->getAllCompanyInfoForStoreOwner($userId);
+        $results = $this->deliveryCompanyProfileManager->getAllCompanyInfoForStoreOwner($userId);
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', DeliveryCompanyInfoResponse::class, $result);
@@ -73,7 +73,7 @@ class DeliveryCompanyInfoService
     public function  getAllCompanyInfoForCaptain($userId)
     {
         $respons=[];
-        $results = $this->deliveryCompanyInfoManager->getAllCompanyInfoForCaptain($userId);
+        $results = $this->deliveryCompanyProfileManager->getAllCompanyInfoForCaptain($userId);
        
         foreach ($results as  $result) {
            $respons[]= $this->autoMapping->map('array', DeliveryCompanyInfoResponse::class, $result);

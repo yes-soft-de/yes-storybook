@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\AutoMapping;
 use App\Request\DeliveryCompanyInfoRequest;
 use App\Request\DeliveryCompanyInfoUpdateRequest;
-use App\Service\DeliveryCompanyInfoService;
+use App\Service\DeliveryCompanyProfileService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +15,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
-class DeliveryCompanyInfoController extends BaseController
+class DeliveryCompanyProfileController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $deliveryCompanyInfoService;
+    private $deliveryCompanyProfileService;
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, DeliveryCompanyInfoService $deliveryCompanyInfoService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, DeliveryCompanyProfileService $deliveryCompanyProfileService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->deliveryCompanyInfoService = $deliveryCompanyInfoService;
+        $this->deliveryCompanyProfileService = $deliveryCompanyProfileService;
     }
 
     /**
@@ -48,7 +48,7 @@ class DeliveryCompanyInfoController extends BaseController
 
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
-        $result = $this->deliveryCompanyInfoService->createDeliveryCompanyInfo($request);
+        $result = $this->deliveryCompanyProfileService->createDeliveryCompanyInfo($request);
             
 
         return $this->response($result, self::CREATE);
@@ -73,7 +73,7 @@ class DeliveryCompanyInfoController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $result = $this->deliveryCompanyInfoService->updateCompanyInfo($request);
+        $result = $this->deliveryCompanyProfileService->updateCompanyInfo($request);
 
         return $this->response($result, self::UPDATE);
     }
@@ -84,7 +84,7 @@ class DeliveryCompanyInfoController extends BaseController
      */
     public function getcompanyinfoById($id)
     {
-        $result = $this->deliveryCompanyInfoService->getcompanyinfoById($id);
+        $result = $this->deliveryCompanyProfileService->getcompanyinfoById($id);
 
         return $this->response($result, self::FETCH);
     }
@@ -95,7 +95,7 @@ class DeliveryCompanyInfoController extends BaseController
      */
     public function getcompanyinfoAll()
     {
-        $result = $this->deliveryCompanyInfoService->getcompanyinfoAll();
+        $result = $this->deliveryCompanyProfileService->getcompanyinfoAll();
 
         return $this->response($result, self::FETCH);
     }
@@ -107,11 +107,11 @@ class DeliveryCompanyInfoController extends BaseController
     public function getcompanyinfoAllForUser()
     {
         if ($this->isGranted('ROLE_OWNER')) {
-             $result = $this->deliveryCompanyInfoService->getAllCompanyInfoForStoreOwner($this->getUserId());
+             $result = $this->deliveryCompanyProfileService->getAllCompanyInfoForStoreOwner($this->getUserId());
         }
 
         if ($this->isGranted('ROLE_CAPTAIN')) {
-             $result = $this->deliveryCompanyInfoService->getAllCompanyInfoForCaptain($this->getUserId());
+             $result = $this->deliveryCompanyProfileService->getAllCompanyInfoForCaptain($this->getUserId());
         }
         return $this->response($result, self::FETCH);
     }
