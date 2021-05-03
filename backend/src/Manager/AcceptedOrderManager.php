@@ -9,7 +9,6 @@ use App\Repository\AcceptedOrderEntityRepository;
 use App\Request\AcceptedOrderCreateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AcceptedOrderManager
 {
     private $autoMapping;
@@ -17,11 +16,10 @@ class AcceptedOrderManager
     private $acceptedOrderEntityRepository;
     private $orderManager;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, AcceptedOrderEntityRepository $acceptedOrderEntityRepository,OrderManager $orderManager)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, AcceptedOrderEntityRepository $acceptedOrderEntityRepository,OrderManager $orderManager)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
-        $this->encoder = $encoder;
         $this->acceptedOrderEntityRepository = $acceptedOrderEntityRepository;
         $this->orderManager = $orderManager;
     }

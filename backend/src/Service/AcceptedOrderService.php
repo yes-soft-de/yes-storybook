@@ -9,7 +9,6 @@ use App\Request\AcceptedOrderCreateRequest;
 use App\Response\AcceptedOrderResponse;
 use App\Service\LogService;
 use App\Service\RoomIdHelperService;
-use App\Service\DateFactoryService;
 use App\Service\AcceptedOrderFilterService;
 
 class AcceptedOrderService
@@ -20,13 +19,12 @@ class AcceptedOrderService
     private $roomIdHelperService;
     private $acceptedOrderFilterService;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService,  RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService)
+    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService,  RoomIdHelperService $roomIdHelperService, AcceptedOrderFilterService $acceptedOrderFilterService)
     {
         $this->autoMapping = $autoMapping;
         $this->acceptedOrderManager = $acceptedOrderManager;
         $this->logService = $logService;
         $this->roomIdHelperService = $roomIdHelperService;
-        $this->dateFactoryService = $dateFactoryService;
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 

@@ -10,7 +10,6 @@ use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use App\Request\DeleteRequest;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrderManager
 {
