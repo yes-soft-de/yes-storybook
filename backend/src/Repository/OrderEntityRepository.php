@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\OrderEntity;
 use App\Entity\AcceptedOrderEntity;
 use App\Entity\CaptainProfileEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerEntity;
 use App\Entity\BranchesEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -165,7 +165,7 @@ class OrderEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(CaptainProfileEntity::class, 'captainProfileEntity', Join::WITH, 'acceptedOrderEntity.captainID = captainProfileEntity.captainID')
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
+            ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
 
             ->andWhere("OrderEntity.state = 'ongoing' ") 
             ->getQuery()
@@ -193,7 +193,7 @@ class OrderEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('OrderEntity')
             ->select('OrderEntity.id', 'OrderEntity.ownerID', 'OrderEntity.source', 'OrderEntity.destination', 'OrderEntity.date', 'OrderEntity.updateDate', 'OrderEntity.note', 'OrderEntity.payment', 'OrderEntity.recipientName', 'OrderEntity.recipientPhone', 'OrderEntity.state', 'OrderEntity.fromBranch', 'userProfileEntity.userName as userName', 'OrderEntity.kilometer')
             
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
+            ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
 
             ->getQuery()
             ->getResult();
@@ -227,7 +227,7 @@ class OrderEntityRepository extends ServiceEntityRepository
           ->andWhere('OrderEntity.date < :toDate')
           ->andWhere('OrderEntity.ownerID = :ownerId')
 
-          ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = :ownerId')
+          ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = :ownerId')
         
           ->setParameter('fromDate', $fromDate)
           ->setParameter('toDate', $toDate)
@@ -243,7 +243,7 @@ class OrderEntityRepository extends ServiceEntityRepository
        // countOrdersInMonth = countOrdersForOwnerInMonth
           ->select('OrderEntity.ownerID','OrderEntity.ownerID', 'count(OrderEntity.ownerID) as countOrdersInMonth')
           ->addSelect('userProfileEntity.userName', 'userProfileEntity.image')
-          ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
+          ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = OrderEntity.ownerID')
         
           ->where('OrderEntity.date >= :fromDate')
           ->andWhere('OrderEntity.date < :toDate')

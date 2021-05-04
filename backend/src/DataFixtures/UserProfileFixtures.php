@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -12,7 +12,7 @@ class UserProfileFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         for ($i = 2; $i < 20; $i++) {
-            $userProfile = new UserProfileEntity();
+            $userProfile = new StoreOwnerEntity();
 
             $userProfile->setUserID("u" . $i);
             $userProfile->setImage("imagePath" . $i);

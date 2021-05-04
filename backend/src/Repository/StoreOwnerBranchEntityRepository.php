@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\StoreOwnerBranchEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -26,7 +26,7 @@ class StoreOwnerBranchEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('BranchesEntity')
             ->select('BranchesEntity.id', 'BranchesEntity.ownerID', 'BranchesEntity.location', 'BranchesEntity.city', 'BranchesEntity.brancheName','userProfileEntity.free','userProfileEntity.userName','userProfileEntity.status','BranchesEntity.isActive') 
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = BranchesEntity.ownerID')
+            ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = BranchesEntity.ownerID')
 
             ->andWhere("BranchesEntity.ownerID = :userId ")
 

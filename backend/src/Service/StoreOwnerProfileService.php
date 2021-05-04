@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Entity\UserEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerEntity;
 use App\Manager\UserManager;
 use App\Request\UserProfileCreateRequest;
 use App\Request\UserProfileUpdateRequest;
@@ -58,9 +58,9 @@ class StoreOwnerProfileService
         $uuid = $this->roomIdHelperService->roomIdGenerate();
         $userProfile = $this->userManager->userProfileCreate($request, $uuid);
 
-        if ($userProfile instanceof UserProfileEntity) {
+        if ($userProfile instanceof StoreOwnerEntity) {
 
-            return $this->autoMapping->map(UserProfileEntity::class,UserProfileCreateResponse::class, $userProfile);
+            return $this->autoMapping->map(StoreOwnerEntity::class,UserProfileCreateResponse::class, $userProfile);
        }
         if ($userProfile == true) {
           
@@ -72,14 +72,14 @@ class StoreOwnerProfileService
     {
         $item = $this->userManager->userProfileUpdate($request);
         
-        return $this->autoMapping->map(UserProfileEntity::class, UserProfileResponse::class, $item);
+        return $this->autoMapping->map(StoreOwnerEntity::class, UserProfileResponse::class, $item);
     }
 
     public function userProfileUpdateByAdmin(userProfileUpdateByAdminRequest $request)
     {
         $item = $this->userManager->userProfileUpdateByAdmin($request);
 
-        return $this->autoMapping->map(UserProfileEntity::class, UserProfileResponse::class, $item);
+        return $this->autoMapping->map(StoreOwnerEntity::class, UserProfileResponse::class, $item);
     }
 
     public function getUserProfileByID($id)
