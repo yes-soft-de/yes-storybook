@@ -19,7 +19,7 @@ use App\Manager\UserManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
-class CaptainService
+class CaptainProfileService
 {
     private $autoMapping;
     private $userManager;

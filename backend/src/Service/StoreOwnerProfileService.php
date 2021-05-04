@@ -18,7 +18,7 @@ use App\Service\StoreOwnerBranchService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
-class UserService
+class StoreOwnerProfileService
 {
     private $autoMapping;
     private $userManager;

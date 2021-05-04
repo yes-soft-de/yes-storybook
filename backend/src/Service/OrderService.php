@@ -14,11 +14,12 @@ use App\Response\DeleteResponse;
 use App\Response\OrdersongoingResponse;
 use App\Service\StoreOwnerSubscriptionService;
 use App\Service\RatingService;
+use App\Service\StoreOwnerProfileService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
 use App\Service\AcceptedOrderFilterService;
-use App\Service\CaptainService;
+use App\Service\CaptainProfileService;
 use App\Service\StoreOwnerBranchService;
 use App\Constant\StatusConstant;
 
@@ -30,20 +31,20 @@ class OrderService extends StatusConstant
     private $logService;
     private $storeOwnerBranchService;
     private $storeOwnerSubscriptionService;
-    private $userService;
+    private $storeOwnerProfileService;
     private $params;
     private $ratingService;
     // private $notificationService;
     private $roomIdHelperService;
     private $dateFactoryService;
     private $acceptedOrderFilterService;
-    private $captainService;
+    private $captainProfileService;
 
     public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
                                 LogService $logService, StoreOwnerBranchService $storeOwnerBranchService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
-                                UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
+                                StoreOwnerProfileService $storeOwnerProfileService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
-                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService,                                CaptainService $captainService
+                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService,                                CaptainProfileService $captainProfileService
                                 )
     {
         $this->autoMapping = $autoMapping;
@@ -52,14 +53,14 @@ class OrderService extends StatusConstant
         $this->logService = $logService;
         $this->storeOwnerBranchService = $storeOwnerBranchService;
         $this->storeOwnerSubscriptionService = $storeOwnerSubscriptionService;
-        $this->userService = $userService;
+        $this->storeOwnerProfileService = $storeOwnerProfileService;
         $this->ratingService = $ratingService;
         $this->roomIdHelperService = $roomIdHelperService;
         $this->dateFactoryService = $dateFactoryService;
         $this->params = $params->get('upload_base_url') . '/';
         // $this->notificationService = $notificationService;
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
-        $this->captainService = $captainService;
+        $this->captainProfileService = $captainProfileService;
     }
 
     public function createOrder(OrderCreateRequest $request)
@@ -160,7 +161,7 @@ class OrderService extends StatusConstant
                     $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                }
             
-            $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
+            $order['owner'] = $this->storeOwnerProfileService->getUserProfileByUserID($order['ownerID']);
             $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
 
             $order['record'] = $this->logService->getLogByOrderId($orderId);
@@ -173,7 +174,7 @@ class OrderService extends StatusConstant
     public function closestOrders($userId)
     {
         // $response ="this captain inactive!!";
-        // $status = $this->captainService->captainIsActive($userId);
+        // $status = $this->captainProfileService->captainIsActive($userId);
         // if ($status == 'active') {
             $response = [];
             $orders = $this->orderManager->closestOrders();
@@ -184,7 +185,7 @@ class OrderService extends StatusConstant
                 }
                 $order['record'] = $this->logService->getLogByOrderId($order['id']);
                
-                $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
+                $order['owner'] = $this->storeOwnerProfileService->getUserProfileByUserID($order['ownerID']);
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
             }
         // }

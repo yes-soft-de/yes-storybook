@@ -13,12 +13,12 @@ class CaptainVacationService
 {
     private $autoMapping;
     private $captainVacationManager;
-    private $captainService;
+    private $captainProfileService;
 
-    public function __construct(AutoMapping $autoMapping, CaptainVacationManager $captainVacationManager, CaptainService $captainService)
+    public function __construct(AutoMapping $autoMapping, CaptainVacationManager $captainVacationManager, CaptainProfileService $captainProfileService)
     {
         $this->autoMapping = $autoMapping;
-        $this->captainService = $captainService;
+        $this->captainProfileService = $captainProfileService;
         $this->captainVacationManager = $captainVacationManager;
     }
 
@@ -26,7 +26,7 @@ class CaptainVacationService
     {
         $result = $this->captainVacationManager->createCaptainVacation($request);
         if ($result) {
-           $this->captainService->updateCaptainStateByAdmin($request); 
+           $this->captainProfileService->updateCaptainStateByAdmin($request); 
         }
         $respnose = $this->autoMapping->map(CaptainVacationEntity::class, CaptainVacationResponse::class, $result);
         
