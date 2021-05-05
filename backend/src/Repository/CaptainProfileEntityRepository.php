@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\CaptainProfileEntity;
 use App\Entity\AcceptedOrderEntity;
-use App\Entity\StoreOwnerEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Entity\OrderEntity;
 use App\Entity\StoreOwnerBranchEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -215,7 +215,7 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
 
-            ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'orderEntity.ownerID = userProfileEntity.userID')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'orderEntity.ownerID = userProfileEntity.userID')
 
             ->getQuery()
             ->getResult();

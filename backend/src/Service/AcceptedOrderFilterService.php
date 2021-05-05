@@ -4,23 +4,28 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Manager\AcceptedOrderManager;
+use App\Manager\OrderManager;
 use App\Response\AcceptedOrdersResponse;
+use App\Response\OrderResponse;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\LogService;
 use App\Service\DateFactoryService;
+use App\Request\AcceptedOrderCreateRequest;
 
 class AcceptedOrderFilterService
 {
     private $autoMapping;
     private $acceptedOrderManager;
+    private $orderManager;
     private $logService;
     private $params;
     private $dateFactoryService;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, ParameterBagInterface $params, LogService $logService, DateFactoryService $dateFactoryService)
+    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, OrderManager $orderManager, ParameterBagInterface $params, LogService $logService, DateFactoryService $dateFactoryService)
     {
         $this->autoMapping = $autoMapping;
         $this->acceptedOrderManager = $acceptedOrderManager;
+        $this->orderManager = $orderManager;
         $this->logService = $logService;
         $this->params = $params->get('upload_base_url') . '/';
         $this->dateFactoryService = $dateFactoryService;
@@ -36,14 +41,14 @@ class AcceptedOrderFilterService
         return $this->acceptedOrderManager->getAcceptedOrderByOrderId($orderId);
     }
 
-    public function getAcceptedOrderByCaptainId($captainId):array
+    public function getAcceptedOrderByCaptainId($captainID):array
     {
         $response = [];
-        $orders = $this->acceptedOrderManager->getAcceptedOrderByCaptainId($captainId);
+        $orders = $this->orderManager->getAcceptedOrderByCaptainId($captainID);
    
         foreach ($orders as $order){
-            $order['record'] = $this->logService->getLogByOrderId($order['orderID']);
-            $response[] = $this->autoMapping->map('array', AcceptedOrdersResponse::class, $order);
+            $order['record'] = $this->logService->getLogByOrderId($order['id']);
+            $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
     
     return $response;

@@ -161,6 +161,8 @@ App\Request\AcceptedOrderCreateRequest:
   properties:
     orderID:
       - NotBlank: ~
+    captainID:
+      - NotBlank: ~
 
 App\Request\AcceptedOrderUpdateRequest:
   properties:

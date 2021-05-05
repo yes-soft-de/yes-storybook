@@ -6,7 +6,7 @@ use App\Entity\DeliveryCompanyProfileEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\CaptainProfileEntity;
-use App\Entity\StoreOwnerEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
@@ -44,7 +44,7 @@ class DeliveryCompanyProfileEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('CompanyInfoEntity') 
             ->select('CompanyInfoEntity.id, CompanyInfoEntity.phone, CompanyInfoEntity.phone2, CompanyInfoEntity.whatsapp, CompanyInfoEntity.fax, CompanyInfoEntity.bank, CompanyInfoEntity.stc, CompanyInfoEntity.email')
             ->addSelect('userProfileEntity.uuid')
-            ->leftJoin(StoreOwnerEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = :userId')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = :userId')
             ->setParameter('userId',$userId)
             ->getQuery()
             ->getResult();

@@ -6,6 +6,7 @@ use App\AutoMapping;
 use App\Entity\OrderEntity;
 use App\Repository\OrderEntityRepository;
 use App\Request\OrderCreateRequest;
+use App\Request\AcceptedOrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use App\Request\DeleteRequest;
@@ -91,7 +92,6 @@ class OrderManager
     {
         $item = $this->orderEntityRepository->find($request->getId());
        
-
         if ($item) {
             $item = $this->autoMapping->mapToObject(OrderUpdateStateByCaptainRequest::class, OrderEntity::class, $request, $item);
 
@@ -183,5 +183,10 @@ class OrderManager
     public function countOrdersInDay($ownerID, $fromDate, $toDate)
     {
         return $this->orderEntityRepository->countOrdersInDay($ownerID, $fromDate, $toDate);
+    }
+
+    public function getAcceptedOrderByCaptainId($captainID)
+    {
+        return $this->orderEntityRepository->getAcceptedOrderByCaptainId($captainID);
     }
 }

@@ -223,16 +223,15 @@ class OrderService extends StatusConstant
     public function orderUpdateStateByCaptain(OrderUpdateStateByCaptainRequest $request)
     {
         $item = $this->orderManager->orderUpdateStateByCaptain($request);
-        if($item) {
-            $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState(), $request->getCaptainID());
-        
-            $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item->getId());
+        if($item) {        
+            $this->logService->createLog($item->getId(), $request->getState(), $request->getcaptainID());
+            $fromBranch = $this->storeOwnerBranchService->getBrancheById($item->getFromBranch());
             $record = $this->logService->getLogByOrderId($item->getId());
         }
         $response = $this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
         if($item) {
-            $response->acceptedOrder =  $acceptedOrder;
             $response->record =  $record;
+            $response->fromBranch =  $fromBranch;
         }
 
         //start-----> notification

@@ -92,11 +92,6 @@ class OrderEntity
      */
     private $captainID;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $acceptedOrderDate;
-
 
     public function getId(): ?int
     {
@@ -286,18 +281,6 @@ class OrderEntity
     public function setCaptainID(string $captainID): self
     {
         $this->captainID = $captainID;
-
-        return $this;
-    }
-
-    public function getAcceptedOrderDate()
-    {
-        return $this->acceptedOrderDate;
-    }
-
-    public function setAcceptedOrderDate($acceptedOrderDate): self
-    {
-        $this->acceptedOrderDate = new \DateTime($acceptedOrderDate);
 
         return $this;
     }

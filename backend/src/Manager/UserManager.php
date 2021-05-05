@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\UserEntity;
-use App\Entity\StoreOwnerEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Entity\CaptainProfileEntity;
 use App\Repository\UserEntityRepository;
 use App\Repository\StoreOwnerProfileEntityRepository;
@@ -44,9 +44,9 @@ class UserManager
         $userProfile = $this->getUserByUserID($request->getUserID());
         if ($userProfile == null) {
 
-        $userRegister = $this->autoMapping->map(UserRegisterRequest::class, StoreOwnerEntity::class, $request);
+        $userRegister = $this->autoMapping->map(UserRegisterRequest::class, StoreOwnerProfileEntity::class, $request);
 
-        $user = new StoreOwnerEntity($request->getUserID());
+        $user = new StoreOwnerProfileEntity($request->getUserID());
 
         if ($request->getPassword()) {
             $userRegister->setPassword($this->encoder->encodePassword($user, $request->getPassword()));
@@ -75,7 +75,7 @@ class UserManager
         $request->setUuid($uuid);
         $userProfile = $this->getUserProfileByUserID($request->getUserID());
         if ($userProfile == null) {
-            $userProfile = $this->autoMapping->map(UserProfileCreateRequest::class, StoreOwnerEntity::class, $request);
+            $userProfile = $this->autoMapping->map(UserProfileCreateRequest::class, StoreOwnerProfileEntity::class, $request);
 
             $userProfile->setStatus('inactive');
             $userProfile->setFree(false);
@@ -96,7 +96,7 @@ class UserManager
         $item = $this->storeOwnerProfileEntityRepository->getUserProfile($request->getUserID());
 
         if ($item) {
-            $item = $this->autoMapping->mapToObject(UserProfileUpdateRequest::class, StoreOwnerEntity::class, $request, $item);
+            $item = $this->autoMapping->mapToObject(UserProfileUpdateRequest::class, StoreOwnerProfileEntity::class, $request, $item);
 
             $this->entityManager->flush();
             $this->entityManager->clear();
@@ -110,7 +110,7 @@ class UserManager
         $item = $this->storeOwnerProfileEntityRepository->find($request->getId());
 
         if ($item) {
-            $item = $this->autoMapping->mapToObject(userProfileUpdateByAdminRequest::class, StoreOwnerEntity::class, $request, $item);
+            $item = $this->autoMapping->mapToObject(userProfileUpdateByAdminRequest::class, StoreOwnerProfileEntity::class, $request, $item);
 
             $this->entityManager->flush();
             $this->entityManager->clear();

@@ -14,6 +14,8 @@ class OrderUpdateStateByCaptainRequest
 
     private $captainID;
 
+    
+
     /**
      * @return mixed
      */

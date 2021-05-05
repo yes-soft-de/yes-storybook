@@ -31,43 +31,43 @@ class AcceptedOrderController extends BaseController
         $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
-    /**
-     * @Route("/acceptedOrder", name="createAcceptedOrder", methods={"POST"})
-     * @IsGranted("ROLE_CAPTAIN")
-     */
-    public function createAcceptedOrder(Request $request)
-    {   
-            $data = json_decode($request->getContent(), true);
+    // /**
+    //  * @Route("/acceptedOrder", name="createAcceptedOrder", methods={"POST"})
+    //  * @IsGranted("ROLE_CAPTAIN")
+    //  */
+    // public function createAcceptedOrder(Request $request)
+    // {   
+    //         $data = json_decode($request->getContent(), true);
 
-            $request = $this->autoMapping->map(stdClass::class, AcceptedOrderCreateRequest::class, (object)$data);
+    //         $request = $this->autoMapping->map(stdClass::class, AcceptedOrderCreateRequest::class, (object)$data);
 
-            $request->setCaptainID($this->getUserId());
+    //         $request->setCaptainID($this->getUserId());
 
-            $violations = $this->validator->validate($request);
-            if (\count($violations) > 0) {
-                $violationsString = (string) $violations;
+    //         $violations = $this->validator->validate($request);
+    //         if (\count($violations) > 0) {
+    //             $violationsString = (string) $violations;
 
-                return new JsonResponse($violationsString, Response::HTTP_OK);
-            }
+    //             return new JsonResponse($violationsString, Response::HTTP_OK);
+    //         }
 
-            $response = $this->acceptedOrderService->createAcceptedOrder($request);
-            if (is_string($response)) {
-                return $this->response($response, self::ACCEPTED_ERROR);
-            }
-        return $this->response($response, self::CREATE);
-    }
+    //         $response = $this->acceptedOrderService->createAcceptedOrder($request);
+    //         if (is_string($response)) {
+    //             return $this->response($response, self::ACCEPTED_ERROR);
+    //         }
+    //     return $this->response($response, self::CREATE);
+    // }
 
-     /**
-      * @Route("/getAcceptedOrder", name="getAcceptedOrderByCaptainId", methods={"GET"})
-      * @IsGranted("ROLE_CAPTAIN")
-      * @return JsonResponse
-      */
-      public function getAcceptedOrderByCaptainId()
-      {
-          $result = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainId($this->getUserId());
+    //  /**
+    //   * @Route("/getAcceptedOrder", name="getAcceptedOrderByCaptainId", methods={"GET"})
+    //   * @IsGranted("ROLE_CAPTAIN")
+    //   * @return JsonResponse
+    //   */
+    //   public function getAcceptedOrderByCaptainId()
+    //   {
+    //       $result = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainId($this->getUserId());
   
-          return $this->response($result, self::FETCH);
-      }
+    //       return $this->response($result, self::FETCH);
+    //   }
     
     /**
      * @Route("/getTop5Captains", name="GetTop5Captains",methods={"GET"})

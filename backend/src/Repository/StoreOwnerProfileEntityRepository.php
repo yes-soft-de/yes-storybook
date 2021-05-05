@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\StoreOwnerEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Entity\StoreOwnerBranchEntity;
 use App\Entity\OrderEntity;
 use App\Entity\CaptainProfileEntity;
@@ -12,16 +12,16 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @method StoreOwnerEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method StoreOwnerEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method StoreOwnerEntity[]    findAll()
- * @method StoreOwnerEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method StoreOwnerProfileEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method StoreOwnerProfileEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method StoreOwnerProfileEntity[]    findAll()
+ * @method StoreOwnerProfileEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class StoreOwnerProfileEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, StoreOwnerEntity::class);
+        parent::__construct($registry, StoreOwnerProfileEntity::class);
     }
 
     public function getUserProfileByUserID($userID)
