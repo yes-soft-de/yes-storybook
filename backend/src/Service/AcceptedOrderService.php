@@ -3,57 +3,53 @@
 namespace App\Service;
 
 use App\AutoMapping;
-use App\Entity\AcceptedOrderEntity;
-use App\Manager\AcceptedOrderManager;
-use App\Request\AcceptedOrderCreateRequest;
-use App\Response\AcceptedOrderResponse;
+use App\Manager\OrderManager;
+use App\Response\OrderResponse;
 use App\Service\LogService;
-use App\Service\RoomIdHelperService;
-use App\Service\DateFactoryService;
-use App\Service\AcceptedOrderFilterService;
 
 class AcceptedOrderService
 {
     private $autoMapping;
-    private $acceptedOrderManager;
+    private $orderManager;
     private $logService;
-    private $roomIdHelperService;
-    private $acceptedOrderFilterService;
 
-    public function __construct(AutoMapping $autoMapping, AcceptedOrderManager $acceptedOrderManager, LogService $logService,  RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService)
+    public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, LogService $logService)
     {
         $this->autoMapping = $autoMapping;
-        $this->acceptedOrderManager = $acceptedOrderManager;
+        $this->orderManager = $orderManager;
         $this->logService = $logService;
-        $this->roomIdHelperService = $roomIdHelperService;
-        $this->dateFactoryService = $dateFactoryService;
-        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
     }
 
-    public function createAcceptedOrder(AcceptedOrderCreateRequest $request):object
-    {   
-        $response =(object)"This order was received by another captain";
-        $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($request->getOrderID());
-        if (!$acceptedOrder) {
-            $item = $this->acceptedOrderManager->createAcceptedOrder($request);
-            if ($item) {
-               $this->logService->createLog($item->getOrderID(), $item->getState(), $request->getCaptainID());
-               $data = $this->acceptedOrderFilterService->getOwnerIdAndUuid($item->getOrderID());
-               $this->roomIdHelperService->createRoomIdHelper($data);
-            }
-            $response = $this->autoMapping->map(AcceptedOrderEntity::class, AcceptedOrderResponse::class, $item);
+    public function getAcceptedOrderByCaptainId($captainID):array
+    {
+        $response = [];
+        $orders = $this->orderManager->getAcceptedOrderByCaptainId($captainID);
+   
+        foreach ($orders as $order){
+            $order['record'] = $this->logService->getLogByOrderId($order['id']);
+            $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
+    
         return $response;
     }
 
-    public function updateAcceptedOrderStateByCaptain($orderId, $state, $captainID)
+    public function countCaptainOrdersDelivered($captainId)
     {
-        $this->acceptedOrderManager->updateAcceptedOrderStateByCaptain($orderId, $state);
-        $this->logService->createLog($orderId, $state, $captainID);
+        return $this->orderManager->countCaptainOrdersDelivered($captainId);
     }
 
-    public function countAcceptedOrder($captainId)
+    public function countOrdersInMonthForCaptain($fromDate, $toDate, $captainId)
     {
-        return $this->acceptedOrderManager->countAcceptedOrder($captainId);
-    }    
+        return $this->orderManager->countOrdersInMonthForCaptain($fromDate, $toDate, $captainId);
+    }
+
+    public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)
+    {
+        return $this->orderManager->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
+    }
+
+    public function countCaptainOrdersInDay($captainID, $fromDate, $toDate)
+    {
+        return $this->orderManager->countCaptainOrdersInDay($captainID, $fromDate, $toDate);
+    }
 }

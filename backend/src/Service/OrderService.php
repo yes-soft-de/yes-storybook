@@ -14,51 +14,50 @@ use App\Response\DeleteResponse;
 use App\Response\OrdersongoingResponse;
 use App\Service\StoreOwnerSubscriptionService;
 use App\Service\RatingService;
+use App\Service\StoreOwnerProfileService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Service\RoomIdHelperService;
 use App\Service\DateFactoryService;
-use App\Service\AcceptedOrderFilterService;
-use App\Service\CaptainService;
+use App\Service\AcceptedOrderService;
+use App\Service\CaptainProfileService;
+use App\Service\StoreOwnerBranchService;
 use App\Constant\StatusConstant;
 
 class OrderService extends StatusConstant
 {
     private $autoMapping;
     private $orderManager;
-    private $acceptedOrderService;
     private $logService;
-    private $branchesService;
+    private $storeOwnerBranchService;
     private $storeOwnerSubscriptionService;
-    private $userService;
+    private $storeOwnerProfileService;
     private $params;
     private $ratingService;
     // private $notificationService;
     private $roomIdHelperService;
     private $dateFactoryService;
-    private $acceptedOrderFilterService;
-    private $captainService;
+    private $acceptedOrderService;
+    private $captainProfileService;
 
-    public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, AcceptedOrderService $acceptedOrderService,
-                                LogService $logService, BranchesService $branchesService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService,
-                                UserService $userService, ParameterBagInterface $params,  RatingService $ratingService
+    public function __construct(AutoMapping $autoMapping, OrderManager $orderManager, LogService $logService, StoreOwnerBranchService $storeOwnerBranchService, StoreOwnerSubscriptionService $storeOwnerSubscriptionService, StoreOwnerProfileService $storeOwnerProfileService, ParameterBagInterface $params,  RatingService $ratingService
                                 // , NotificationService $notificationService
-                               , RoomIdHelperService $roomIdHelperService, DateFactoryService $dateFactoryService, AcceptedOrderFilterService $acceptedOrderFilterService,                                CaptainService $captainService
+                               , RoomIdHelperService $roomIdHelperService,  DateFactoryService $dateFactoryService, AcceptedOrderService $acceptedOrderService, CaptainProfileService $captainProfileService
                                 )
     {
         $this->autoMapping = $autoMapping;
         $this->orderManager = $orderManager;
         $this->acceptedOrderService = $acceptedOrderService;
         $this->logService = $logService;
-        $this->branchesService = $branchesService;
+        $this->storeOwnerBranchService = $storeOwnerBranchService;
         $this->storeOwnerSubscriptionService = $storeOwnerSubscriptionService;
-        $this->userService = $userService;
+        $this->storeOwnerProfileService = $storeOwnerProfileService;
         $this->ratingService = $ratingService;
         $this->roomIdHelperService = $roomIdHelperService;
         $this->dateFactoryService = $dateFactoryService;
         $this->params = $params->get('upload_base_url') . '/';
         // $this->notificationService = $notificationService;
-        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
-        $this->captainService = $captainService;
+        $this->acceptedOrderService = $acceptedOrderService;
+        $this->captainProfileService = $captainProfileService;
     }
 
     public function createOrder(OrderCreateRequest $request)
@@ -117,9 +116,11 @@ class OrderService extends StatusConstant
      
         if ($order){
             if ($order['fromBranch']){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
-            $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
+            if ($order['captainID'] == true) {
+                $acceptedOrder = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+                }
             $record = $this->logService->getFirstDate($orderId);
         }
         $response = $this->autoMapping->map('array', OrderResponse::class, $order);
@@ -140,9 +141,12 @@ class OrderService extends StatusConstant
         foreach ($orders as $order) {
 
             if ($order['fromBranch'] == true){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
             }
-            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
+            
+            if ($order['captainID'] == true) {
+                $order['acceptedOrder'] = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+                }
             $order['record'] = $this->logService->getLogByOrderId($order['id']);
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
@@ -152,16 +156,16 @@ class OrderService extends StatusConstant
 
     public function orderStatus($orderId)
     {
-        
-        $order = $this->orderManager->orderStatus( $orderId);
+        $order = $this->orderManager->orderStatus($orderId);
         if ($order){
                if ($order['fromBranch'] == true) {
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                }
             
-            $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
-            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($orderId);
-
+            $order['owner'] = $this->storeOwnerProfileService->getUserProfileByUserID($order['ownerID']);
+            if ($order['captainID'] == true) {
+            $order['acceptedOrder'] = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+            }
             $order['record'] = $this->logService->getLogByOrderId($orderId);
         }
         $response = $this->autoMapping->map('array', OrderResponse::class, $order);
@@ -172,18 +176,18 @@ class OrderService extends StatusConstant
     public function closestOrders($userId)
     {
         // $response ="this captain inactive!!";
-        // $status = $this->captainService->captainIsActive($userId);
+        // $status = $this->captainProfileService->captainIsActive($userId);
         // if ($status == 'active') {
             $response = [];
             $orders = $this->orderManager->closestOrders();
 
             foreach ($orders as $order) {
                 if ($order['fromBranch'] == true){
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
                 $order['record'] = $this->logService->getLogByOrderId($order['id']);
                
-                $order['owner'] = $this->userService->getUserProfileByUserID($order['ownerID']);
+                $order['owner'] = $this->storeOwnerProfileService->getUserProfileByUserID($order['ownerID']);
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
             }
         // }
@@ -200,10 +204,8 @@ class OrderService extends StatusConstant
 
             if ($order['fromBranch']){
 
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
-            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
-          
             $order['record'] = $this->logService->getLogByOrderId($order['id']);
             
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
@@ -221,16 +223,15 @@ class OrderService extends StatusConstant
     public function orderUpdateStateByCaptain(OrderUpdateStateByCaptainRequest $request)
     {
         $item = $this->orderManager->orderUpdateStateByCaptain($request);
-        if($item) {
-            $this->acceptedOrderService->updateAcceptedOrderStateByCaptain($item->getId(), $request->getState(), $request->getCaptainID());
-        
-            $acceptedOrder = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($item->getId());
+        if($item) {        
+            $this->logService->createLog($item->getId(), $request->getState(), $request->getcaptainID());
+            $fromBranch = $this->storeOwnerBranchService->getBrancheById($item->getFromBranch());
             $record = $this->logService->getLogByOrderId($item->getId());
         }
         $response = $this->autoMapping->map(OrderEntity::class, OrderResponse::class, $item);
         if($item) {
-            $response->acceptedOrder =  $acceptedOrder;
             $response->record =  $record;
+            $response->fromBranch =  $fromBranch;
         }
 
         //start-----> notification
@@ -284,7 +285,7 @@ class OrderService extends StatusConstant
             $ongoingOrder['baseURL'] = $this->params;
             
             if ($ongoingOrder['fromBranch']){
-                $ongoingOrder['fromBranch'] = $this->branchesService->getBrancheById($ongoingOrder['fromBranch']);
+                $ongoingOrder['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($ongoingOrder['fromBranch']);
                 }
                 
             $ongoingOrder['record'] = $this->logService->getFirstDate($ongoingOrder['orderID']);
@@ -303,10 +304,12 @@ class OrderService extends StatusConstant
         foreach ($orders as $order) {
 
             if ($order['fromBranch']){
-                $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                 }
 
-            $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
+            if ($order['captainID'] == true) {
+                $order['acceptedOrder'] = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+                    }
 
             $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
         }
@@ -328,10 +331,12 @@ class OrderService extends StatusConstant
             foreach ($ordersInMonth as $order) {
 
                 if ($order['fromBranch']){
-                    $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                    $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                     }
     
-                $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
+                if ($order['captainID'] == true) {
+                    $order['acceptedOrder'] = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+                        }
                 $order['record'] = $this->logService->getLogByOrderId($order['id']); 
                 $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
             }
@@ -339,21 +344,23 @@ class OrderService extends StatusConstant
 
         if ($userType == "captain") {
         
-            $response['countOrdersInMonth'] = $this->acceptedOrderFilterService->countOrdersInMonthForCaptain($date[0], $date[1], $userId);
-            $response['countOrdersInDay'] = $this->acceptedOrderFilterService->countOrdersInDay($userId, $date[0],$date[1]);
-            $acceptedInMonth = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
+            $response['countOrdersInMonth'] = $this->acceptedOrderService->countOrdersInMonthForCaptain($date[0], $date[1], $userId);
+            $response['countOrdersInDay'] = $this->acceptedOrderService->countCaptainOrdersInDay($userId, $date[0],$date[1]);
+            $acceptedInMonth = $this->acceptedOrderService->getAcceptedOrderByCaptainIdInMonth($date[0], $date[1], $userId);
             
             foreach ($acceptedInMonth as $item){
-                $ordersInMonth =  $this->orderManager->orderById($item['orderID']);  
+                $ordersInMonth =  $this->orderManager->orderById($item['id']);  
             
             
                 foreach ($ordersInMonth as $order) {
         
                     if ($order['fromBranch']){
-                        $order['fromBranch'] = $this->branchesService->getBrancheById($order['fromBranch']);
+                        $order['fromBranch'] = $this->storeOwnerBranchService->getBrancheById($order['fromBranch']);
                         }
 
-                    $order['acceptedOrder'] = $this->acceptedOrderFilterService->getAcceptedOrderByOrderId($order['id']);
+                    if ($order['captainID'] == true) {
+                        $order['acceptedOrder'] = $this->captainProfileService->getCaptainProfileByCaptainID($order['captainID']);
+                         }
                     $order['record'] = $this->logService->getLogByOrderId($order['id']); 
                     $firstDate = $this->logService->getFirstDate($order['id']); 
                     $lastDate = $this->logService->getLastDate($order['id']);
@@ -363,8 +370,7 @@ class OrderService extends StatusConstant
                         
                     }
                     
-                    $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);
-                    
+                    $response[] = $this->autoMapping->map('array', OrderResponse::class, $order);   
                 }
             }
         }

@@ -4,9 +4,9 @@ namespace App\Repository;
 
 use App\Entity\CaptainProfileEntity;
 use App\Entity\AcceptedOrderEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Entity\OrderEntity;
-use App\Entity\BranchesEntity;
+use App\Entity\StoreOwnerBranchEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -213,9 +213,9 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'acceptedOrderEntity.orderID  = orderEntity.id')
 
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
+            ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'orderEntity.ownerID = userProfileEntity.userID')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'orderEntity.ownerID = userProfileEntity.userID')
 
             ->getQuery()
             ->getResult();
@@ -238,4 +238,52 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getTop5Captains()
+    {
+        return $this->createQueryBuilder('captainProfileEntity')
+           
+            ->select( 'captainProfileEntity.name', 'captainProfileEntity.car', 'captainProfileEntity.age', 'captainProfileEntity.salary', 'captainProfileEntity.bounce', 'captainProfileEntity.image', 'captainProfileEntity.specialLink')
+
+            ->addSelect('OrderEntity.captainID', 'count(OrderEntity.captainID) countOrdersDeliverd')
+
+            ->leftJoin(OrderEntity::class, 'OrderEntity', Join::WITH, 'OrderEntity.captainID = captainProfileEntity.captainID')
+
+            // ->andWhere("OrderEntity.state ='deliverd'")
+           
+            ->addGroupBy('OrderEntity.captainID')
+            
+            ->having('count(OrderEntity.captainID) > 0')
+            ->setMaxResults(5)
+            ->addOrderBy('countOrdersDeliverd','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
+    {
+        return $this->createQueryBuilder('captainProfileEntity')
+
+            ->select('captainProfileEntity.name', 'captainProfileEntity.car', 'captainProfileEntity.age', 'captainProfileEntity.salary', 'captainProfileEntity.bounce', 'captainProfileEntity.image', 'captainProfileEntity.specialLink', 'captainProfileEntity.drivingLicence')
+            
+            ->addSelect('OrderEntity.captainID', 'count(OrderEntity.captainID) countOrdersInMonth')
+           
+            ->leftJoin(OrderEntity::class, 'OrderEntity', Join::WITH, 'OrderEntity.captainID = captainProfileEntity.captainID')
+
+             ->where('OrderEntity.date >= :fromDate')
+             ->andWhere('OrderEntity.date < :toDate')
+            // ->andWhere("OrderEntity.state ='deliverd'")
+        
+            ->addGroupBy('OrderEntity.captainID')
+            
+            ->having('count(OrderEntity.captainID) > 0')
+            ->setMaxResults(15)
+            ->addOrderBy('countOrdersInMonth','DESC')
+         
+            ->setParameter('fromDate', $fromDate)
+            ->setParameter('toDate', $toDate)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

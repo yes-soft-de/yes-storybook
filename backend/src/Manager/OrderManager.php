@@ -10,7 +10,6 @@ use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use App\Request\DeleteRequest;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrderManager
 {
@@ -92,7 +91,6 @@ class OrderManager
     {
         $item = $this->orderEntityRepository->find($request->getId());
        
-
         if ($item) {
             $item = $this->autoMapping->mapToObject(OrderUpdateStateByCaptainRequest::class, OrderEntity::class, $request, $item);
 
@@ -104,7 +102,7 @@ class OrderManager
             return $item;
         }
     }
-
+//مراجعة للحذف
     public function orderUpdateStateByCaptain2($orderID)
     {
         $item = $this->orderEntityRepository->find($orderID);
@@ -184,5 +182,30 @@ class OrderManager
     public function countOrdersInDay($ownerID, $fromDate, $toDate)
     {
         return $this->orderEntityRepository->countOrdersInDay($ownerID, $fromDate, $toDate);
+    }
+
+    public function getAcceptedOrderByCaptainId($captainID)
+    {
+        return $this->orderEntityRepository->getAcceptedOrderByCaptainId($captainID);
+    }
+
+    public function  countCaptainOrdersDelivered($captainId)
+    {
+        return $this->orderEntityRepository->countCaptainOrdersDelivered($captainId);
+    }
+
+    public function countOrdersInMonthForCaptain($fromDate, $toDate, $captainId)
+    {
+        return $this->orderEntityRepository->countOrdersInMonthForCaptain($fromDate, $toDate, $captainId);
+    }
+
+    public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)
+    {
+        return $this->orderEntityRepository->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
+    }
+
+    public function countCaptainOrdersInDay($captainID, $fromDate, $toDate)
+    {
+        return $this->orderEntityRepository->countCaptainOrdersInDay($captainID, $fromDate, $toDate);
     }
 }

@@ -10,8 +10,8 @@ use App\Request\CaptainProfileUpdateRequest;
 use App\Request\CaptainProfileUpdateByAdminRequest;
 use App\Request\userProfileUpdateByAdminRequest;
 use App\Request\UserRegisterRequest;
-use App\Service\UserService;
-use App\Service\CaptainService;
+use App\Service\StoreOwnerProfileService;
+use App\Service\CaptainProfileService;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,17 +26,17 @@ class UserController extends BaseController
 {
     private $autoMapping;
     private $validator;
-    private $userService;
-    private $captainService;
+    private $storeOwnerProfileService;
+    private $captainProfileService;
    
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, UserService $userService, CaptainService $captainService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, StoreOwnerProfileService $storeOwnerProfileService, CaptainProfileService $captainProfileService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
-        $this->userService = $userService;
-        $this->captainService = $captainService;
+        $this->storeOwnerProfileService = $storeOwnerProfileService;
+        $this->captainProfileService = $captainProfileService;
         
     }
 
@@ -59,7 +59,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->userService->userRegister($request);
+        $response = $this->storeOwnerProfileService->userRegister($request);
        
         return $this->response($response, self::CREATE);
     }
@@ -85,7 +85,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->userService->userProfileCreate($request);
+        $response = $this->storeOwnerProfileService->userProfileCreate($request);
 
         return $this->response($response, self::CREATE);
     }
@@ -103,7 +103,7 @@ class UserController extends BaseController
         $request = $this->autoMapping->map(stdClass::class, UserProfileUpdateRequest::class, (object)$data);
         $request->setUserID($this->getUserId());
 
-        $response = $this->userService->userProfileUpdate($request);
+        $response = $this->storeOwnerProfileService->userProfileUpdate($request);
 
         return $this->response($response, self::UPDATE);
     }
@@ -120,7 +120,7 @@ class UserController extends BaseController
 
         $request = $this->autoMapping->map(stdClass::class, userProfileUpdateByAdminRequest::class, (object)$data);
 
-        $response = $this->userService->userProfileUpdateByAdmin($request);
+        $response = $this->storeOwnerProfileService->userProfileUpdateByAdmin($request);
 
         return $this->response($response, self::UPDATE);
     }
@@ -132,7 +132,7 @@ class UserController extends BaseController
      */
     public function getUserProfileByID($id)
     {
-        $response = $this->userService->getUserProfileByID($id);
+        $response = $this->storeOwnerProfileService->getUserProfileByID($id);
 
         return $this->response($response, self::FETCH);
     }
@@ -144,7 +144,7 @@ class UserController extends BaseController
      */
     public function getUserProfile($userId)
     {
-        $response = $this->userService->getUserProfileByUserID($userId);
+        $response = $this->storeOwnerProfileService->getUserProfileByUserID($userId);
 
         return $this->response($response, self::FETCH);
     }
@@ -156,7 +156,7 @@ class UserController extends BaseController
      */
     public function getUserProfileByUserID()
     {
-        $response = $this->userService->getUserProfileByUserID($this->getUserId());
+        $response = $this->storeOwnerProfileService->getUserProfileByUserID($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }
@@ -182,7 +182,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->captainService->createCaptainProfile($request);
+        $response = $this->captainProfileService->createCaptainProfile($request);
 
         return $this->response($response, self::CREATE);
     }
@@ -207,7 +207,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->captainService->UpdateCaptainProfile($request);
+        $response = $this->captainProfileService->UpdateCaptainProfile($request);
 
         return $this->response($response, self::UPDATE);
     }
@@ -232,7 +232,7 @@ class UserController extends BaseController
             return new JsonResponse($violationsString, Response::HTTP_OK);
         }
 
-        $response = $this->captainService->UpdateCaptainProfileByAdmin($request);
+        $response = $this->captainProfileService->UpdateCaptainProfileByAdmin($request);
 
         return $this->response($response, self::UPDATE);
     }
@@ -245,7 +245,7 @@ class UserController extends BaseController
      */
     public function getCaptainProfileByCaptainID()
     {
-        $response = $this->captainService->getCaptainProfileByCaptainID($this->getUserId());
+        $response = $this->captainProfileService->getCaptainProfileByCaptainID($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }
@@ -257,7 +257,7 @@ class UserController extends BaseController
      */
     public function getCaptainProfileByID($captainProfileId)
     {
-        $response = $this->captainService->getCaptainProfileByID($captainProfileId);
+        $response = $this->captainProfileService->getCaptainProfileByID($captainProfileId);
 
         return $this->response($response, self::FETCH);
     }
@@ -269,7 +269,7 @@ class UserController extends BaseController
      */
     public function getCaptainsInactive()
     {
-        $response = $this->captainService->getCaptainsInactive();
+        $response = $this->captainProfileService->getCaptainsInactive();
 
         return $this->response($response, self::FETCH);
     }
@@ -294,7 +294,7 @@ class UserController extends BaseController
      */
     public function dashboardCaptains()
     {
-        $result = $this->captainService->dashboardCaptains();
+        $result = $this->captainProfileService->dashboardCaptains();
 
         return $this->response($result, self::FETCH);
     }
@@ -307,7 +307,7 @@ class UserController extends BaseController
      */
     public function getCaptainsInVacation()
     {
-        $result = $this->captainService->getCaptainsInVacation();
+        $result = $this->captainProfileService->getCaptainsInVacation();
 
         return $this->response($result, self::FETCH);
     }
@@ -320,7 +320,7 @@ class UserController extends BaseController
      */
     public function getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId)
     {
-        $result = $this->captainService->getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId);
+        $result = $this->captainProfileService->getCaptainFinancialAccountDetailsByCaptainProfileId($captainProfileId);
 
         return $this->response($result, self::FETCH);
     }
@@ -332,7 +332,7 @@ class UserController extends BaseController
      */
     public function getAllStoreOwners()
     {
-        $response = $this->userService->getAllStoreOwners();
+        $response = $this->storeOwnerProfileService->getAllStoreOwners();
 
         return $this->response($response, self::FETCH);
     }
@@ -343,7 +343,7 @@ class UserController extends BaseController
      */
     public function getAllCaptains()
     {
-        $response = $this->captainService->getAllCaptains();
+        $response = $this->captainProfileService->getAllCaptains();
 
         return $this->response($response, self::FETCH);
     }
@@ -355,7 +355,7 @@ class UserController extends BaseController
      */
     public function getCaptainFinancialAccountDetailsByCaptainId()
     {
-        $response = $this->captainService->getCaptainFinancialAccountDetailsByCaptainId($this->getUserId());
+        $response = $this->captainProfileService->getCaptainFinancialAccountDetailsByCaptainId($this->getUserId());
 
         return $this->response($response, self::FETCH);
     }
@@ -367,7 +367,7 @@ class UserController extends BaseController
      */
     public function getCaptainsWithUnfinishedPayments()
     {
-        $response = $this->captainService->getCaptainsWithUnfinishedPayments();
+        $response = $this->captainProfileService->getCaptainsWithUnfinishedPayments();
 
         return $this->response($response, self::FETCH);
     }
@@ -384,8 +384,33 @@ class UserController extends BaseController
 
         $request = $this->autoMapping->map(stdClass::class,CaptainProfileUpdateByAdminRequest::class,(object)$data);
         
-        $response = $this->captainService->updateCaptainNewMessageStatus($request,false);
+        $response = $this->captainProfileService->updateCaptainNewMessageStatus($request,false);
 
         return $this->response($response, self::CREATE);
+    }
+
+    /**
+     * @Route("/getTop5Captains", name="GetTop5Captains",methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTop5Captains()
+    {
+        $result = $this->captainProfileService->getTop5Captains();
+
+        return $this->response($result, self::FETCH);
+    }
+
+    /**
+     * @Route("/topCaptains", name="getTopCaptainsInThisMonth",methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTopCaptainsInLastMonthDate()
+    {
+        $result = $this->captainProfileService->getTopCaptainsInLastMonthDate();
+
+        return $this->response($result, self::FETCH);
     }
 }

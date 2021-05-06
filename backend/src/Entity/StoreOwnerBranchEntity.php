@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\BranchesEntityRepository;
+use App\Repository\StoreOwnerBranchEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass=BranchesEntityRepository::class)
+ * @ORM\Entity(repositoryClass=StoreOwnerBranchEntityRepository::class)
  */
-class BranchesEntity
+class StoreOwnerBranchEntity
 {
     /**
      * @ORM\Id

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\AutoMapping;
 use App\Service\OrderService;
+use App\Service\AcceptedOrderService;
 use App\Request\OrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
+use App\Request\AcceptedOrderCreateRequest;
 use App\Request\DeleteRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,19 +19,22 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use stdClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+
 class OrderController extends BaseController
 {
     private $autoMapping;
     private $validator;
     private $orderService;
+    private $acceptedOrderService;
    
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, OrderService $orderService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, OrderService $orderService, AcceptedOrderService $acceptedOrderService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
         $this->orderService = $orderService;
+        $this->acceptedOrderService = $acceptedOrderService;
     }
     /**
      * @Route("order", name="createOrder", methods={"POST"})
@@ -135,7 +140,8 @@ class OrderController extends BaseController
 
         return $this->response($response, self::UPDATE);
     }
-
+    
+    //state:on way to pick order or in store or picked or ongoing or cash or deliverd
     /**
      * @Route("/orderUpdateState", name="orderUpdateStateByCaptain", methods={"PUT"})
      * @IsGranted("ROLE_CAPTAIN")
@@ -230,4 +236,16 @@ class OrderController extends BaseController
 
         return $this->response($result, self::FETCH);
     }
+
+    /**
+      * @Route("/getAcceptedOrder", name="getAcceptedOrderByCaptainId", methods={"GET"})
+      * @IsGranted("ROLE_CAPTAIN")
+      * @return JsonResponse
+      */
+      public function getAcceptedOrderByCaptainId()
+      {
+          $result = $this->acceptedOrderService->getAcceptedOrderByCaptainId($this->getUserId());
+  
+          return $this->response($result, self::FETCH);
+      }
 }

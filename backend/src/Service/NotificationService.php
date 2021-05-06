@@ -9,7 +9,7 @@ use App\Entity\NotificationTokenEntity;
 use App\Manager\NotificationManager;
 use App\Service\RoomIdHelperService;
 use App\Service\SupportService;
-use App\Service\CaptainService;
+use App\Service\CaptainProfileService;
 use App\Request\NotificationTokenRequest;
 use App\Response\NotificationTokenResponse;
 use Kreait\Firebase\Messaging;
@@ -24,18 +24,18 @@ class NotificationService extends MessageConstant
     private $roomIdHelperService;
     private $supportService;
     private $autoMapping;
-    private $captainService;
+    private $captainProfileService;
 
     const CAPTAIN_TOPIC = 'captains';
 
-    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, supportService $supportService, CaptainService $captainService)
+    public function __construct(AutoMapping $autoMapping, Messaging $messaging, NotificationManager $notificationManager, RoomIdHelperService $roomIdHelperService, supportService $supportService, CaptainProfileService $captainProfileService)
     {
         $this->messaging = $messaging;
         $this->notificationManager = $notificationManager;
         $this->autoMapping = $autoMapping;
         $this->roomIdHelperService = $roomIdHelperService;
         $this->supportService = $supportService;
-        $this->captainService = $captainService;
+        $this->captainProfileService = $captainProfileService;
     }
 
     public function notificationToCaptain()
@@ -93,7 +93,7 @@ class NotificationService extends MessageConstant
     {
         $response=[];
         //NewMessageStatus = true
-        $item = $this->captainService->updateCaptainNewMessageStatus($request,true);
+        $item = $this->captainProfileService->updateCaptainNewMessageStatus($request,true);
         if($item) {
             $response[] =  $this->autoMapping->map('array', NotificationTokenResponse::class, $item);
         }

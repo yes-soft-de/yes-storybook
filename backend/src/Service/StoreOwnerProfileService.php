@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\AutoMapping;
 use App\Entity\UserEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Manager\UserManager;
 use App\Request\UserProfileCreateRequest;
 use App\Request\UserProfileUpdateRequest;
@@ -13,26 +13,25 @@ use App\Request\UserRegisterRequest;
 use App\Response\UserProfileCreateResponse;
 use App\Response\UserProfileResponse;
 use App\Response\UserRegisterResponse;
-use App\Response\AllUsersResponse;
-use App\Response\StoreOwnerRemainingOrdersResponse;
 use App\Service\RoomIdHelperService;
+use App\Service\StoreOwnerBranchService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
-class UserService
+class StoreOwnerProfileService
 {
     private $autoMapping;
     private $userManager;
-    private $branchesService;
+    private $storeOwnerBranchService;
     private $params;
     private $roomIdHelperService;
 
-    public function __construct(AutoMapping $autoMapping, UserManager $userManager,  RatingService $ratingService, BranchesService $branchesService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
+    public function __construct(AutoMapping $autoMapping, UserManager $userManager,  RatingService $ratingService, StoreOwnerBranchService $storeOwnerBranchService, ParameterBagInterface $params, RoomIdHelperService $roomIdHelperService)
     {
         $this->autoMapping = $autoMapping;
         $this->userManager = $userManager;
         $this->ratingService = $ratingService;
-        $this->branchesService = $branchesService;
+        $this->storeOwnerBranchService = $storeOwnerBranchService;
         $this->roomIdHelperService = $roomIdHelperService;
 
         $this->params = $params->get('upload_base_url') . '/';
@@ -59,9 +58,9 @@ class UserService
         $uuid = $this->roomIdHelperService->roomIdGenerate();
         $userProfile = $this->userManager->userProfileCreate($request, $uuid);
 
-        if ($userProfile instanceof UserProfileEntity) {
+        if ($userProfile instanceof StoreOwnerProfileEntity) {
 
-            return $this->autoMapping->map(UserProfileEntity::class,UserProfileCreateResponse::class, $userProfile);
+            return $this->autoMapping->map(StoreOwnerProfileEntity::class,UserProfileCreateResponse::class, $userProfile);
        }
         if ($userProfile == true) {
           
@@ -73,28 +72,28 @@ class UserService
     {
         $item = $this->userManager->userProfileUpdate($request);
         
-        return $this->autoMapping->map(UserProfileEntity::class, UserProfileResponse::class, $item);
+        return $this->autoMapping->map(StoreOwnerProfileEntity::class, UserProfileResponse::class, $item);
     }
 
     public function userProfileUpdateByAdmin(userProfileUpdateByAdminRequest $request)
     {
         $item = $this->userManager->userProfileUpdateByAdmin($request);
 
-        return $this->autoMapping->map(UserProfileEntity::class, UserProfileResponse::class, $item);
+        return $this->autoMapping->map(StoreOwnerProfileEntity::class, UserProfileResponse::class, $item);
     }
 
     public function getUserProfileByID($id)
     {
         $item = $this->userManager->getUserProfileByID($id);
       
-        $item['branches'] = $this->branchesService->branchesByUserId($item['userID']);
+        $item['branches'] = $this->storeOwnerBranchService->branchesByUserId($item['userID']);
         return $this->autoMapping->map('array', UserProfileCreateResponse::class, $item);
     }
 
     public function getUserProfileByUserID($userID)
     {
         $item = $this->userManager->getUserProfileByUserID($userID);
-        $item['branches'] = $this->branchesService->branchesByUserId($userID);
+        $item['branches'] = $this->storeOwnerBranchService->branchesByUserId($userID);
 
         try {
             if ($item['image'])

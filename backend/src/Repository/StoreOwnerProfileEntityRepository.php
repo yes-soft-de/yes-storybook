@@ -2,10 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\UserProfileEntity;
-use App\Entity\StoreOwnerSubscriptionEntity;
-use App\Entity\DeliveryCompanyPackageEntity;
-use App\Entity\BranchesEntity;
+use App\Entity\StoreOwnerProfileEntity;
+use App\Entity\StoreOwnerBranchEntity;
 use App\Entity\OrderEntity;
 use App\Entity\CaptainProfileEntity;
 use App\Entity\AcceptedOrderEntity;
@@ -14,16 +12,16 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @method UserProfileEntity|null find($id, $lockMode = null, $lockVersion = null)
- * @method UserProfileEntity|null findOneBy(array $criteria, array $orderBy = null)
- * @method UserProfileEntity[]    findAll()
- * @method UserProfileEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method StoreOwnerProfileEntity|null find($id, $lockMode = null, $lockVersion = null)
+ * @method StoreOwnerProfileEntity|null findOneBy(array $criteria, array $orderBy = null)
+ * @method StoreOwnerProfileEntity[]    findAll()
+ * @method StoreOwnerProfileEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserProfileEntityRepository extends ServiceEntityRepository
+class StoreOwnerProfileEntityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, UserProfileEntity::class);
+        parent::__construct($registry, StoreOwnerProfileEntity::class);
     }
 
     public function getUserProfileByUserID($userID)
@@ -72,7 +70,7 @@ class UserProfileEntityRepository extends ServiceEntityRepository
        
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'profile.userID = orderEntity.ownerID')
 
-            ->leftJoin(BranchesEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
+            ->leftJoin(StoreOwnerBranchEntity::class, 'branchesEntity', Join::WITH, 'orderEntity.fromBranch = branchesEntity.id')
 
             ->leftJoin(AcceptedOrderEntity::class, 'acceptedOrderEntity', Join::WITH, 'orderEntity.id = acceptedOrderEntity.orderID')
 

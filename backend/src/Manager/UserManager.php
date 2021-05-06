@@ -4,10 +4,10 @@ namespace App\Manager;
 
 use App\AutoMapping;
 use App\Entity\UserEntity;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use App\Entity\CaptainProfileEntity;
 use App\Repository\UserEntityRepository;
-use App\Repository\UserProfileEntityRepository;
+use App\Repository\StoreOwnerProfileEntityRepository;
 use App\Repository\CaptainProfileEntityRepository;
 use App\Request\UserProfileCreateRequest;
 use App\Request\userProfileUpdateByAdminRequest;
@@ -27,16 +27,16 @@ class UserManager
     private $encoder;
     private $userRepository;
     private $captainProfileEntityRepository;
-    private $profileRepository;
+    private $storeOwnerProfileEntityRepository;
 
-    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, UserEntityRepository $userRepository, CaptainProfileEntityRepository $captainProfileEntityRepository, UserProfileEntityRepository $profileRepository)
+    public function __construct(AutoMapping $autoMapping, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, UserEntityRepository $userRepository, CaptainProfileEntityRepository $captainProfileEntityRepository, StoreOwnerProfileEntityRepository $storeOwnerProfileEntityRepository)
     {
         $this->autoMapping = $autoMapping;
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
         $this->userRepository = $userRepository;
         $this->captainProfileEntityRepository = $captainProfileEntityRepository;
-        $this->profileRepository = $profileRepository;
+        $this->storeOwnerProfileEntityRepository = $storeOwnerProfileEntityRepository;
     }
 
     public function userRegister(UserRegisterRequest $request)
@@ -44,9 +44,9 @@ class UserManager
         $userProfile = $this->getUserByUserID($request->getUserID());
         if ($userProfile == null) {
 
-        $userRegister = $this->autoMapping->map(UserRegisterRequest::class, UserEntity::class, $request);
+        $userRegister = $this->autoMapping->map(UserRegisterRequest::class, StoreOwnerProfileEntity::class, $request);
 
-        $user = new UserEntity($request->getUserID());
+        $user = new StoreOwnerProfileEntity($request->getUserID());
 
         if ($request->getPassword()) {
             $userRegister->setPassword($this->encoder->encodePassword($user, $request->getPassword()));
@@ -75,7 +75,7 @@ class UserManager
         $request->setUuid($uuid);
         $userProfile = $this->getUserProfileByUserID($request->getUserID());
         if ($userProfile == null) {
-            $userProfile = $this->autoMapping->map(UserProfileCreateRequest::class, UserProfileEntity::class, $request);
+            $userProfile = $this->autoMapping->map(UserProfileCreateRequest::class, StoreOwnerProfileEntity::class, $request);
 
             $userProfile->setStatus('inactive');
             $userProfile->setFree(false);
@@ -93,10 +93,10 @@ class UserManager
 
     public function userProfileUpdate(UserProfileUpdateRequest $request)
     {
-        $item = $this->profileRepository->getUserProfile($request->getUserID());
+        $item = $this->storeOwnerProfileEntityRepository->getUserProfile($request->getUserID());
 
         if ($item) {
-            $item = $this->autoMapping->mapToObject(UserProfileUpdateRequest::class, UserProfileEntity::class, $request, $item);
+            $item = $this->autoMapping->mapToObject(UserProfileUpdateRequest::class, StoreOwnerProfileEntity::class, $request, $item);
 
             $this->entityManager->flush();
             $this->entityManager->clear();
@@ -107,10 +107,10 @@ class UserManager
 
     public function userProfileUpdateByAdmin(userProfileUpdateByAdminRequest $request)
     {
-        $item = $this->profileRepository->find($request->getId());
+        $item = $this->storeOwnerProfileEntityRepository->find($request->getId());
 
         if ($item) {
-            $item = $this->autoMapping->mapToObject(userProfileUpdateByAdminRequest::class, UserProfileEntity::class, $request, $item);
+            $item = $this->autoMapping->mapToObject(userProfileUpdateByAdminRequest::class, StoreOwnerProfileEntity::class, $request, $item);
 
             $this->entityManager->flush();
             $this->entityManager->clear();
@@ -121,17 +121,17 @@ class UserManager
 
     public function getUserProfileByID($id)
     {
-        return $this->profileRepository->getUserProfileByID($id);
+        return $this->storeOwnerProfileEntityRepository->getUserProfileByID($id);
     }
 
     public function getUserProfileByUserID($userID)
     {
-        return $this->profileRepository->getUserProfileByUserID($userID);
+        return $this->storeOwnerProfileEntityRepository->getUserProfileByUserID($userID);
     }
 
     public function getremainingOrders($userID)
     {
-        return $this->profileRepository->getremainingOrders($userID);
+        return $this->storeOwnerProfileEntityRepository->getremainingOrders($userID);
     }
 
     public function createCaptainProfile(CaptainProfileCreateRequest $request, $uuid)
@@ -253,7 +253,7 @@ class UserManager
 //لا داعي له ولكن تركته لتأكد
     public function getOwners()
     {
-        return $this->profileRepository->getOwners();
+        return $this->storeOwnerProfileEntityRepository->getOwners();
     }
 //لا داعي له ولكن تركته لتأكد
     public function getCaptains($userID)
@@ -263,7 +263,7 @@ class UserManager
 
     public function getAllStoreOwners()
     {
-        return $this->profileRepository->getAllStoreOwners();
+        return $this->storeOwnerProfileEntityRepository->getAllStoreOwners();
     }
     
     public function getAllCaptains()
@@ -294,5 +294,15 @@ class UserManager
             return $entity;
         }
         return null;
+    }
+
+    public function getTop5Captains()
+    {        
+        return $this->captainProfileEntityRepository->getTop5Captains();
+    }
+
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
+    {
+        return $this->captainProfileEntityRepository->getTopCaptainsInLastMonthDate($fromDate, $toDate);
     }
 }

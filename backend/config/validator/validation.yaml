@@ -125,8 +125,6 @@ App\Request\CaptainProfileUpdateRequest:
       - NotBlank: ~
     drivingLicence:
       - NotBlank: ~
-    state:
-      - NotBlank: ~
 
 App\Request\CaptainProfileUpdateByAdminRequest:
   properties:
@@ -160,6 +158,8 @@ App\Request\OrderUpdateRequest:
 App\Request\AcceptedOrderCreateRequest:
   properties:
     orderID:
+      - NotBlank: ~
+    captainID:
       - NotBlank: ~
 
 App\Request\AcceptedOrderUpdateRequest:

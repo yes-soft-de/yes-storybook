@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\SupportEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 /**
  * @method SupportEntity|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,7 +25,7 @@ class SupportEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('ReportEntity')
             ->addSelect('ReportEntity.id', 'ReportEntity.orderId', 'ReportEntity.reason', 'ReportEntity.userId', 'userProfileEntity.userName', 'ReportEntity.uuid', 'ReportEntity.newMessageStatus') 
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = ReportEntity.userId')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = ReportEntity.userId')
             
             ->getQuery()
             ->getResult();
@@ -36,7 +36,7 @@ class SupportEntityRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('ReportEntity')
             ->addSelect('ReportEntity.id', 'ReportEntity.orderId', 'ReportEntity.reason', 'ReportEntity.userId', 'userProfileEntity.userName', 'ReportEntity.uuid', 'ReportEntity.newMessageStatus') 
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = ReportEntity.userId')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = ReportEntity.userId')
             ->andWhere('ReportEntity.id = :id')
             ->setParameter('id',$id)
             ->getQuery()

@@ -6,7 +6,7 @@ use DateTime;
 
 class DateFactoryService extends ResponseConstant
 {
-    public function returnLastMonthDate():array
+   public function returnLastMonthDate():array
     {
         $dateNow =new DateTime("now");
         $year = $dateNow->format("Y");
@@ -20,7 +20,7 @@ class DateFactoryService extends ResponseConstant
         return [$toDate,  $fromDate];
      }
 
-     public function returnRequiredDate($year, $month):array
+   public function returnRequiredDate($year, $month):array
      {
         $fromDate =new \DateTime($year . '-' . $month . '-01'); 
         $toDate = new \DateTime($fromDate->format('Y-m-d h:i:s') . ' +1 month');
@@ -32,15 +32,14 @@ class DateFactoryService extends ResponseConstant
     
      }
 
-     public  function subtractTwoDates($firstDate, $lastDate)
+   public function subtractTwoDates($firstDate, $lastDate)
       {
-        
         $difference = $firstDate->diff($lastDate);
       
          return $this->format_interval($difference);
       }
 
-   function format_interval($interval)
+   public function format_interval($interval)
     {
       $result = "";
       if ($interval->y) { $result .= $interval->format("%y years "); }

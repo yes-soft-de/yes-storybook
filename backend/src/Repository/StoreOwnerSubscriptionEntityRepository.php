@@ -7,7 +7,7 @@ use App\Entity\DeliveryCompanyPackageEntity;
 use App\Entity\OrderEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\UserProfileEntity;
+use App\Entity\StoreOwnerProfileEntity;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
@@ -47,7 +47,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 
             ->Join(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
-            ->join(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
+            ->join(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
             ->andWhere("subscription.status = 'inactive'")
 
@@ -64,7 +64,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
 
-            ->join(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
+            ->join(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
             ->andWhere("subscription.id = :id")
 
@@ -135,7 +135,7 @@ class StoreOwnerSubscriptionEntityRepository extends ServiceEntityRepository
 
             ->leftJoin(OrderEntity::class, 'orderEntity', Join::WITH, 'orderEntity.subscribeId = subscription.id')
 
-            ->leftJoin(UserProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
+            ->leftJoin(StoreOwnerProfileEntity::class, 'userProfileEntity', Join::WITH, 'userProfileEntity.userID = subscription.ownerID')
 
             ->leftJoin(DeliveryCompanyPackageEntity::class, 'packageEntity', Join::WITH, 'packageEntity.id = subscription.packageID')
             
