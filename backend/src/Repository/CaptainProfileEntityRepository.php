@@ -238,4 +238,52 @@ class CaptainProfileEntityRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getTop5Captains()
+    {
+        return $this->createQueryBuilder('captainProfileEntity')
+           
+            ->select( 'captainProfileEntity.name', 'captainProfileEntity.car', 'captainProfileEntity.age', 'captainProfileEntity.salary', 'captainProfileEntity.bounce', 'captainProfileEntity.image', 'captainProfileEntity.specialLink')
+
+            ->addSelect('OrderEntity.captainID', 'count(OrderEntity.captainID) countOrdersDeliverd')
+
+            ->leftJoin(OrderEntity::class, 'OrderEntity', Join::WITH, 'OrderEntity.captainID = captainProfileEntity.captainID')
+
+            // ->andWhere("OrderEntity.state ='deliverd'")
+           
+            ->addGroupBy('OrderEntity.captainID')
+            
+            ->having('count(OrderEntity.captainID) > 0')
+            ->setMaxResults(5)
+            ->addOrderBy('countOrdersDeliverd','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
+    {
+        return $this->createQueryBuilder('captainProfileEntity')
+
+            ->select('captainProfileEntity.name', 'captainProfileEntity.car', 'captainProfileEntity.age', 'captainProfileEntity.salary', 'captainProfileEntity.bounce', 'captainProfileEntity.image', 'captainProfileEntity.specialLink', 'captainProfileEntity.drivingLicence')
+            
+            ->addSelect('OrderEntity.captainID', 'count(OrderEntity.captainID) countOrdersInMonth')
+           
+            ->leftJoin(OrderEntity::class, 'OrderEntity', Join::WITH, 'OrderEntity.captainID = captainProfileEntity.captainID')
+
+             ->where('OrderEntity.date >= :fromDate')
+             ->andWhere('OrderEntity.date < :toDate')
+            // ->andWhere("OrderEntity.state ='deliverd'")
+        
+            ->addGroupBy('OrderEntity.captainID')
+            
+            ->having('count(OrderEntity.captainID) > 0')
+            ->setMaxResults(15)
+            ->addOrderBy('countOrdersInMonth','DESC')
+         
+            ->setParameter('fromDate', $fromDate)
+            ->setParameter('toDate', $toDate)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

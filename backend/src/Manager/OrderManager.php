@@ -6,7 +6,6 @@ use App\AutoMapping;
 use App\Entity\OrderEntity;
 use App\Repository\OrderEntityRepository;
 use App\Request\OrderCreateRequest;
-use App\Request\AcceptedOrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
 use App\Request\DeleteRequest;
@@ -103,7 +102,7 @@ class OrderManager
             return $item;
         }
     }
-
+//مراجعة للحذف
     public function orderUpdateStateByCaptain2($orderID)
     {
         $item = $this->orderEntityRepository->find($orderID);
@@ -188,5 +187,25 @@ class OrderManager
     public function getAcceptedOrderByCaptainId($captainID)
     {
         return $this->orderEntityRepository->getAcceptedOrderByCaptainId($captainID);
+    }
+
+    public function  countCaptainOrdersDelivered($captainId)
+    {
+        return $this->orderEntityRepository->countCaptainOrdersDelivered($captainId);
+    }
+
+    public function countOrdersInMonthForCaptain($fromDate, $toDate, $captainId)
+    {
+        return $this->orderEntityRepository->countOrdersInMonthForCaptain($fromDate, $toDate, $captainId);
+    }
+
+    public function getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId)
+    {
+        return $this->orderEntityRepository->getAcceptedOrderByCaptainIdInMonth($fromDate, $toDate, $captainId);
+    }
+
+    public function countCaptainOrdersInDay($captainID, $fromDate, $toDate)
+    {
+        return $this->orderEntityRepository->countCaptainOrdersInDay($captainID, $fromDate, $toDate);
     }
 }

@@ -388,4 +388,29 @@ class UserController extends BaseController
 
         return $this->response($response, self::CREATE);
     }
+
+    /**
+     * @Route("/getTop5Captains", name="GetTop5Captains",methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTop5Captains()
+    {
+        $result = $this->captainProfileService->getTop5Captains();
+
+        return $this->response($result, self::FETCH);
+    }
+
+    /**
+     * @Route("/topCaptains", name="getTopCaptainsInThisMonth",methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTopCaptainsInLastMonthDate()
+    {
+        $result = $this->captainProfileService->getTopCaptainsInLastMonthDate();
+
+        return $this->response($result, self::FETCH);
+    }
 }

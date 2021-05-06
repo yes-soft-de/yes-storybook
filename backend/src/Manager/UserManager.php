@@ -295,4 +295,14 @@ class UserManager
         }
         return null;
     }
+
+    public function getTop5Captains()
+    {        
+        return $this->captainProfileEntityRepository->getTop5Captains();
+    }
+
+    public function getTopCaptainsInLastMonthDate($fromDate, $toDate)
+    {
+        return $this->captainProfileEntityRepository->getTopCaptainsInLastMonthDate($fromDate, $toDate);
+    }
 }

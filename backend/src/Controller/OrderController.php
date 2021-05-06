@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\AutoMapping;
 use App\Service\OrderService;
-use App\Service\AcceptedOrderFilterService;
+use App\Service\AcceptedOrderService;
 use App\Request\OrderCreateRequest;
 use App\Request\OrderUpdateRequest;
 use App\Request\OrderUpdateStateByCaptainRequest;
@@ -25,16 +25,16 @@ class OrderController extends BaseController
     private $autoMapping;
     private $validator;
     private $orderService;
-    private $acceptedOrderFilterService;
+    private $acceptedOrderService;
    
 
-    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, OrderService $orderService, AcceptedOrderFilterService $acceptedOrderFilterService)
+    public function __construct(SerializerInterface $serializer, AutoMapping $autoMapping, ValidatorInterface $validator, OrderService $orderService, AcceptedOrderService $acceptedOrderService)
     {
         parent::__construct($serializer);
         $this->autoMapping = $autoMapping;
         $this->validator = $validator;
         $this->orderService = $orderService;
-        $this->acceptedOrderFilterService = $acceptedOrderFilterService;
+        $this->acceptedOrderService = $acceptedOrderService;
     }
     /**
      * @Route("order", name="createOrder", methods={"POST"})
@@ -244,7 +244,7 @@ class OrderController extends BaseController
       */
       public function getAcceptedOrderByCaptainId()
       {
-          $result = $this->acceptedOrderFilterService->getAcceptedOrderByCaptainId($this->getUserId());
+          $result = $this->acceptedOrderService->getAcceptedOrderByCaptainId($this->getUserId());
   
           return $this->response($result, self::FETCH);
       }
