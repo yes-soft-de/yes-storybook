@@ -35,7 +35,7 @@ export class ButtonComponent implements OnInit {
     if (this.type === 'flat') {
       return {
         'background-color': this.color,
-        color: 'transparent'
+        color: 'white'
       };
     } else {
       return {
