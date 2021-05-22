@@ -25,7 +25,7 @@ jobs:
         run: cd frontend/dashboard &&npm run build-storybook
 
       - name: Remove Jekyll
-        run: touch .nojekyll
+        run: touch frontend/dashboard/.nojekyll
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
