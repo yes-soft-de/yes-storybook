@@ -1,0 +1,5 @@
+<header class="yes-header">
+    <img src="assets/logo.svg" height="24">
+    <yes-button *ngIf="!user" type="outline" color="white" label="login"></yes-button>
+    <yes-button *ngIf="user" type="text" color="white" [label]="user.firstName"></yes-button>
+</header>

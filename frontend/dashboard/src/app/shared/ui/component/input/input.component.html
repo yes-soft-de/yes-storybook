@@ -1,6 +1,6 @@
 <mat-form-field appearance="legacy" class="form-field input">
-    <mat-label>{{label}}</mat-label>
-    <input matInput [placeholder]="placeholder" [formControl]="control">
-    <mat-hint>ex. {{hint}}</mat-hint>
+    <mat-label>{{label | titlecase}}</mat-label>
+    <input matInput [placeholder]="placeholder | titlecase" [formControl]="control">
+    <mat-hint>ex. {{hint | titlecase}}</mat-hint>
     <mat-icon *ngIf="enableClearButton" matSuffix (click)="clear()">clear</mat-icon>
 </mat-form-field>

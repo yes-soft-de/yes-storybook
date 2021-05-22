@@ -7,12 +7,15 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { PageComponent } from './ui/component/page/page.component';
+import { NavigationModule } from '../navigation/navigation.module';
 
 
 @NgModule({
   declarations: [
     ButtonComponent,
-    InputComponent
+    InputComponent,
+    PageComponent
   ],
   imports: [
     CommonModule,
@@ -20,11 +23,13 @@ import { MatInputModule } from '@angular/material/input';
     AngularSvgIconModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    NavigationModule
   ],
   exports: [
     InputComponent,
-    ButtonComponent
+    ButtonComponent,
+    PageComponent
   ]
 })
 export class SharedModule { }

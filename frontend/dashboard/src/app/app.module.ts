@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NavigationModule } from './navigation/navigation.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -24,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     SharedModule,
-    AuthModule
+    AuthModule,
+    NavigationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
