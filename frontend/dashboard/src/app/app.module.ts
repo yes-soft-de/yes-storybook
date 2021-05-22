@@ -19,12 +19,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     AngularSvgIconModule.forRoot(),
     MatIconModule,
-    AuthModule,
-    SharedModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    SharedModule,
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]

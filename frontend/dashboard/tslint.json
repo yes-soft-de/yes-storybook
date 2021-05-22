@@ -146,6 +146,7 @@
       true,
       "element",
       "app",
+      "yes",
       "storybook",
       "kebab-case"
     ]

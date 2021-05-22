@@ -1,7 +1,3 @@
-<button
-  type="button"
-  [ngClass]="classes"
-  [ngStyle]="styles"
-  (click)="onClick.emit($event)">
-  {{label}}
+<button type="button" [ngClass]="classes" [ngStyle]="styles" (click)="onClick.emit($event)">
+  {{label | titlecase }}
 </button>

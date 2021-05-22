@@ -1,9 +1,6 @@
-<mat-form-field appearance="legacy">
-    <mat-label>
-        {{label}}
-    </mat-label>
-
+<mat-form-field appearance="legacy" class="form-field input">
+    <mat-label>{{label}}</mat-label>
     <input matInput [placeholder]="placeholder" [formControl]="control">
     <mat-hint>ex. {{hint}}</mat-hint>
-    <mat-icon matSuffix *ngIf="enableClearButton">clear</mat-icon>
+    <mat-icon *ngIf="enableClearButton" matSuffix (click)="clear()">clear</mat-icon>
 </mat-form-field>

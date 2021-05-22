@@ -23,7 +23,8 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ],
   exports: [
-    InputComponent
+    InputComponent,
+    ButtonComponent
   ]
 })
 export class SharedModule { }

@@ -12,4 +12,6 @@ export class AuthFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  submit(): void {
+  }
 }
