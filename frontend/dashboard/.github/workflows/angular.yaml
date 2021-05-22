@@ -1,0 +1,35 @@
+name: Angular Storybook
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v1
+
+      - name: Use Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build 🔧
+        run: npm run build-storybook
+
+      - name: Remove Jekyll
+        run: touch .nojekyll
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: storybook-static # The folder the action should deploy.
+
