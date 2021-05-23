@@ -1,7 +1,7 @@
 <div class="auth-form-container">
     <div class="auth-form">
-        <yes-input [enableClearButton]="true" label="Email Address" hint="email@domain.com"></yes-input>
-        <yes-input [enableClearButton]="true" label="Password" hint="a213SS#87"></yes-input>
+        <yes-input [control]="username" [enableClearButton]="true" label="Email Address" hint="email@domain.com"></yes-input>
+        <yes-input [control]="password" [enableClearButton]="true" label="Password" hint="a213SS#87"></yes-input>
         <yes-button label="login" color="blue" type="flat" (onClick)="submit()"></yes-button>
     </div>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthFormComponent } from './ui/forms/auth-form/auth-form.component';
 import { MatInputModule } from '@angular/material/input';
 import { SharedModule } from '../shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -13,7 +14,8 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     CommonModule,
     MatInputModule,
-    SharedModule
+    SharedModule,
+    HttpClientModule
   ],
   exports: [
     AuthFormComponent
